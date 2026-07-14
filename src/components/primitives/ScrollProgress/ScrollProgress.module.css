@@ -1,0 +1,82 @@
+.rail {
+  position: fixed;
+  right: var(--space-5);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-rail);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.line {
+  position: relative;
+  width: var(--bw);
+  height: 140px;
+  background: var(--color-line-soft);
+}
+
+.bar {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform-origin: top center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  border: var(--bw) solid var(--color-ink);
+  background: transparent;
+  transition:
+    background-color var(--dur-fast) var(--ease-power-out),
+    transform var(--dur-fast) var(--ease-power-out);
+}
+
+.dot:hover {
+  transform: scale(1.35);
+}
+
+.dot.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.dotLabel {
+  position: absolute;
+  right: calc(100% + var(--space-3));
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px var(--space-2);
+  background: var(--color-ink);
+  color: var(--color-base);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) linear;
+}
+
+.dot:hover .dotLabel,
+.dot:focus-visible .dotLabel,
+.dot.active .dotLabel {
+  opacity: 1;
+}
+
+@media (max-width: 960px), (pointer: coarse) {
+  .rail {
+    display: none;
+  }
+}

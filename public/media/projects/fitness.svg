@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="FITNESS placeholder">
+  <rect width="800" height="600" fill="#E3DCCB"/>
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#111110" stroke-width="4"/>
+  <polygon points="48,248 300,48 452,48 200,248" fill="#1F1BEB"/>
+   <rect x="470" y="48" width="282" height="200" fill="none" stroke="#111110" stroke-width="4"/>
+   <rect x="500" y="90" width="220" height="30" fill="#111110"/>
+   <rect x="500" y="140" width="160" height="30" fill="#111110"/>
+  <text x="48" y="360" font-family="monospace" font-size="26" fill="#57534A" letter-spacing="4">// PLACEHOLDER</text>
+  <text x="48" y="470" font-family="Arial, sans-serif" font-weight="800" font-size="82" fill="#111110" letter-spacing="-3">FITNESS</text>
+  <text x="48" y="540" font-family="monospace" font-size="20" fill="#1F1BEB" letter-spacing="2">REACT NATIVE · FIREBASE</text>
+</svg>

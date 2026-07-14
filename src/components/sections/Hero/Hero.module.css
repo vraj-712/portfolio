@@ -1,0 +1,133 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--color-base);
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-inline: var(--gutter);
+}
+
+.bloom {
+  z-index: 1;
+  background: var(--color-accent);
+  will-change: clip-path;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  margin-bottom: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-ink-muted);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-900);
+  font-weight: 800;
+  line-height: 0.84;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.lineOuter {
+  display: block;
+  overflow: hidden;
+}
+
+.lineInner {
+  display: block;
+  will-change: transform;
+}
+
+.lineOffset {
+  margin-left: 0.22em; /* deliberate grid-break offset */
+}
+
+.role {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink);
+}
+
+.roleStatic {
+  color: var(--color-ink-muted);
+}
+
+.roleRoll {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* accent-layer inversions (contrast-safe: on-accent over accent) */
+.bloom .eyebrow,
+.bloom .name,
+.bloom .role,
+.bloom .roleStatic,
+.bloom .roleRoll {
+  color: var(--color-on-accent);
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  letter-spacing: 0.2em;
+  color: var(--color-ink-muted);
+  mix-blend-mode: difference;
+}
+
+.arrow {
+  animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .role {
+    font-size: var(--fs-200);
+  }
+}

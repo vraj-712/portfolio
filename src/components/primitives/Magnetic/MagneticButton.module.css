@@ -1,0 +1,53 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  border: var(--bw) solid var(--color-ink);
+  border-radius: var(--radius);
+  transition:
+    background-color var(--dur-fast) var(--ease-power-out),
+    color var(--dur-fast) var(--ease-power-out),
+    box-shadow var(--dur-fast) var(--ease-power-out),
+    transform var(--dur-fast) var(--ease-power-out);
+  will-change: transform;
+}
+
+.inner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.solid {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-ink);
+  box-shadow: var(--shadow-sm);
+}
+.solid:hover {
+  background: var(--color-accent-press);
+  box-shadow: var(--shadow);
+}
+
+.outline {
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-sm);
+}
+.outline:hover {
+  background: var(--color-ink);
+  color: var(--color-base);
+  box-shadow: var(--shadow);
+}
+
+.btn:active {
+  box-shadow: none;
+  transform: translate(3px, 3px);
+}

@@ -1,0 +1,20 @@
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.15em;
+  line-height: 1.15;
+  vertical-align: bottom;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.item {
+  display: block;
+  height: 1.15em;
+  line-height: 1.15;
+  white-space: nowrap;
+}

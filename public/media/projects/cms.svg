@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="CMS PORTAL placeholder">
+  <rect width="800" height="600" fill="#E3DCCB"/>
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#111110" stroke-width="4"/>
+  <rect x="48" y="48" width="300" height="200" fill="#1F1BEB"/>
+   <circle cx="198" cy="148" r="70" fill="#E3DCCB"/>
+   <circle cx="198" cy="148" r="34" fill="#111110"/>
+   <rect x="380" y="48" width="372" height="200" fill="none" stroke="#111110" stroke-width="4"/>
+  <text x="48" y="360" font-family="monospace" font-size="26" fill="#57534A" letter-spacing="4">// PLACEHOLDER</text>
+  <text x="48" y="470" font-family="Arial, sans-serif" font-weight="800" font-size="82" fill="#111110" letter-spacing="-3">CMS PORTAL</text>
+  <text x="48" y="540" font-family="monospace" font-size="20" fill="#1F1BEB" letter-spacing="2">PAYLOAD · NEXT.JS</text>
+</svg>

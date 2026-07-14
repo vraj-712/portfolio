@@ -1,0 +1,10 @@
+.panel {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--color-accent);
+  pointer-events: none;
+  /* start cleared away; parent timelines set the real clip-path */
+  clip-path: inset(0% 0% 100% 0%);
+  will-change: clip-path;
+}

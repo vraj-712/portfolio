@@ -1,0 +1,82 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  border: 0 solid var(--color-ink);
+  transition:
+    width var(--dur-snappy) var(--ease-power-out),
+    height var(--dur-snappy) var(--ease-power-out),
+    background-color var(--dur-snappy) var(--ease-power-out),
+    border-width var(--dur-snappy) var(--ease-power-out),
+    border-radius var(--dur-snappy) var(--ease-power-out),
+    opacity var(--dur-fast) linear;
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-on-accent);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--dur-fast) linear;
+}
+
+/* --- variants --- */
+.cursor[data-variant='hover'] .dot {
+  width: 46px;
+  height: 46px;
+  background: transparent;
+  border-width: var(--bw);
+}
+
+.cursor[data-variant='view'] .dot,
+.cursor[data-variant='click'] .dot,
+.cursor[data-variant='drag'] .dot {
+  width: 78px;
+  height: 78px;
+  background: var(--color-accent);
+}
+
+.cursor[data-variant='view'] .label,
+.cursor[data-variant='click'] .label,
+.cursor[data-variant='drag'] .label {
+  opacity: 1;
+}
+
+.cursor[data-variant='text'] .dot {
+  width: 3px;
+  height: 30px;
+  border-radius: 0;
+}
+
+.cursor[data-variant='hidden'] .dot {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot,
+  .label {
+    transition-duration: 0.001ms;
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="BOOKING placeholder">
+  <rect width="800" height="600" fill="#E3DCCB"/>
+  <rect x="10" y="10" width="780" height="580" fill="none" stroke="#111110" stroke-width="4"/>
+  <rect x="48" y="60" width="500" height="34" fill="#111110"/>
+   <rect x="48" y="110" width="420" height="34" fill="#111110"/>
+   <rect x="48" y="160" width="460" height="34" fill="none" stroke="#111110" stroke-width="4"/>
+   <circle cx="680" cy="130" r="72" fill="#1F1BEB"/>
+  <text x="48" y="360" font-family="monospace" font-size="26" fill="#57534A" letter-spacing="4">// PLACEHOLDER</text>
+  <text x="48" y="470" font-family="Arial, sans-serif" font-weight="800" font-size="82" fill="#111110" letter-spacing="-3">BOOKING</text>
+  <text x="48" y="540" font-family="monospace" font-size="20" fill="#1F1BEB" letter-spacing="2">MERN · AUTH · PAYMENTS</text>
+</svg>

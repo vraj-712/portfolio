@@ -1,0 +1,92 @@
+/* =============================================================================
+   THEME TOKENS — the single source of truth for the whole site.
+   Every component consumes var(--token). No hardcoded hex outside this file.
+   Palette: Light Editorial-Brutalist — Bone + Ink + Ultramarine.
+   Re-theme (even a full dark flip) by editing only this file.
+   ============================================================================= */
+
+:root {
+  /* --- Base / surfaces --- */
+  --color-base:        #ECE7DA; /* bone paper — page canvas */
+  --color-base-2:      #E3DCCB; /* elevated paper — cards, panels, wells */
+  --color-base-3:      #DAD2BE; /* deepest paper — insets, marquee track */
+
+  /* --- Ink / text --- */
+  --color-ink:         #111110; /* near-black warm ink — primary text, borders */
+  --color-ink-muted:   #57534A; /* warm gray — meta, captions, secondary (6.2:1) */
+
+  /* --- Accent (rationed: reveal / focus / emphasis) --- */
+  --color-accent:      #1F1BEB; /* electric ultramarine (7.05:1 on base) */
+  --color-accent-press:#1512B0; /* darker ultramarine — active/pressed */
+  --color-on-accent:   #F7F4EC; /* paper-white — the ONLY text color allowed on accent */
+
+  /* --- Lines --- */
+  --color-line:        #111110; /* full-strength brutalist divider/frame (= ink) */
+  --color-line-soft:   #C9C0AD; /* hairline on paper where full ink is too loud */
+
+  /* --- Selection --- */
+  --color-selection-bg: var(--color-accent);
+  --color-selection-fg: var(--color-on-accent);
+
+  /* --- Fonts --- */
+  --font-display: 'Bricolage Grotesque Variable', 'Arial Narrow', system-ui, sans-serif;
+  --font-body:    'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --font-mono:    'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* --- Fluid type scale (clamp between 360px and 1440px viewports) --- */
+  --fs-100: clamp(0.75rem, 0.708rem + 0.19vw, 0.875rem);   /* eyebrow / label   12→14 */
+  --fs-200: clamp(0.8125rem, 0.771rem + 0.19vw, 0.9375rem);/* meta              13→15 */
+  --fs-300: clamp(1rem, 0.938rem + 0.28vw, 1.1875rem);     /* body              16→19 */
+  --fs-400: clamp(1.25rem, 1.125rem + 0.56vw, 1.625rem);   /* lead              20→26 */
+  --fs-500: clamp(1.625rem, 1.417rem + 0.93vw, 2.25rem);   /* h3 / card title   26→36 */
+  --fs-600: clamp(2.125rem, 1.667rem + 2.04vw, 3.5rem);    /* h2                34→56 */
+  --fs-700: clamp(2.75rem, 1.833rem + 4.07vw, 5.5rem);     /* section display   44→88 */
+  --fs-800: clamp(3.75rem, 2.25rem + 6.67vw, 8.25rem);     /* display-lg        60→132 */
+  --fs-900: clamp(4.75rem, 2rem + 12.22vw, 13rem);         /* hero mega         76→208 */
+
+  /* --- Spacing scale (8px base) --- */
+  --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.5rem;  --space-6: 2rem;    --space-7: 3rem;    --space-8: 4rem;
+  --space-9: 6rem;    --space-10: 8rem;
+  --space-section: clamp(4rem, 2rem + 8vw, 9rem);      /* vertical section rhythm */
+  --gutter:        clamp(1.25rem, 0.5rem + 3vw, 5rem); /* horizontal page gutter */
+
+  /* --- Containers / measure --- */
+  --container:        90rem;  /* 1440 */
+  --container-narrow: 60rem;  /* 960  */
+  --measure:          68ch;   /* reading width */
+
+  /* --- Borders — brutalist --- */
+  --bw-hair: 1px; --bw: 2px; --bw-thick: 3px; --bw-brutal: 4px;
+  --radius: 0;            /* sharp corners everywhere */
+  --radius-pill: 999px;  /* single exception: nav pill / chips */
+
+  /* --- Hard shadows — NO blur (offset + spread 0) --- */
+  --shadow-sm:     4px 4px 0 0 var(--color-ink);
+  --shadow:        8px 8px 0 0 var(--color-ink);
+  --shadow-lg:     12px 12px 0 0 var(--color-ink);
+  --shadow-accent: 8px 8px 0 0 var(--color-accent);
+
+  /* --- Easing — CSS cubic-bezier (mirrors GSAP strings in lib/gsap/easings.ts) --- */
+  --ease-expo-out:     cubic-bezier(0.16, 1, 0.30, 1);    /* GSAP expo.out    */
+  --ease-power-out:    cubic-bezier(0.22, 1, 0.36, 1);    /* GSAP power4.out  */
+  --ease-back-out:     cubic-bezier(0.34, 1.56, 0.64, 1); /* GSAP back.out(1.7) */
+  --ease-power-in-out: cubic-bezier(0.65, 0, 0.35, 1);    /* GSAP power2.inOut */
+
+  /* --- Durations --- */
+  --dur-instant: 0.1s; --dur-fast: 0.2s; --dur-snappy: 0.3s;
+  --dur-base: 0.45s;   --dur-slow: 0.6s; --dur-cinematic: 0.9s;
+
+  /* --- Z-index layers --- */
+  --z-base: 0; --z-content: 1; --z-rail: 20; --z-header: 90;
+  --z-overlay: 100; --z-cursor: 9999;
+}
+
+/* Documented dark flip — not shipped. Enable with <html data-theme="dark">.
+   Re-run the contrast check if ever enabled. */
+:root[data-theme='dark'] {
+  --color-base: #0E0E0D; --color-base-2: #161513; --color-base-3: #1E1C19;
+  --color-ink: #ECE7DA; --color-ink-muted: #9A9284;
+  --color-accent: #6C6BFF; --color-accent-press: #4D4CF0; --color-on-accent: #0E0E0D;
+  --color-line: #ECE7DA; --color-line-soft: #2A2824;
+}

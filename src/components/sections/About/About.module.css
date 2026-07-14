@@ -1,0 +1,98 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: clamp(2rem, 1rem + 5vw, 6rem);
+  align-items: start;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.lead {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+}
+
+.philosophy {
+  max-width: var(--measure);
+  font-size: var(--fs-400);
+  line-height: 1.35;
+  color: var(--color-ink-muted);
+  border-left: var(--bw-brutal) solid var(--color-ink);
+  padding-left: var(--space-5);
+}
+
+.mark {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  padding: 0 0.12em;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.card {
+  padding: var(--space-5);
+  border: var(--bw) solid var(--color-ink);
+  background: var(--color-base-2);
+  box-shadow: var(--shadow-sm);
+}
+.cardLabel,
+.sideLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+.degree {
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 600;
+  line-height: 1.05;
+  margin-bottom: var(--space-2);
+}
+.school {
+  font-size: var(--fs-200);
+  color: var(--color-ink-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.chip,
+.chipGhost {
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: var(--bw) solid var(--color-ink);
+}
+.chip {
+  background: var(--color-ink);
+  color: var(--color-base);
+}
+.chipGhost {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}

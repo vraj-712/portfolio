@@ -1,0 +1,74 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  background: var(--color-ink);
+  will-change: clip-path;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+}
+
+.name {
+  display: flex;
+  font-family: var(--font-display);
+  font-size: var(--fs-700);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--color-base);
+}
+
+.unit {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.unitInner {
+  display: inline-block;
+  will-change: transform;
+}
+
+.space {
+  display: inline-block;
+  width: 0.32em;
+}
+
+.skip {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--space-7);
+  padding: var(--space-2) var(--space-4);
+  border: var(--bw) solid var(--color-base);
+  color: var(--color-base);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition:
+    background-color var(--dur-fast) var(--ease-power-out),
+    color var(--dur-fast) var(--ease-power-out);
+}
+
+.skip:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
