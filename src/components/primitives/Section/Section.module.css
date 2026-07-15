@@ -19,7 +19,8 @@
   padding: var(--space-2) var(--space-4);
   background: var(--color-base);
   border: var(--bw) solid var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--skin-radius);
+  box-shadow: var(--skin-shadow-sm);
   font-family: var(--font-mono);
   font-size: var(--fs-100);
   font-weight: 700;

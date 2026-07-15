@@ -56,7 +56,8 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   border: var(--bw) solid var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--skin-radius);
+  box-shadow: var(--skin-shadow-sm);
   background: var(--color-base);
   color: var(--color-ink);
   font-weight: 700;
@@ -206,7 +207,8 @@
   width: 2.75rem;
   height: 2.75rem;
   border: var(--bw) solid var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--skin-radius);
+  box-shadow: var(--skin-shadow-sm);
   background: var(--color-base);
   color: var(--color-ink);
   font-weight: 700;

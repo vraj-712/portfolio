@@ -11,9 +11,10 @@
   aspect-ratio: 4 / 3;
   flex-shrink: 0; /* keep the media proportion when the card stretches to match siblings */
   border: var(--bw-thick) solid var(--color-ink);
+  border-radius: var(--skin-radius);
   background: var(--color-base-2);
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: var(--skin-shadow);
   will-change: transform;
 }
 

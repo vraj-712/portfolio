@@ -17,6 +17,27 @@
   will-change: transform;
 }
 
+/* per-Mode character: Fluid = big soft accent-tinted circles, Terminal = tiny
+   sharp ink grid, Kinetic = bold accent circles */
+:root[data-cursor-theme='fluid'] .dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 24%, var(--color-base-3));
+}
+:root[data-cursor-theme='terminal'] .dot {
+  width: 4px;
+  height: 4px;
+  background: var(--color-ink);
+  opacity: 0.3;
+}
+:root[data-cursor-theme='kinetic'] .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 55%, var(--color-base-3));
+}
+
 /* thin out the grid on small screens so it stays a texture, not clutter */
 @media (max-width: 640px) {
   .dot {

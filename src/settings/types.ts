@@ -13,6 +13,10 @@ export type PaletteId =
   | 'midnight-cyan'
   | 'oxblood-cream';
 
+/** Cursor "Mode": each id re-skins the cursor, the motion profile, and section
+ *  skins site-wide. `off` = native system cursor. */
+export type CursorThemeId = 'precision' | 'fluid' | 'terminal' | 'kinetic' | 'off';
+
 export interface Settings {
   themeMode: ThemeMode;
   paletteId: PaletteId | null; // null = custom (a color was hand-edited)
@@ -28,7 +32,7 @@ export interface Settings {
   reduceMotion: boolean;
   motionSpeed: number; // 0.5 – 2  (1 = default)
   smoothScroll: boolean;
-  customCursor: boolean;
+  cursorTheme: CursorThemeId;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -46,5 +50,5 @@ export const DEFAULT_SETTINGS: Settings = {
   reduceMotion: false,
   motionSpeed: 1,
   smoothScroll: true,
-  customCursor: true,
+  cursorTheme: 'precision',
 };

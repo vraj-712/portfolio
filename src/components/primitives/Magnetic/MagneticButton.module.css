@@ -10,7 +10,7 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
   border: var(--bw) solid var(--color-ink);
-  border-radius: var(--radius);
+  border-radius: var(--skin-radius);
   transition:
     background-color var(--dur-fast) var(--ease-power-out),
     color var(--dur-fast) var(--ease-power-out),
@@ -29,22 +29,22 @@
   background: var(--color-accent);
   color: var(--color-on-accent);
   border-color: var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--skin-shadow-sm);
 }
 .solid:hover {
   background: var(--color-accent-press);
-  box-shadow: var(--shadow);
+  box-shadow: var(--skin-shadow);
 }
 
 .outline {
   background: transparent;
   color: var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--skin-shadow-sm);
 }
 .outline:hover {
   background: var(--color-ink);
   color: var(--color-base);
-  box-shadow: var(--shadow);
+  box-shadow: var(--skin-shadow);
 }
 
 .btn:active {

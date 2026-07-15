@@ -1,0 +1,78 @@
+.vline,
+.hline,
+.marker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.vline {
+  width: 1px;
+  height: 100vh;
+  background: var(--color-ink);
+  opacity: 0.45;
+}
+.hline {
+  width: 100vw;
+  height: 1px;
+  background: var(--color-ink);
+  opacity: 0.45;
+}
+
+.marker {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--color-accent);
+  transition:
+    width var(--dur-snappy) steps(4),
+    height var(--dur-snappy) steps(4),
+    background-color var(--dur-snappy) steps(4);
+}
+.marker[data-variant='hover'] {
+  width: 30px;
+  height: 30px;
+}
+.marker[data-variant='view'],
+.marker[data-variant='click'],
+.marker[data-variant='drag'] {
+  width: 34px;
+  height: 34px;
+  background: color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+.marker[data-variant='text'] {
+  width: 2px;
+  height: 26px;
+  border: none;
+  background: var(--color-ink);
+}
+
+.coords {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: calc(100% + 4px);
+  padding: 2px 5px;
+  background: var(--color-ink);
+  color: var(--color-base);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.label {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: calc(100% + 4px);
+  padding: 2px 5px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}

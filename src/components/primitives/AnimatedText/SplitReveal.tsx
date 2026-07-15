@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSplitText } from '../../../hooks/useSplitText';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
-import { EASE } from '../../../lib/gsap/easings';
+import { textReveal } from '../../../lib/gsap/reveal';
 import type { SplitType } from '../../../lib/gsap/splitText';
 
 interface SplitRevealProps {
@@ -20,17 +20,18 @@ interface SplitRevealProps {
   className?: string;
 }
 
-/** Kinetic type: splits text and reveals the units. Re-splits after fonts load
- *  and on resize (via useSplitText → PLAN_REVIEW R1). Reduced-motion → plain text. */
+/** Kinetic type: splits text and reveals the units with the active Mode's motion
+ *  (ease/duration/skew read at reveal time, so switching Mode re-flavours reveals
+ *  that haven't fired yet). Explicit props still win. Reduced-motion → plain text. */
 export function SplitReveal({
   as = 'span',
   children,
   splitBy = 'words',
-  stagger = 0.06,
-  duration = 0.7,
-  ease = EASE.expoOut,
+  stagger,
+  duration,
+  ease,
   y = 110,
-  skew = 0,
+  skew,
   trigger = 'inview',
   start = 'top 80%',
   className,
@@ -48,29 +49,46 @@ export function SplitReveal({
       const units = res[splitBy];
       if (units.length === 0) return;
 
+      const revealed = { yPercent: 0, autoAlpha: 1, skewY: 0 };
+      const play = () => {
+        const rv = textReveal();
+        return gsap.to(units, {
+          ...revealed,
+          duration: (duration ?? 0.7) * rv.durScale,
+          ease: ease ?? rv.ease,
+          stagger: stagger ?? rv.stagger,
+        });
+      };
+
       const ctx = gsap.context(() => {
-        gsap.fromTo(
-          units,
-          { yPercent: y, autoAlpha: 0, skewY: skew },
-          {
-            yPercent: 0,
-            autoAlpha: 1,
-            skewY: 0,
-            duration,
-            ease,
-            stagger,
-            scrollTrigger:
-              trigger === 'mount'
-                ? undefined
-                : {
-                    trigger: el,
-                    start,
-                    ...(trigger === 'scrub'
-                      ? { scrub: true, end: 'top 45%' }
-                      : { toggleActions: 'play none none none' }),
-                  },
+        gsap.set(units, { yPercent: y, autoAlpha: 0, skewY: skew ?? textReveal().skew });
+
+        if (trigger === 'mount') {
+          play();
+          return;
+        }
+        if (trigger === 'scrub') {
+          const rv = textReveal();
+          gsap.to(units, {
+            ...revealed,
+            ease: ease ?? rv.ease,
+            stagger: stagger ?? rv.stagger,
+            scrollTrigger: { trigger: el, start, scrub: true, end: 'top 45%' },
+          });
+          return;
+        }
+        // inview: build once; read the profile live when it enters, so a Mode
+        // switch before the reveal changes its feel without a rebuild/flash.
+        ScrollTrigger.create({
+          trigger: el,
+          start,
+          once: true,
+          onEnter: () => play(),
+          // already scrolled past on load/refresh → just show it, no animation
+          onRefresh: (self) => {
+            if (self.progress > 0) gsap.set(units, revealed);
           },
-        );
+        });
       }, el);
 
       ScrollTrigger.refresh();

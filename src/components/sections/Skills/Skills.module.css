@@ -55,7 +55,8 @@
   padding: var(--space-2) var(--space-4);
   background: var(--color-base);
   border: var(--bw) solid var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--skin-radius);
+  box-shadow: var(--skin-shadow-sm);
   font-family: var(--font-mono);
   font-size: var(--fs-100);
   text-transform: uppercase;
@@ -89,6 +90,7 @@
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
   border: var(--bw-thick) solid var(--color-ink);
+  border-radius: var(--skin-radius);
   box-shadow: var(--shadow-lg);
 }
 .counter {
@@ -126,6 +128,7 @@
 .activeToken {
   padding: var(--space-2) var(--space-4);
   border: var(--bw) solid var(--color-ink);
+  border-radius: var(--skin-radius);
   background: transparent;
   font-family: var(--font-display);
   font-size: var(--fs-400);
@@ -161,7 +164,8 @@
   padding: var(--space-2) var(--space-5);
   background: var(--color-base);
   border: var(--bw) solid var(--color-ink);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--skin-radius);
+  box-shadow: var(--skin-shadow-sm);
   font-family: var(--font-mono);
   font-size: var(--fs-100);
   text-transform: uppercase;
@@ -203,6 +207,7 @@
 .token {
   padding: var(--space-2) var(--space-4);
   border: var(--bw) solid var(--color-ink);
+  border-radius: var(--skin-radius);
   font-family: var(--font-display);
   font-size: var(--fs-400);
   font-weight: 600;

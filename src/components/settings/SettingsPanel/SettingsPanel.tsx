@@ -8,6 +8,7 @@ import { SliderControl } from '../controls/SliderControl';
 import { SegmentedControl } from '../controls/SegmentedControl';
 import { ColorControl } from '../controls/ColorControl';
 import { PresetSwatches } from '../controls/PresetSwatches';
+import { CursorThemePicker } from '../controls/CursorThemePicker';
 import { cx } from '../../../lib/utils/cx';
 import s from './SettingsPanel.module.css';
 
@@ -178,11 +179,10 @@ export function SettingsPanel() {
 
           <section className={s.group}>
             <h3 className={s.groupTitle}>Cursor</h3>
-            <ToggleControl
-              label="Custom cursor"
-              checked={settings.customCursor}
-              onChange={(v) => setSetting('customCursor', v)}
-              hint="Desktop only"
+            <p className={s.subLabel}>Cursor + motion + skin — desktop only</p>
+            <CursorThemePicker
+              value={settings.cursorTheme}
+              onChange={(v) => setSetting('cursorTheme', v)}
             />
           </section>
 

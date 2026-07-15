@@ -1,0 +1,80 @@
+.blob,
+.core {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  will-change: transform;
+  border-radius: 50%;
+}
+
+.blob {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  background: var(--color-accent);
+  opacity: 0.9;
+  transition:
+    width var(--dur-base) var(--ease-power-out),
+    height var(--dur-base) var(--ease-power-out),
+    opacity var(--dur-fast) linear;
+}
+
+.core {
+  width: 7px;
+  height: 7px;
+  background: var(--color-ink);
+  transition: opacity var(--dur-fast) linear;
+}
+
+/* context growth */
+.blob[data-variant='hover'] {
+  width: 78px;
+  height: 78px;
+}
+.blob[data-variant='view'],
+.blob[data-variant='click'],
+.blob[data-variant='drag'] {
+  width: 96px;
+  height: 96px;
+}
+/* hide the core once the blob has taken over */
+.core[data-variant='hover'],
+.core[data-variant='view'],
+.core[data-variant='click'],
+.core[data-variant='drag'] {
+  opacity: 0;
+}
+.blob[data-variant='text'] {
+  width: 3px;
+  height: 30px;
+  border-radius: 2px;
+  opacity: 0.9;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-on-accent);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--dur-fast) linear;
+}
+.blob[data-variant='view'] .label,
+.blob[data-variant='click'] .label,
+.blob[data-variant='drag'] .label {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob,
+  .core,
+  .label {
+    transition-duration: 0.001ms;
+  }
+}

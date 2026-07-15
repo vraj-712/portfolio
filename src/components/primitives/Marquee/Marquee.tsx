@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useMotionProfile } from '../../../hooks/useMotionProfile';
 import { clamp } from '../../../lib/utils/math';
 import { cx } from '../../../lib/utils/cx';
 import styles from './Marquee.module.css';
@@ -25,6 +26,7 @@ export function Marquee({
   ariaLabel,
 }: MarqueeProps) {
   const reduced = useReducedMotion();
+  const { loopScale, loopEase } = useMotionProfile();
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -40,8 +42,8 @@ export function Marquee({
       gsap.set(track, { xPercent: from });
       const loop = gsap.to(track, {
         xPercent: to,
-        duration: speed,
-        ease: 'none',
+        duration: speed * loopScale, // Mode scales the loop speed
+        ease: loopEase, // 'none', or a ticker's 'steps(n)' for Terminal
         repeat: -1,
       });
 
@@ -81,7 +83,7 @@ export function Marquee({
         outer.removeEventListener('focusout', play);
       };
     },
-    { dependencies: [reduced, direction, speed], scope: outerRef },
+    { dependencies: [reduced, direction, speed, loopScale, loopEase], scope: outerRef },
   );
 
   const sep = separator ?? <span className={styles.sep} aria-hidden="true">◆</span>;

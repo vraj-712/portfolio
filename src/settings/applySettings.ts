@@ -24,4 +24,7 @@ export function applySettings(s: Settings): void {
 
   root.classList.toggle('no-hard-shadows', !s.hardShadows);
   root.toggleAttribute('data-reduce-motion', s.reduceMotion);
+
+  // Mode: one attribute drives all [data-cursor-theme] CSS skin overrides.
+  root.setAttribute('data-cursor-theme', s.cursorTheme);
 }

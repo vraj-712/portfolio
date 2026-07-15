@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSection';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useLenis } from '../../../hooks/useLenis';
+import { useSettings } from '../../../hooks/useSettings';
 import { RollingText } from '../../primitives/RollingText/RollingText';
 import { MagneticButton } from '../../primitives/Magnetic/MagneticButton';
 import { HeroField } from './HeroField';
@@ -135,9 +136,30 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
   );
 }
 
+/** The accent bloom's reveal shape is a Mode signature, computed per scroll
+ *  progress (0 = hidden → 1 = full): a hard rectangular wipe for Terminal, a
+ *  corner bloom for Kinetic, a centred circle otherwise. Driven imperatively so
+ *  the pinned ScrollTrigger is never rebuilt when the Mode changes. */
+function bloomShapeAt(theme: string, p: number): string {
+  switch (theme) {
+    case 'terminal':
+      return `inset(0 ${(1 - p) * 100}% 0 0)`;
+    case 'kinetic':
+      return `circle(${p * 165}% at 12% 88%)`;
+    default:
+      return `circle(${p * 135}% at 50% 52%)`;
+  }
+}
+
 export function Hero({ started = true }: { started?: boolean }) {
   const reduced = useReducedMotion();
   const lenis = useLenis();
+  const { settings } = useSettings();
+  const theme = settings.cursorTheme;
+  // read live inside the pin's onUpdate so the bloom shape follows the Mode
+  // without rebuilding the (pinned) ScrollTrigger
+  const themeRef = useRef(theme);
+  themeRef.current = theme;
   const rootRef = useRef<HTMLElement>(null);
   const bloomRef = useRef<HTMLDivElement>(null);
   const [facet, setFacet] = useState(0);
@@ -168,15 +190,15 @@ export function Hero({ started = true }: { started?: boolean }) {
       const names = root.querySelectorAll<HTMLElement>('[data-hero-name]');
 
       gsap.set(baseLines, { yPercent: 120, autoAlpha: 0 });
+      const bloom = bloomRef.current;
+      if (bloom) bloom.style.clipPath = bloomShapeAt(themeRef.current, 0);
 
       if (reduced) {
         setFacet(0);
-        gsap.set(bloomRef.current, { clipPath: 'circle(0% at 50% 52%)' });
         return;
       }
 
       gsap.set(names, { scale: 1.06, transformOrigin: 'left center' });
-      gsap.set(bloomRef.current, { clipPath: 'circle(0% at 50% 52%)' });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -188,14 +210,12 @@ export function Hero({ started = true }: { started?: boolean }) {
           onUpdate: (self) => {
             const p = self.progress;
             setFacet(p < 0.34 ? 0 : p < 0.67 ? 1 : 2);
+            // bloom shape follows the *current* Mode, read live
+            if (bloom) bloom.style.clipPath = bloomShapeAt(themeRef.current, p);
           },
         },
       });
-      tl.to(names, { scale: 1, letterSpacing: '-0.04em', ease: 'none' }, 0).to(
-        bloomRef.current,
-        { clipPath: 'circle(135% at 50% 52%)', ease: 'none' },
-        0,
-      );
+      tl.to(names, { scale: 1, letterSpacing: '-0.04em', ease: 'none' }, 0);
     },
     { dependencies: [reduced], scope: rootRef },
   );
