@@ -1,0 +1,26 @@
+.field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  place-items: center;
+  padding: clamp(4.5rem, 11vh, 7rem) var(--gutter) clamp(2.5rem, 6vh, 4rem);
+  pointer-events: none;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-base-3);
+  will-change: transform;
+}
+
+/* thin out the grid on small screens so it stays a texture, not clutter */
+@media (max-width: 640px) {
+  .dot {
+    width: 4px;
+    height: 4px;
+  }
+}

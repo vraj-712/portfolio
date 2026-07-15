@@ -76,7 +76,8 @@
   padding-inline: var(--gutter);
   pointer-events: none;
 }
-/* frosted card: blurs the moving marquee behind the middle content */
+/* brutalist frosted box: thick ink border + hard shadow, blurs the moving
+   marquee behind the middle content */
 .panel {
   display: flex;
   flex-direction: column;
@@ -101,8 +102,14 @@
   --roll-h: 1.28em;
   --roll-lh: 1.28;
   flex-shrink: 0;
+  /* never wider than the box's content area, and centred within it so the
+     shorter labels (FRONTEND/BACKEND) stay centred too */
+  max-width: 100%;
+  text-align: center;
   font-family: var(--font-display);
-  font-size: var(--fs-800);
+  /* sized so even the longest label ("TOOLS & PLATFORMS") fits INSIDE the box:
+     grows with the viewport but caps before it can outrun the 66rem panel */
+  font-size: clamp(3.25rem, 1.7rem + 4.6vw, 5.5rem);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: -0.04em;

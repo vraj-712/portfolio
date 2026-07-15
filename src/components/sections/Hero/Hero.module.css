@@ -8,25 +8,108 @@
 .layer {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: flex;
-  align-items: center;
-  padding-inline: var(--gutter);
+  padding: clamp(4.5rem, 11vh, 7rem) var(--gutter) clamp(2rem, 5vh, 3.25rem);
 }
 
 .bloom {
-  z-index: 1;
+  z-index: 2;
   background: var(--color-accent);
   will-change: clip-path;
 }
 
+/* full-height card: meta top bar, centred name block, meta bottom bar */
 .inner {
+  position: relative;
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- meta bars ---------------------------------------------------------- */
+.metaTop,
+.metaBottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-muted);
+}
+.metaBottom {
+  align-items: flex-end;
+  /* keep the bottom-right corner clear for the fixed Settings button:
+     group stats + socials on the left instead of splitting to both edges */
+  justify-content: flex-start;
+  gap: clamp(var(--space-7), 6vw, var(--space-10));
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: var(--bw) solid var(--color-ink);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-base);
+  color: var(--color-ink);
+  font-weight: 700;
+}
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 var(--color-accent);
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 60%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.place {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35em;
+  text-align: right;
+}
+.time {
+  color: var(--color-ink);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+}
+.tz {
+  color: var(--color-ink-muted);
+  font-weight: 400;
+}
+
+/* ---- centre block ------------------------------------------------------- */
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
 }
 
 .eyebrow {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-4);
   font-family: var(--font-mono);
   font-size: var(--fs-100);
   text-transform: uppercase;
@@ -37,7 +120,9 @@
 .name {
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--fs-900);
+  /* height-aware: must share the viewport with the meta bars + CTAs, so cap by
+     vh as well as vw and never exceed the base display size */
+  font-size: clamp(3rem, min(10.5vw, 21vh), var(--fs-900));
   font-weight: 800;
   line-height: 0.84;
   letter-spacing: -0.03em;
@@ -63,7 +148,7 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
   font-family: var(--font-mono);
   font-size: var(--fs-300);
   text-transform: uppercase;
@@ -80,54 +165,126 @@
   font-weight: 700;
 }
 
-/* accent-layer inversions (contrast-safe: on-accent over accent) */
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+/* ---- bottom stats + socials -------------------------------------------- */
+.stats {
+  display: flex;
+  gap: clamp(var(--space-5), 4vw, var(--space-9));
+}
+.stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+}
+.statNum {
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+.statLabel {
+  font-size: var(--fs-100);
+  letter-spacing: 0.18em;
+}
+
+.socials {
+  display: flex;
+  gap: var(--space-3);
+}
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: var(--bw) solid var(--color-ink);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-base);
+  color: var(--color-ink);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition:
+    background-color var(--dur-fast) var(--ease-power-out),
+    color var(--dur-fast) var(--ease-power-out),
+    transform var(--dur-fast) var(--ease-power-out),
+    box-shadow var(--dur-fast) var(--ease-power-out);
+}
+.socials a:hover {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+.socials a:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* ---- accent-layer inversions (contrast-safe over the accent bloom) ------ */
 .bloom .eyebrow,
 .bloom .name,
 .bloom .role,
 .bloom .roleStatic,
-.bloom .roleRoll {
+.bloom .roleRoll,
+.bloom .metaTop,
+.bloom .metaBottom,
+.bloom .status,
+.bloom .time,
+.bloom .statNum {
   color: var(--color-on-accent);
 }
-
-.scrollHint {
-  position: absolute;
-  bottom: var(--space-5);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: var(--fs-100);
-  letter-spacing: 0.2em;
-  color: var(--color-ink-muted);
-  mix-blend-mode: difference;
+.bloom .status,
+.bloom .socials a {
+  background: transparent;
+  border-color: var(--color-on-accent);
+  color: var(--color-on-accent);
 }
-
-.arrow {
-  animation: bob 2s ease-in-out infinite;
+.bloom .statusDot {
+  background: var(--color-on-accent);
 }
-
-@keyframes bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(8px);
-  }
+.bloom .ctaPrimary {
+  background: var(--color-on-accent);
+  color: var(--color-accent);
+  border-color: var(--color-on-accent);
+}
+.bloom .ctaGhost {
+  background: transparent;
+  color: var(--color-on-accent);
+  border-color: var(--color-on-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arrow {
+  .statusDot {
     animation: none;
   }
 }
 
+/* ---- mobile ------------------------------------------------------------- */
 @media (max-width: 640px) {
   .role {
     font-size: var(--fs-200);
+  }
+  .metaTop {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .place {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .metaBottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .ctas {
+    margin-top: var(--space-6);
   }
 }
