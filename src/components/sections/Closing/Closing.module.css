@@ -100,7 +100,6 @@
   gap: var(--space-4);
   margin-top: var(--space-6);
   padding-top: var(--space-5);
-  border-top: var(--bw) solid var(--color-line);
 }
 
 .backTop {

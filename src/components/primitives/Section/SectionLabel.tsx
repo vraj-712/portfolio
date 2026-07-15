@@ -16,7 +16,7 @@ export function SectionLabel({ index, align = 'left', id, children, className }:
       {index !== undefined && (
         <span className={styles.labelIndex}>{String(index).padStart(2, '0')}</span>
       )}
-      <span className={styles.labelText}>{children}</span>
+      <span>{children}</span>
     </p>
   );
 }

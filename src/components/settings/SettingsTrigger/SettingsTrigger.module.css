@@ -1,0 +1,46 @@
+.trigger {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: calc(var(--z-panel) - 5);
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: var(--bw) solid var(--color-ink);
+  border-radius: var(--radius);
+  background: var(--color-ink);
+  color: var(--color-base);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--dur-fast) var(--ease-power-out),
+    box-shadow var(--dur-fast) var(--ease-power-out),
+    background-color var(--dur-fast) var(--ease-power-out),
+    color var(--dur-fast) var(--ease-power-out),
+    opacity var(--dur-fast) linear;
+}
+
+.trigger:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+  box-shadow: var(--shadow);
+  transform: translate(-2px, -2px);
+}
+
+.trigger:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .trigger {
+    width: 46px;
+    height: 46px;
+  }
+}

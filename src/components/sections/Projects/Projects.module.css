@@ -10,18 +10,10 @@
 .head {
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* so the label chip sizes to its content, not full width */
   gap: var(--space-3);
   padding-inline: var(--gutter);
   margin-bottom: var(--space-7);
-}
-
-.title {
-  font-family: var(--font-display);
-  font-size: var(--fs-800);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 0.9;
 }
 
 /* vertical stack (default: touch / reduced motion) */
@@ -39,23 +31,20 @@
   display: flex;
   flex-direction: column;
 }
-/* header is a proper top bar (in flow) so cards never sit behind it */
+/* header is a proper top bar (in flow); extra top padding clears the fixed nav
+   so the "04 / Selected Work" label is always visible when the section pins */
 .horizontal .head {
   flex-shrink: 0;
-  padding-block: var(--space-6) var(--space-4);
+  padding-block: var(--space-9) var(--space-4);
   margin-bottom: 0;
 }
-.horizontal .title {
-  font-size: var(--fs-600);
-}
 .horizontal .track {
-  flex: 1 1 auto;
-  min-height: 0;
+  margin-block: auto; /* vertically center the content-height track below the header */
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: center;
+  align-items: stretch; /* all cards equalize to the tallest card → uniform W×H */
   gap: clamp(2.5rem, 5vw, 6rem);
-  padding-right: 0; /* trailing space comes from .trailSpacer (counted in scrollWidth) */
+  padding-right: 0; /* trailing dwell space is added to the pin distance in JS */
   will-change: transform;
 }
 .horizontal .track > article {

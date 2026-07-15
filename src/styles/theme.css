@@ -2,10 +2,16 @@
    THEME TOKENS — the single source of truth for the whole site.
    Every component consumes var(--token). No hardcoded hex outside this file.
    Palette: Light Editorial-Brutalist — Bone + Ink + Ultramarine.
-   Re-theme (even a full dark flip) by editing only this file.
+   Re-theme (even a full dark flip) by editing only this file — or at runtime via
+   the Settings panel, which overrides these vars on <html> (temporary).
    ============================================================================= */
 
 :root {
+  /* --- Runtime scale knobs (Settings panel overrides these on <html>) --- */
+  --fs-scale: 1;    /* global type-scale multiplier */
+  --space-scale: 1; /* global density multiplier */
+  --dur-scale: 1;   /* CSS transition/animation duration multiplier (1/speed) */
+
   /* --- Base / surfaces --- */
   --color-base:        #ECE7DA; /* bone paper — page canvas */
   --color-base-2:      #E3DCCB; /* elevated paper — cards, panels, wells */
@@ -34,22 +40,24 @@
   --font-mono:    'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* --- Fluid type scale (clamp between 360px and 1440px viewports) --- */
-  --fs-100: clamp(0.75rem, 0.708rem + 0.19vw, 0.875rem);   /* eyebrow / label   12→14 */
-  --fs-200: clamp(0.8125rem, 0.771rem + 0.19vw, 0.9375rem);/* meta              13→15 */
-  --fs-300: clamp(1rem, 0.938rem + 0.28vw, 1.1875rem);     /* body              16→19 */
-  --fs-400: clamp(1.25rem, 1.125rem + 0.56vw, 1.625rem);   /* lead              20→26 */
-  --fs-500: clamp(1.625rem, 1.417rem + 0.93vw, 2.25rem);   /* h3 / card title   26→36 */
-  --fs-600: clamp(2.125rem, 1.667rem + 2.04vw, 3.5rem);    /* h2                34→56 */
-  --fs-700: clamp(2.75rem, 1.833rem + 4.07vw, 5.5rem);     /* section display   44→88 */
-  --fs-800: clamp(3.75rem, 2.25rem + 6.67vw, 8.25rem);     /* display-lg        60→132 */
-  --fs-900: clamp(4.75rem, 2rem + 12.22vw, 13rem);         /* hero mega         76→208 */
+  --fs-100: calc(clamp(0.75rem, 0.708rem + 0.19vw, 0.875rem) * var(--fs-scale));    /* eyebrow  12→14 */
+  --fs-200: calc(clamp(0.8125rem, 0.771rem + 0.19vw, 0.9375rem) * var(--fs-scale)); /* meta     13→15 */
+  --fs-300: calc(clamp(1rem, 0.938rem + 0.28vw, 1.1875rem) * var(--fs-scale));      /* body     16→19 */
+  --fs-400: calc(clamp(1.25rem, 1.125rem + 0.56vw, 1.625rem) * var(--fs-scale));    /* lead     20→26 */
+  --fs-500: calc(clamp(1.625rem, 1.417rem + 0.93vw, 2.25rem) * var(--fs-scale));    /* h3       26→36 */
+  --fs-600: calc(clamp(2.125rem, 1.667rem + 2.04vw, 3.5rem) * var(--fs-scale));     /* h2       34→56 */
+  --fs-700: calc(clamp(2.75rem, 1.833rem + 4.07vw, 5.5rem) * var(--fs-scale));      /* display  44→88 */
+  --fs-800: calc(clamp(3.75rem, 2.25rem + 6.67vw, 8.25rem) * var(--fs-scale));      /* disp-lg  60→132 */
+  --fs-900: calc(clamp(4.75rem, 2rem + 12.22vw, 13rem) * var(--fs-scale));          /* hero     76→208 */
 
-  /* --- Spacing scale (8px base) --- */
-  --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem; --space-4: 1rem;
-  --space-5: 1.5rem;  --space-6: 2rem;    --space-7: 3rem;    --space-8: 4rem;
-  --space-9: 6rem;    --space-10: 8rem;
-  --space-section: clamp(4rem, 2rem + 8vw, 9rem);      /* vertical section rhythm */
-  --gutter:        clamp(1.25rem, 0.5rem + 3vw, 5rem); /* horizontal page gutter */
+  /* --- Spacing scale (8px base, density-scaled) --- */
+  --space-1: calc(0.25rem * var(--space-scale)); --space-2: calc(0.5rem * var(--space-scale));
+  --space-3: calc(0.75rem * var(--space-scale)); --space-4: calc(1rem * var(--space-scale));
+  --space-5: calc(1.5rem * var(--space-scale));  --space-6: calc(2rem * var(--space-scale));
+  --space-7: calc(3rem * var(--space-scale));    --space-8: calc(4rem * var(--space-scale));
+  --space-9: calc(6rem * var(--space-scale));    --space-10: calc(8rem * var(--space-scale));
+  --space-section: calc(clamp(4rem, 2rem + 8vw, 9rem) * var(--space-scale));   /* vertical rhythm */
+  --gutter:        calc(clamp(1.25rem, 0.5rem + 3vw, 5rem) * var(--space-scale)); /* page gutter */
 
   /* --- Containers / measure --- */
   --container:        90rem;  /* 1440 */
@@ -73,17 +81,22 @@
   --ease-back-out:     cubic-bezier(0.34, 1.56, 0.64, 1); /* GSAP back.out(1.7) */
   --ease-power-in-out: cubic-bezier(0.65, 0, 0.35, 1);    /* GSAP power2.inOut */
 
-  /* --- Durations --- */
-  --dur-instant: 0.1s; --dur-fast: 0.2s; --dur-snappy: 0.3s;
-  --dur-base: 0.45s;   --dur-slow: 0.6s; --dur-cinematic: 0.9s;
+  /* --- Durations (speed-scaled) --- */
+  --dur-instant: calc(0.1s * var(--dur-scale)); --dur-fast: calc(0.2s * var(--dur-scale));
+  --dur-snappy: calc(0.3s * var(--dur-scale));  --dur-base: calc(0.45s * var(--dur-scale));
+  --dur-slow: calc(0.6s * var(--dur-scale));    --dur-cinematic: calc(0.9s * var(--dur-scale));
 
   /* --- Z-index layers --- */
   --z-base: 0; --z-content: 1; --z-rail: 20; --z-header: 90;
-  --z-overlay: 100; --z-cursor: 9999;
+  --z-overlay: 100; --z-panel: 8000; --z-cursor: 9999;
 }
 
-/* Documented dark flip — not shipped. Enable with <html data-theme="dark">.
-   Re-run the contrast check if ever enabled. */
+/* Settings: drop the signature hard shadows */
+.no-hard-shadows {
+  --shadow-sm: none; --shadow: none; --shadow-lg: none; --shadow-accent: none;
+}
+
+/* Documented dark flip — toggled by the Settings panel via data-theme="dark". */
 :root[data-theme='dark'] {
   --color-base: #0E0E0D; --color-base-2: #161513; --color-base-3: #1E1C19;
   --color-ink: #ECE7DA; --color-ink-muted: #9A9284;

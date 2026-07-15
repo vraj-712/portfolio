@@ -1,9 +1,10 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useCursor } from '../../../hooks/useCursor';
 import { useIsCoarsePointer } from '../../../hooks/useIsCoarsePointer';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useSettings } from '../../../hooks/useSettings';
 import styles from './Cursor.module.css';
 
 /** Inertial, context-aware custom cursor. Position driven by gsap.quickTo
@@ -12,16 +13,26 @@ import styles from './Cursor.module.css';
 export function Cursor() {
   const coarse = useIsCoarsePointer();
   const reduced = useReducedMotion();
+  const { settings } = useSettings();
   const { variant, label } = useCursor();
   const rootRef = useRef<HTMLDivElement>(null);
+  const enabled = !coarse && settings.customCursor;
+
+  // Manage the cursor:none body class with a plain effect so it reliably toggles
+  // when the custom cursor is switched off (not tied to useGSAP's revert timing).
+  useEffect(() => {
+    if (!enabled) return;
+    const el = document.documentElement;
+    el.classList.add('has-custom-cursor');
+    return () => el.classList.remove('has-custom-cursor');
+  }, [enabled]);
 
   useGSAP(
     () => {
-      if (coarse) return;
+      if (!enabled) return;
       const root = rootRef.current;
       if (!root) return;
 
-      document.documentElement.classList.add('has-custom-cursor');
       gsap.set(root, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
 
       const dur = reduced ? 0 : 0.5;
@@ -36,13 +47,12 @@ export function Cursor() {
 
       return () => {
         window.removeEventListener('pointermove', onMove);
-        document.documentElement.classList.remove('has-custom-cursor');
       };
     },
-    { dependencies: [coarse, reduced] },
+    { dependencies: [enabled, reduced] },
   );
 
-  if (coarse) return null;
+  if (!enabled) return null;
 
   return (
     <div ref={rootRef} className={styles.cursor} data-variant={variant} aria-hidden="true">

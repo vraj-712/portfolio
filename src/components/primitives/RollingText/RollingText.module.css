@@ -1,8 +1,8 @@
 .mask {
   display: inline-block;
   overflow: hidden;
-  height: 1.15em;
-  line-height: 1.15;
+  height: var(--roll-h, 1.15em);
+  line-height: var(--roll-lh, 1.15);
   vertical-align: bottom;
 }
 
@@ -14,7 +14,7 @@
 
 .item {
   display: block;
-  height: 1.15em;
-  line-height: 1.15;
+  height: var(--roll-h, 1.15em);
+  line-height: var(--roll-lh, 1.15);
   white-space: nowrap;
 }

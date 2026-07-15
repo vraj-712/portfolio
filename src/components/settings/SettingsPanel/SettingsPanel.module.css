@@ -1,0 +1,197 @@
+/* Transparent click-catcher — closes on outside click but does NOT dim the site
+   (so you can see your color/theme changes live). */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-panel) - 1);
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+.backdropOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.panel {
+  /* panel chrome is aliased to the live site theme tokens, so the panel matches
+     the website and re-themes as you change settings (good/bad stay semantic) */
+  --panel-bg: var(--color-base);
+  --panel-surface: var(--color-base-2);
+  --panel-surface-2: var(--color-base-3);
+  --panel-fg: var(--color-ink);
+  --panel-muted: var(--color-ink-muted);
+  --panel-line: var(--color-line);
+  --panel-accent: var(--color-accent);
+  --panel-on-accent: var(--color-on-accent);
+  --panel-good: #1c7a4a;
+  --panel-bad: #c0392b;
+  --panel-font: var(--font-body);
+  --panel-mono: var(--font-mono);
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: var(--z-panel);
+  display: flex;
+  flex-direction: column;
+  width: min(380px, 92vw);
+  height: 100dvh;
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  font-family: var(--panel-font);
+  border-left: var(--bw-thick) solid var(--color-line);
+  box-shadow: -18px 0 44px rgba(0, 0, 0, 0.16);
+  transform: translateX(101%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.open {
+  transform: translateX(0);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 1.4rem 1rem;
+  border-bottom: 1px solid var(--panel-line);
+}
+.kicker {
+  font-family: var(--panel-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--panel-accent);
+}
+.title {
+  font-family: var(--panel-font);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-top: 0.35rem;
+  color: var(--panel-fg);
+}
+.close {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  color: var(--panel-fg);
+  font-size: 0.8rem;
+  transition: background-color 0.15s ease;
+}
+.close:hover {
+  background: var(--panel-surface-2);
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.2rem 1.4rem 2.5rem;
+  overscroll-behavior: contain;
+}
+
+.note {
+  font-family: var(--panel-mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--panel-muted);
+  padding: 0.6rem 0.7rem;
+  border: 1px dashed var(--panel-line);
+  border-radius: 8px;
+  margin-bottom: 1.4rem;
+}
+
+.group {
+  padding-block: 1.1rem;
+  border-top: 1px solid var(--panel-line);
+}
+.group:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.groupTitle {
+  font-family: var(--panel-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--panel-muted);
+  margin-bottom: 1rem;
+}
+.subLabel {
+  display: block;
+  font-family: var(--panel-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--panel-fg);
+  margin: 0.4rem 0 0.6rem;
+}
+.gap {
+  height: 1rem;
+}
+
+/* font pairing grid */
+.fontGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.fontBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  background: var(--panel-surface-2);
+  color: var(--panel-fg);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  text-align: left;
+}
+.fontBtn:hover {
+  transform: translateY(-2px);
+}
+.fontBtnOn {
+  border-color: var(--panel-accent);
+  box-shadow: 0 0 0 1px var(--panel-accent);
+}
+.fontPreview {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--panel-fg);
+}
+.fontName {
+  font-family: var(--panel-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--panel-muted);
+}
+
+.reset {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.8rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  background: var(--panel-surface-2);
+  color: var(--panel-fg);
+  font-family: var(--panel-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background-color 0.15s ease;
+}
+.reset:hover {
+  background: var(--panel-bad);
+  border-color: var(--panel-bad);
+  color: #fff2f2;
+}
+
+@media (max-width: 480px) {
+  .panel {
+    width: 100vw;
+  }
+}

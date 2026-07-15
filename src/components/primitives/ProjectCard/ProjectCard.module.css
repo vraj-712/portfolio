@@ -9,6 +9,7 @@
 .media {
   position: relative;
   aspect-ratio: 4 / 3;
+  flex-shrink: 0; /* keep the media proportion when the card stretches to match siblings */
   border: var(--bw-thick) solid var(--color-ink);
   background: var(--color-base-2);
   overflow: hidden;
@@ -21,6 +22,51 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* --- themed placeholder art (drawn from theme tokens → re-themes live) --- */
+.ph {
+  position: absolute;
+  inset: 0;
+  background: var(--color-base-3);
+}
+.phShape {
+  position: absolute;
+  display: block;
+}
+.phAccent {
+  background: var(--color-accent);
+}
+.phInk1,
+.phInk2 {
+  background: var(--color-ink);
+}
+.phTag {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* four arrangements for variety across the track */
+.media[data-variant='0'] .phAccent { left: 8%; top: 12%; width: 42%; height: 40%; }
+.media[data-variant='0'] .phInk1 { right: 8%; top: 12%; width: 38%; height: 17%; }
+.media[data-variant='0'] .phInk2 { right: 8%; top: 35%; width: 38%; height: 17%; }
+
+.media[data-variant='1'] .phAccent { right: 8%; top: 12%; width: 30%; height: 46%; }
+.media[data-variant='1'] .phInk1 { left: 8%; top: 12%; width: 46%; height: 15%; }
+.media[data-variant='1'] .phInk2 { left: 8%; top: 33%; width: 34%; height: 15%; }
+
+.media[data-variant='2'] .phAccent { left: 8%; top: 12%; width: 24%; height: 40%; }
+.media[data-variant='2'] .phInk1 { left: 36%; top: 12%; width: 24%; height: 40%; }
+.media[data-variant='2'] .phInk2 { left: 64%; top: 12%; width: 24%; height: 40%; }
+
+.media[data-variant='3'] .phAccent { left: 8%; top: 12%; width: 80%; height: 16%; }
+.media[data-variant='3'] .phInk1 { left: 8%; top: 32%; width: 52%; height: 14%; }
+.media[data-variant='3'] .phInk2 { left: 8%; top: 50%; width: 36%; height: 14%; }
 
 .counter {
   position: absolute;

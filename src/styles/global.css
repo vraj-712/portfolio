@@ -156,3 +156,17 @@ html.lenis body { height: auto; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Settings-driven reduce-motion (mirrors the media query above). The Settings
+   panel toggles data-reduce-motion on <html>. */
+:root[data-reduce-motion] {
+  scroll-behavior: auto;
+}
+:root[data-reduce-motion] *,
+:root[data-reduce-motion] *::before,
+:root[data-reduce-motion] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}

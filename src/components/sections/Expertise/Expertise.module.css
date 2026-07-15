@@ -1,3 +1,74 @@
 .rows {
   display: block;
 }
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  padding: clamp(1.4rem, 1rem + 1.6vw, 2.25rem) var(--space-4);
+  border-top: var(--bw) solid var(--color-line);
+  overflow: hidden;
+}
+.row:last-child {
+  border-bottom: var(--bw) solid var(--color-line);
+}
+
+/* accent flood on hover (wipes in from the left) */
+.flood {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--color-accent);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-base) var(--ease-power-out);
+}
+.row:hover .flood {
+  clip-path: inset(0 0 0 0);
+}
+
+.index,
+.body {
+  position: relative;
+  z-index: 1;
+  transition: color var(--dur-base) var(--ease-power-out);
+}
+
+.index {
+  flex-shrink: 0;
+  padding-top: 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 640;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.blurb {
+  max-width: 62ch;
+  font-size: var(--fs-300);
+  color: var(--color-ink-muted);
+}
+
+/* flooded text colors */
+.row:hover .index,
+.row:hover .title,
+.row:hover .blurb {
+  color: var(--color-on-accent);
+}

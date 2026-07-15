@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { useCursorTarget } from '../../../hooks/useCursorTarget';
 import { useIsCoarsePointer } from '../../../hooks/useIsCoarsePointer';
 import { clamp } from '../../../lib/utils/math';
+import { cx } from '../../../lib/utils/cx';
 import type { Project } from '../../../data/content';
 import styles from './ProjectCard.module.css';
 
@@ -63,11 +64,21 @@ export function ProjectCard({ project, index, total, distort = true }: ProjectCa
 
   const { media } = project;
   const hasLinks = Boolean(project.links.live || project.links.source);
+  // Placeholder art is drawn from theme tokens so it re-themes with the site.
+  // Real (raster/video) media is rendered as-is once dropped in.
+  const isPlaceholder = media.src.endsWith('.svg');
 
   return (
     <article ref={cardRef} className={styles.card} {...cursorProps}>
-      <div ref={mediaRef} className={styles.media}>
-        {media.type === 'video' ? (
+      <div ref={mediaRef} className={styles.media} data-variant={index % 4}>
+        {isPlaceholder ? (
+          <div className={styles.ph} role="img" aria-label={media.alt}>
+            <span className={cx(styles.phShape, styles.phAccent)} />
+            <span className={cx(styles.phShape, styles.phInk1)} />
+            <span className={cx(styles.phShape, styles.phInk2)} />
+            <span className={styles.phTag}>// PLACEHOLDER</span>
+          </div>
+        ) : media.type === 'video' ? (
           <video
             className={styles.mediaEl}
             src={media.src}

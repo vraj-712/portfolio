@@ -31,7 +31,7 @@ export function Projects() {
       // Extra trailing translation so the last card scrolls fully into view with
       // breathing room AND dwells there before the section unpins. (Flex trailing
       // padding / spacers are excluded from scrollWidth, so we add it explicitly.)
-      const trail = () => Math.round(window.innerWidth * 0.4);
+      const trail = () => Math.round(window.innerWidth * 0.25);
       const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + trail());
 
       gsap.to(track, {
@@ -60,7 +60,6 @@ export function Projects() {
     >
       <div className={styles.head}>
         <SectionLabel index={4}>Selected Work</SectionLabel>
-        <h2 className={styles.title}>WORK</h2>
       </div>
       <div ref={trackRef} className={styles.track}>
         {projects.map((p, i) => (

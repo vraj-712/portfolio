@@ -3,6 +3,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AppProviders } from './components/providers/AppProviders';
 import { Cursor } from './components/primitives/Cursor/Cursor';
 import { ScrollProgress } from './components/primitives/ScrollProgress/ScrollProgress';
+import { SettingsTrigger } from './components/settings/SettingsTrigger/SettingsTrigger';
+import { SettingsPanel } from './components/settings/SettingsPanel/SettingsPanel';
 import { Intro } from './components/sections/Intro/Intro';
 import { Header } from './components/sections/Header/Header';
 import { Hero } from './components/sections/Hero/Hero';
@@ -52,6 +54,12 @@ function App() {
           <Closing />
         </main>
       </div>
+      {introDone && (
+        <>
+          <SettingsTrigger />
+          <SettingsPanel />
+        </>
+      )}
     </AppProviders>
   );
 }

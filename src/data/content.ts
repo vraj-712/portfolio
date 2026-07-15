@@ -250,17 +250,57 @@ export const content: SiteContent = {
   skills: {
     frontend: {
       label: 'Frontend',
-      items: ['React', 'Next.js', 'React Native', 'JavaScript (ES6+)', 'TypeScript', 'HTML5', 'CSS3', 'Tailwind CSS'],
+      items: [
+        'React',
+        'Next.js',
+        'React Native',
+        'JavaScript (ES6+)',
+        'TypeScript',
+        'HTML5',
+        'CSS3',
+        'Tailwind CSS',
+        'Redux',
+        'Zustand',
+        'GSAP',
+        'Framer Motion',
+        'SASS/SCSS',
+        'Material UI',
+      ],
     },
     backend: {
       label: 'Backend',
-      items: ['Node.js', 'Express.js', 'REST APIs', 'MongoDB', 'Auth & Authorization'],
+      items: [
+        'Node.js',
+        'Express.js',
+        'REST APIs',
+        'GraphQL',
+        'MongoDB',
+        'PostgreSQL',
+        'Prisma',
+        'Socket.io',
+        'JWT',
+        'Auth & Authorization',
+      ],
     },
     tools: {
       label: 'Tools & Platforms',
-      items: ['Git', 'GitHub', 'Firebase', 'Cloudinary', 'Payload CMS', 'Vite', 'npm', 'pnpm'],
+      items: [
+        'Git',
+        'GitHub',
+        'Docker',
+        'Firebase',
+        'Cloudinary',
+        'Payload CMS',
+        'Vite',
+        'Postman',
+        'Figma',
+        'Vercel',
+        'AWS',
+        'npm',
+        'pnpm',
+      ],
     },
-    learning: ['Redis'],
+    learning: ['Redis', 'AI / LLM APIs'],
   },
 
   expertise: [
@@ -283,12 +323,7 @@ export const content: SiteContent = {
       blurb:
         'A television application focused on performance, usability, and media-rich experiences — UI development, API integration, performance improvements, feature work, and bug fixing.',
       tags: ['React Native', 'Android TV', 'Performance', 'Media'],
-      media: {
-        type: 'video',
-        src: '/media/projects/tv-app.mp4',
-        poster: '/media/projects/tv-app.svg',
-        alt: 'React Native TV application interface',
-      }, // TODO real media
+      media: { type: 'image', src: '/media/projects/tv-app.svg', alt: 'React Native TV application interface' }, // TODO real media
       links: {}, // TODO
     },
     {

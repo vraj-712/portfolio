@@ -6,6 +6,7 @@ import { useIsCoarsePointer } from '../../../hooks/useIsCoarsePointer';
 import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSection';
 import { RollingText } from '../../primitives/RollingText/RollingText';
 import { SectionLabel } from '../../primitives/Section/SectionLabel';
+import { EASE } from '../../../lib/gsap/easings';
 import { content } from '../../../data/content';
 import { cx } from '../../../lib/utils/cx';
 import styles from './Skills.module.css';
@@ -15,12 +16,18 @@ const GROUPS = [skills.frontend, skills.backend, skills.tools];
 const CATEGORIES = GROUPS.map((g) => g.label.toUpperCase());
 const ALL = GROUPS.flatMap((g) => g.items);
 
+// full-background marquee rows
+const BG_ROWS = 7;
+const rowWords = (i: number) => {
+  const base = i % 2 === 0 ? ALL : [...ALL].reverse();
+  return [...base, ...base];
+};
+
 export function Skills() {
   const reduced = useReducedMotion();
   const coarse = useIsCoarsePointer();
   const rootRef = useRef<HTMLElement>(null);
-  const rowARef = useRef<HTMLDivElement>(null);
-  const rowBRef = useRef<HTMLDivElement>(null);
+  const tokensRef = useRef<HTMLUListElement>(null);
   const [cat, setCat] = useState(0);
   const horizontal = !reduced && !coarse;
 
@@ -30,17 +37,13 @@ export function Skills() {
     () => {
       if (!horizontal) return;
       const root = rootRef.current;
-      const a = rowARef.current;
-      const b = rowBRef.current;
-      if (!root || !a || !b) return;
+      if (!root) return;
 
-      gsap.set(a, { xPercent: 0 });
-      gsap.set(b, { xPercent: -28 });
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
           start: 'top top',
-          end: '+=120%',
+          end: '+=150%',
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
@@ -50,13 +53,35 @@ export function Skills() {
           },
         },
       });
-      tl.to(a, { xPercent: -28, ease: 'none' }, 0).to(b, { xPercent: 0, ease: 'none' }, 0);
+
+      // slide every background row (alternating directions) across the pin
+      root.querySelectorAll<HTMLElement>('[data-marquee-row]').forEach((row, i) => {
+        const amt = 22 + (i % 3) * 8;
+        const from = i % 2 === 0 ? 0 : -amt;
+        const to = i % 2 === 0 ? -amt : 0;
+        gsap.set(row, { xPercent: from });
+        tl.to(row, { xPercent: to, ease: 'none' }, 0);
+      });
     },
     { dependencies: [horizontal], scope: rootRef },
   );
 
-  const rowA = [...ALL, ...ALL];
-  const rowB = [...ALL].reverse().concat([...ALL].reverse());
+  // Animate the active-category chips in whenever the category flips.
+  useGSAP(
+    () => {
+      if (!horizontal || reduced) return;
+      const el = tokensRef.current;
+      if (!el) return;
+      gsap.fromTo(
+        el.children,
+        { yPercent: 70, autoAlpha: 0 },
+        { yPercent: 0, autoAlpha: 1, stagger: 0.03, duration: 0.4, ease: EASE.powerOut, overwrite: true },
+      );
+    },
+    { dependencies: [cat, horizontal], scope: tokensRef },
+  );
+
+  const activeGroup = GROUPS[cat] ?? skills.frontend;
 
   const learning = (
     <p className={styles.learning}>
@@ -90,32 +115,53 @@ export function Skills() {
 
   return (
     <section ref={rootRef} id="skills" className={cx(styles.skills, styles.pinned)} aria-label="Tech Stack">
-      <div className={styles.stage}>
-        <div ref={rowARef} className={styles.row} aria-hidden="true">
-          {rowA.map((t, i) => (
-            <span key={`a-${t}-${i}`} className={styles.rowItem}>
-              {t}
-            </span>
-          ))}
-        </div>
-        <div ref={rowBRef} className={cx(styles.row, styles.rowAlt)} aria-hidden="true">
-          {rowB.map((t, i) => (
-            <span key={`b-${t}-${i}`} className={styles.rowItem}>
-              {t}
-            </span>
-          ))}
-        </div>
-        <div className={styles.center}>
-          <RollingText values={CATEGORIES} index={cat} className={styles.category} />
-        </div>
-        {learning}
-        {/* SR-only real list of the stack */}
-        <ul className="sr-only">
-          {ALL.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
+      {/* full-background sliding marquee */}
+      <div className={styles.bg} aria-hidden="true">
+        {Array.from({ length: BG_ROWS }, (_, i) => (
+          <div key={i} data-marquee-row className={cx(styles.bgRow, i % 2 === 1 && styles.bgRowAlt)}>
+            {rowWords(i).map((t, j) => (
+              <span key={`${i}-${t}-${j}`} className={styles.bgItem}>
+                {t}
+              </span>
+            ))}
+          </div>
+        ))}
       </div>
+
+      <p className={styles.eyebrow} aria-hidden="true">
+        <span className={styles.eyebrowIndex}>05</span> Tech Stack
+      </p>
+
+      <div className={styles.center}>
+        <div className={styles.panel}>
+          <p className={styles.counter} aria-hidden="true">
+            {String(cat + 1).padStart(2, '0')} / {String(GROUPS.length).padStart(2, '0')}
+          </p>
+          <RollingText values={CATEGORIES} index={cat} className={styles.category} />
+          <ul ref={tokensRef} className={styles.tokens} aria-hidden="true">
+            {activeGroup.items.map((t) => (
+              <li key={t} className={styles.activeToken}>
+                {t}
+              </li>
+            ))}
+          </ul>
+          <div className={styles.dots} aria-hidden="true">
+            {GROUPS.map((g, i) => (
+              <span key={g.label} className={cx(styles.dot, i === cat && styles.dotOn)} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {learning}
+
+      <ul className="sr-only">
+        {GROUPS.map((g) => (
+          <li key={g.label}>
+            {g.label}: {g.items.join(', ')}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

@@ -1,0 +1,227 @@
+/* Controls consume the panel's own fixed chrome tokens (--panel-*), defined on
+   the panel root, so they stay readable regardless of the site theme being edited. */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.fieldHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.fieldLabel,
+.rowLabel {
+  font-family: var(--panel-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--panel-fg);
+}
+
+.value {
+  font-family: var(--panel-mono);
+  font-size: 0.72rem;
+  color: var(--panel-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--panel-muted);
+}
+
+/* --- toggle row --- */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-line);
+  background: var(--panel-surface-2);
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+.switchOn {
+  background: var(--panel-accent);
+  border-color: var(--panel-accent);
+}
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--panel-fg);
+  transition: transform 0.18s ease;
+}
+.switchOn .knob {
+  transform: translateX(20px);
+  background: var(--panel-on-accent);
+}
+
+/* --- slider --- */
+.range {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--panel-line);
+  border-radius: 999px;
+  outline-offset: 4px;
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--panel-accent);
+  cursor: pointer;
+  border: 2px solid var(--panel-bg);
+}
+.range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--panel-accent);
+  cursor: pointer;
+  border: 2px solid var(--panel-bg);
+}
+
+/* --- segmented --- */
+.segment {
+  display: flex;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.seg {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  font-family: var(--panel-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--panel-muted);
+  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  border-right: 1px solid var(--panel-line);
+}
+.seg:last-child {
+  border-right: none;
+}
+.segOn {
+  background: var(--panel-accent);
+  color: var(--panel-on-accent);
+}
+
+/* --- color --- */
+.colorRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.colorInput {
+  width: 38px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 3px;
+}
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+.hexInput {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  font-family: var(--panel-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--panel-fg);
+  background: var(--panel-surface-2);
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+}
+
+.badge {
+  font-family: var(--panel-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+.badgeGood {
+  color: #eafff2;
+  background: var(--panel-good);
+}
+.badgeBad {
+  color: #fff2f2;
+  background: var(--panel-bad);
+}
+
+/* --- palette swatches --- */
+.swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  background: var(--panel-surface-2);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  text-align: left;
+}
+.swatch:hover {
+  transform: translateY(-2px);
+}
+.swatchOn {
+  border-color: var(--panel-accent);
+  box-shadow: 0 0 0 1px var(--panel-accent);
+}
+.swatchColors {
+  display: flex;
+  height: 26px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--panel-line);
+}
+.swatchColors > span {
+  flex: 1;
+}
+.swatchName {
+  font-family: var(--panel-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--panel-muted);
+}

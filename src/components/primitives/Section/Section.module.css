@@ -10,37 +10,28 @@
   padding-inline: var(--gutter);
 }
 
+/* boxed chip: base fill, ink border, hard shadow, accent index */
 .label {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   margin-bottom: var(--space-6);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-base);
+  border: var(--bw) solid var(--color-ink);
+  box-shadow: var(--shadow-sm);
   font-family: var(--font-mono);
   font-size: var(--fs-100);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--color-ink-muted);
+  letter-spacing: 0.16em;
+  color: var(--color-ink);
 }
 
 .labelRight {
-  justify-content: flex-end;
-  text-align: right;
+  margin-left: auto;
 }
 
 .labelIndex {
   color: var(--color-accent);
-}
-
-.labelText {
-  position: relative;
-}
-.labelText::before {
-  content: '';
-  display: inline-block;
-  width: var(--space-6);
-  height: var(--bw);
-  margin-right: var(--space-3);
-  vertical-align: middle;
-  background: var(--color-ink);
 }
