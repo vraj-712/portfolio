@@ -5,48 +5,18 @@ import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSectio
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useLenis } from '../../../hooks/useLenis';
 import { useSettings } from '../../../hooks/useSettings';
+import { useIsCompactHero } from '../../../hooks/useIsCompactHero';
 import { RollingText } from '../../primitives/RollingText/RollingText';
 import { MagneticButton } from '../../primitives/Magnetic/MagneticButton';
 import { HeroField } from './HeroField';
+import { HeroMobile } from './HeroMobile';
 import { EASE } from '../../../lib/gsap/easings';
 import { content } from '../../../data/content';
 import { cx } from '../../../lib/utils/cx';
+import { CITY, STATS, SOCIALS, pad, istTime, bloomShapeAt } from './heroShared';
 import styles from './Hero.module.css';
 
-const { brand, skills, projects, experience, contact } = content;
-
-const CITY = brand.location.split(',')[0] ?? brand.location;
-const STATS = [
-  { n: projects.length, label: 'Projects' },
-  {
-    n: skills.frontend.items.length + skills.backend.items.length + skills.tools.items.length,
-    label: 'Technologies',
-  },
-  { n: experience.length, label: 'Roles' },
-] as const;
-
-const SOCIALS = [
-  { label: 'GH', full: 'GitHub', href: contact.github },
-  { label: 'LI', full: 'LinkedIn', href: contact.linkedin },
-  { label: 'EM', full: 'Email', href: `mailto:${contact.email}` },
-] as const;
-
-const pad = (n: number) => String(n).padStart(2, '0');
-
-/** Local time in Ahmedabad (IST), independent of the visitor's timezone. */
-function istTime(): string {
-  try {
-    return new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Kolkata',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }).format(new Date());
-  } catch {
-    return '';
-  }
-}
+const { brand } = content;
 
 interface HeroContentProps {
   accent?: boolean;
@@ -136,22 +106,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
   );
 }
 
-/** The accent bloom's reveal shape is a Mode signature, computed per scroll
- *  progress (0 = hidden → 1 = full): a hard rectangular wipe for Terminal, a
- *  corner bloom for Kinetic, a centred circle otherwise. Driven imperatively so
- *  the pinned ScrollTrigger is never rebuilt when the Mode changes. */
-function bloomShapeAt(theme: string, p: number): string {
-  switch (theme) {
-    case 'terminal':
-      return `inset(0 ${(1 - p) * 100}% 0 0)`;
-    case 'kinetic':
-      return `circle(${p * 165}% at 12% 88%)`;
-    default:
-      return `circle(${p * 135}% at 50% 52%)`;
-  }
-}
-
-export function Hero({ started = true }: { started?: boolean }) {
+function HeroDesktop({ started = true }: { started?: boolean }) {
   const reduced = useReducedMotion();
   const lenis = useLenis();
   const { settings } = useSettings();
@@ -193,29 +148,33 @@ export function Hero({ started = true }: { started?: boolean }) {
       const bloom = bloomRef.current;
       if (bloom) bloom.style.clipPath = bloomShapeAt(themeRef.current, 0);
 
-      if (reduced) {
-        setFacet(0);
-        return;
-      }
+      setFacet(0);
+      if (reduced) return;
 
-      gsap.set(names, { scale: 1.06, transformOrigin: 'left center' });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: root,
-          start: 'top top',
-          end: '+=90%',
-          pin: true,
-          scrub: 0.6,
-          onUpdate: (self) => {
-            const p = self.progress;
-            setFacet(p < 0.34 ? 0 : p < 0.67 ? 1 : 2);
-            // bloom shape follows the *current* Mode, read live
-            if (bloom) bloom.style.clipPath = bloomShapeAt(themeRef.current, p);
+      // Pin + scrub bloom only on a real desktop (fine pointer, wide). On touch
+      // or narrow screens the hero flows naturally (see the CSS breakpoint) with
+      // no pin. gsap.matchMedia auto-reverts on resize / pointer change, so the
+      // JS (pin) and CSS (layout) stay in lockstep via the same media condition.
+      const mm = gsap.matchMedia();
+      mm.add('(min-width: 641px) and (pointer: fine)', () => {
+        gsap.set(names, { scale: 1.06, transformOrigin: 'left center' });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: root,
+            start: 'top top',
+            end: '+=90%',
+            pin: true,
+            scrub: 0.6,
+            onUpdate: (self) => {
+              const p = self.progress;
+              setFacet(p < 0.34 ? 0 : p < 0.67 ? 1 : 2);
+              // bloom shape follows the *current* Mode, read live
+              if (bloom) bloom.style.clipPath = bloomShapeAt(themeRef.current, p);
+            },
           },
-        },
+        });
+        tl.to(names, { scale: 1, letterSpacing: '-0.04em', ease: 'none' }, 0);
       });
-      tl.to(names, { scale: 1, letterSpacing: '-0.04em', ease: 'none' }, 0);
     },
     { dependencies: [reduced], scope: rootRef },
   );
@@ -256,4 +215,12 @@ export function Hero({ started = true }: { started?: boolean }) {
       </div>
     </section>
   );
+}
+
+/** Renders the pinned, cursor-reactive desktop hero on a real desktop, and a
+ *  purpose-built compact hero on touch / small screens. The breakpoint matches
+ *  the desktop pin's matchMedia condition, so the two never conflict. */
+export function Hero({ started = true }: { started?: boolean }) {
+  const compact = useIsCompactHero();
+  return compact ? <HeroMobile started={started} /> : <HeroDesktop started={started} />;
 }

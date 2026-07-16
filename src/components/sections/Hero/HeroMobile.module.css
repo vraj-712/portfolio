@@ -1,59 +1,89 @@
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100svh;
   overflow: hidden;
   background: var(--color-base);
 }
 
-.layer {
+/* uniform dot backdrop — evenly spaced (no stretched horizontal bands like the
+   desktop grid gave on tall phones) with a subtle drift. Tints per Mode. */
+.bg {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  display: flex;
-  padding: clamp(4.5rem, 11vh, 7rem) var(--gutter) clamp(2rem, 5vh, 3.25rem);
+  z-index: 0;
+  background-image: radial-gradient(var(--color-base-3) 1.6px, transparent 1.7px);
+  background-size: 26px 26px;
+  animation: drift 7s linear infinite;
+}
+@keyframes drift {
+  to {
+    background-position: 26px 26px;
+  }
+}
+:root[data-cursor-theme='fluid'] .bg {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-accent) 22%, var(--color-base-3)) 2px,
+    transparent 2.1px
+  );
+  background-size: 30px 30px;
+}
+:root[data-cursor-theme='terminal'] .bg {
+  background-image: radial-gradient(var(--color-ink) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  opacity: 0.4;
+}
+:root[data-cursor-theme='kinetic'] .bg {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-accent) 45%, var(--color-base-3)) 2px,
+    transparent 2.1px
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg {
+    animation: none;
+  }
 }
 
+/* base layer sits in flow (defines the hero height); the accent duplicate is
+   overlaid and clipped by the scroll bloom */
+.layer {
+  position: relative;
+  z-index: 1;
+}
 .bloom {
+  position: absolute;
+  inset: 0;
   z-index: 2;
   background: var(--color-accent);
   will-change: clip-path;
 }
 
-/* full-height card: meta top bar, centred name block, meta bottom bar */
 .inner {
-  position: relative;
-  width: 100%;
-  max-width: var(--container);
-  margin-inline: auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-7);
+  min-height: 100svh;
+  padding: calc(var(--space-9) + env(safe-area-inset-top, 0px)) var(--gutter)
+    calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
 }
 
-/* ---- meta bars ---------------------------------------------------------- */
-.metaTop,
-.metaBottom {
+/* ---- top meta ---- */
+.top {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-3);
   font-family: var(--font-mono);
   font-size: var(--fs-100);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--color-ink-muted);
 }
-.metaBottom {
-  align-items: flex-end;
-  /* keep the bottom-right corner clear for the fixed Settings button:
-     group stats + socials on the left instead of splitting to both edges */
-  justify-content: flex-start;
-  gap: clamp(var(--space-7), 6vw, var(--space-10));
-}
-
 .status {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  align-self: flex-start;
   padding: var(--space-2) var(--space-4);
   border: var(--bw) solid var(--color-ink);
   border-radius: var(--skin-radius);
@@ -67,7 +97,6 @@
   height: 8px;
   border-radius: 50%;
   background: var(--color-accent);
-  box-shadow: 0 0 0 0 var(--color-accent);
   animation: pulse 2s ease-out infinite;
 }
 @keyframes pulse {
@@ -81,13 +110,16 @@
     box-shadow: 0 0 0 0 transparent;
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .statusDot {
+    animation: none;
+  }
+}
 
 .place {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35em;
-  text-align: right;
+  gap: 0.3em;
 }
 .time {
   color: var(--color-ink);
@@ -100,15 +132,11 @@
   font-weight: 400;
 }
 
-/* ---- centre block ------------------------------------------------------- */
-.center {
-  flex: 1;
+/* ---- headline ---- */
+.headline {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 0;
 }
-
 .eyebrow {
   margin-bottom: var(--space-4);
   font-family: var(--font-mono);
@@ -117,66 +145,68 @@
   letter-spacing: 0.2em;
   color: var(--color-ink-muted);
 }
-
 .name {
   margin: 0;
   font-family: var(--font-display);
-  /* height-aware: must share the viewport with the meta bars + CTAs, so cap by
-     vh as well as vw and never exceed the base display size */
-  font-size: clamp(3rem, min(10.5vw, 21vh), var(--fs-900));
+  font-size: clamp(3.25rem, 16vw, 5rem);
   font-weight: 800;
-  line-height: 0.84;
+  line-height: 0.86;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--color-ink);
 }
-
 .lineOuter {
   display: block;
   overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
 }
-
 .lineInner {
   display: block;
   will-change: transform;
 }
-
 .lineOffset {
-  margin-left: 0.22em; /* deliberate grid-break offset */
+  margin-left: 0.18em;
 }
-
 .role {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   margin-top: var(--space-5);
   font-family: var(--font-mono);
-  font-size: var(--fs-300);
+  font-size: var(--fs-200);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--color-ink);
 }
-
 .roleStatic {
   color: var(--color-ink-muted);
 }
-
 .roleRoll {
   color: var(--color-accent);
   font-weight: 700;
 }
 
+/* ---- CTAs ---- */
 .ctas {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-4);
-  margin-top: var(--space-6);
+}
+.ctaPrimary,
+.ctaGhost {
+  width: 100%;
 }
 
-/* ---- bottom stats + socials -------------------------------------------- */
+/* ---- footer meta ---- */
+.foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
 .stats {
   display: flex;
-  gap: clamp(var(--space-5), 4vw, var(--space-9));
+  gap: clamp(var(--space-5), 8vw, var(--space-8));
 }
 .stats li {
   display: flex;
@@ -192,10 +222,12 @@
   color: var(--color-ink);
 }
 .statLabel {
+  font-family: var(--font-mono);
   font-size: var(--fs-100);
-  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-muted);
 }
-
 .socials {
   display: flex;
   gap: var(--space-3);
@@ -211,6 +243,8 @@
   box-shadow: var(--skin-shadow-sm);
   background: var(--color-base);
   color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
   font-weight: 700;
   letter-spacing: 0.08em;
   transition:
@@ -219,27 +253,24 @@
     transform var(--dur-fast) var(--ease-power-out),
     box-shadow var(--dur-fast) var(--ease-power-out);
 }
-.socials a:hover {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  border-color: var(--color-accent);
-}
 .socials a:active {
   transform: translate(2px, 2px);
   box-shadow: none;
 }
 
-/* ---- accent-layer inversions (contrast-safe over the accent bloom) ------ */
+/* ---- accent-layer inversions (contrast-safe over the accent bloom) ------- */
+.bloom .top,
+.bloom .foot,
 .bloom .eyebrow,
 .bloom .name,
 .bloom .role,
 .bloom .roleStatic,
 .bloom .roleRoll,
-.bloom .metaTop,
-.bloom .metaBottom,
-.bloom .status,
+.bloom .place,
 .bloom .time,
-.bloom .statNum {
+.bloom .tz,
+.bloom .statNum,
+.bloom .statLabel {
   color: var(--color-on-accent);
 }
 .bloom .status,
@@ -250,6 +281,7 @@
 }
 .bloom .statusDot {
   background: var(--color-on-accent);
+  animation: none;
 }
 .bloom .ctaPrimary {
   background: var(--color-on-accent);
@@ -261,14 +293,3 @@
   color: var(--color-on-accent);
   border-color: var(--color-on-accent);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .statusDot {
-    animation: none;
-  }
-}
-
-/* Note: touch / small screens render the dedicated <HeroMobile> component
-   instead of this layout (see Hero.tsx + useIsCompactHero), so no mobile
-   overrides are needed here — this hero only mounts on wide, fine-pointer
-   viewports. */

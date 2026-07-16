@@ -96,3 +96,11 @@
     gap: var(--space-8);
   }
 }
+
+@media (max-width: 640px) {
+  /* the display lead is a full screen-and-a-half at fs-600 on a phone — step it
+     down so the statement stays punchy without dominating the scroll */
+  .lead {
+    font-size: var(--fs-500);
+  }
+}

@@ -57,7 +57,7 @@
   --space-7: calc(3rem * var(--space-scale));    --space-8: calc(4rem * var(--space-scale));
   --space-9: calc(6rem * var(--space-scale));    --space-10: calc(8rem * var(--space-scale));
   --space-section: calc(clamp(4rem, 2rem + 8vw, 9rem) * var(--space-scale));   /* vertical rhythm */
-  --gutter:        calc(clamp(1.25rem, 0.5rem + 3vw, 5rem) * var(--space-scale)); /* page gutter */
+  --gutter:        calc(clamp(1.5rem, 0.5rem + 3vw, 5rem) * var(--space-scale)); /* page gutter (floor gives small screens breathing room) */
 
   /* --- Containers / measure --- */
   --container:        90rem;  /* 1440 */
