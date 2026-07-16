@@ -1,6 +1,7 @@
 .rail {
   position: fixed;
-  right: var(--space-5);
+  /* hug the page edge, not the screen edge, once the page is capped */
+  right: calc(var(--page-inset) + var(--space-5));
   top: 50%;
   transform: translateY(-50%);
   z-index: var(--z-rail);

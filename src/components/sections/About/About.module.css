@@ -67,6 +67,20 @@
   color: var(--color-ink-muted);
 }
 
+/* stacked education entries (most recent first) */
+.eduItem + .eduItem {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: var(--bw) solid var(--color-line);
+}
+.eduMeta {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  letter-spacing: 0.08em;
+  color: var(--color-ink-muted);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;

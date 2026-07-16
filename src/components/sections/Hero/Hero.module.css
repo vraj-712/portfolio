@@ -269,6 +269,6 @@
 }
 
 /* Note: touch / small screens render the dedicated <HeroMobile> component
-   instead of this layout (see Hero.tsx + useIsCompactHero), so no mobile
+   instead of this layout (see Hero.tsx + useIsCompact), so no mobile
    overrides are needed here — this hero only mounts on wide, fine-pointer
    viewports. */

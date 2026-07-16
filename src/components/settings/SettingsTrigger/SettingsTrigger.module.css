@@ -1,6 +1,7 @@
 .trigger {
   position: fixed;
-  right: clamp(1rem, 3vw, 2rem);
+  /* hug the page edge, not the screen edge, once the page is capped */
+  right: calc(var(--page-inset) + clamp(1rem, 3vw, 2rem));
   bottom: clamp(1rem, 3vw, 2rem);
   z-index: calc(var(--z-panel) - 5);
   display: grid;

@@ -14,6 +14,7 @@ import { Expertise } from './components/sections/Expertise/Expertise';
 import { Experience } from './components/sections/Experience/Experience';
 import { Projects } from './components/sections/Projects/Projects';
 import { Skills } from './components/sections/Skills/Skills';
+import { Credentials } from './components/sections/Credentials/Credentials';
 import { Closing } from './components/sections/Closing/Closing';
 import { content } from './data/content';
 
@@ -51,6 +52,7 @@ function App() {
           <Experience />
           <Projects />
           <Skills />
+          <Credentials />
           <Closing />
         </main>
       </div>

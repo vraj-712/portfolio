@@ -1,8 +1,7 @@
 /* =============================================================================
    CONTENT — the single, typed, drop-in-replaceable data layer.
-   Structure mirrors Vraj_Patel_Professional_Profile.md. Swap the string values
-   for final copy; the structure (and every component) stays the same.
-   Placeholders (email / phone / links / media) are marked // TODO.
+   Real data supplied by Vraj (profile, education, experience, skills, projects,
+   certificates, courses). Anything still unknown is marked // TODO — never invented.
    ============================================================================= */
 
 export interface NavItem {
@@ -26,13 +25,14 @@ export interface EducationItem {
   degree: string;
   field: string;
   school: string;
-  short: string;
+  period: string;
+  location: string;
 }
 
 export interface AboutContent {
   lead: string;
   philosophy: string;
-  education: EducationItem;
+  education: EducationItem[];
   interests: string[];
   strengths: string[];
 }
@@ -54,9 +54,8 @@ export interface SkillGroup {
 }
 
 export interface Skills {
-  frontend: SkillGroup;
-  backend: SkillGroup;
-  tools: SkillGroup;
+  /** Ordered categories — the Stack section rolls through these. */
+  groups: SkillGroup[];
   learning: string[];
 }
 
@@ -88,6 +87,16 @@ export interface Project {
   links: ProjectLinks;
 }
 
+export interface Certificate {
+  title: string;
+  issuer: string;
+}
+
+export interface Course {
+  title: string;
+  url?: string;
+}
+
 export interface Contact {
   email: string;
   phone: string;
@@ -106,6 +115,8 @@ export interface SiteContent {
   skills: Skills;
   expertise: ExpertiseItem[];
   projects: Project[];
+  certificates: Certificate[];
+  courses: Course[];
   vision: string;
   contact: Contact;
 }
@@ -115,18 +126,13 @@ export const content: SiteContent = {
     name: 'Vraj Patel',
     firstName: 'Vraj',
     lastName: 'Patel',
-    role: 'Full Stack Software Developer',
-    roleFacets: ['FULL STACK', 'REACT NATIVE', 'PRODUCT-MINDED'],
-    tagline:
-      'Engineering with precision. Designing with purpose. Building experiences that people remember.',
-    taglineParts: [
-      'Engineering with precision.',
-      'Designing with purpose.',
-      'Building experiences that people remember.',
-    ],
+    role: 'Full Stack Developer',
+    roleFacets: ['FULL STACK', 'NEXT.JS', 'REACT NATIVE'],
+    tagline: 'Curious by default. Fast by habit. Building for what comes next.',
+    taglineParts: ['Curious by default.', 'Fast by habit.', 'Building for what comes next.'],
     location: 'Ahmedabad, Gujarat, India',
     summary:
-      'Full Stack Software Developer building production web, mobile, and TV apps with modern JavaScript — focused on scalable architecture, maintainable code, and interfaces people remember.',
+      'Full stack developer at 9series building production platforms with Next.js, Postgres, and React Native — internal operations tooling, real-time collaboration, third-party integrations, and AI-assisted features.',
   },
 
   nav: [
@@ -135,296 +141,293 @@ export const content: SiteContent = {
     { id: 'experience', label: 'Experience' },
     { id: 'projects', label: 'Work' },
     { id: 'skills', label: 'Stack' },
+    { id: 'credentials', label: 'Credentials' },
     { id: 'closing', label: 'Contact' },
   ],
 
   marqueeWords: [
-    'REACT',
     'NEXT.JS',
+    'REACT',
     'REACT NATIVE',
-    'ANDROID TV',
     'NODE.JS',
-    'MONGODB',
-    'DETAIL-ORIENTED',
-    'FAST LEARNER',
-    'PERFORMANCE',
-    'MERN',
+    'EXPRESS.JS',
     'TYPESCRIPT',
+    'POSTGRES',
+    'MONGODB',
+    'REDIS',
+    'PAYLOAD CMS',
+    'ANDROID TV',
   ],
 
   about: {
-    lead: 'I build modern digital products that combine clean engineering with exceptional user experiences — production-ready web, mobile, and TV apps across the modern JavaScript ecosystem.',
+    lead: 'I am a Computer Engineering graduate and full stack developer with a strong passion for backend and web development — building production platforms end to end with Next.js, Node.js, and React Native.',
     philosophy:
-      'Exceptional software is created through a balance of engineering excellence and thoughtful design. Every animation, interaction, loading state, and user flow should have a purpose. I build products people enjoy using — not just products that function correctly.',
-    education: {
-      degree: 'Bachelor of Engineering',
-      field: 'Computer Engineering',
-      school: 'LJ Institute of Engineering & Technology (LJIET)',
-      short: 'B.E. Computer Engineering · LJIET',
-    },
+      "I learn by shipping. Almost every project has meant a new stack, a new integration, or a problem I hadn't solved before — and that's the part I like. I don't think good engineers know everything; they close the gap quickly and leave the codebase better than they found it.",
+    education: [
+      {
+        degree: 'B.E.',
+        field: 'Computer Engineering',
+        school: 'LJ Institute of Engineering and Technology',
+        period: '2021 — 2025',
+        location: 'Ahmedabad, India',
+      },
+      {
+        degree: '12th Science',
+        field: 'GSEB',
+        school: 'H. B. Kapadiya School',
+        period: '2020 — 2021',
+        location: 'Ahmedabad, India',
+      },
+      {
+        degree: '10th',
+        field: 'GSEB',
+        school: 'H. B. Kapadiya School',
+        period: '2018 — 2019',
+        location: 'Ahmedabad, India',
+      },
+    ],
     interests: [
-      'Artificial Intelligence',
-      'Product Development',
       'Backend Engineering',
-      'UI/UX Design',
-      'Motion Design',
-      'Photography',
-      'Modern Web',
+      'Web Development',
+      'React Native',
+      'AI-assisted Development',
+      'Databases',
     ],
     strengths: [
-      'Analytical thinking',
-      'Fast learner',
-      'Detail-oriented',
       'Adaptable',
+      'Fast learner',
+      'Analytical thinking',
+      'Detail-oriented',
       'Collaborative',
-      'Continuous improvement',
     ],
   },
 
   experience: [
     {
-      company: 'PrimeApps',
-      role: 'Full Stack Developer / React Native Developer',
-      period: 'Present',
+      company: '9series',
+      role: 'Jr Software Engineer',
+      period: 'Jul 2025 — Present',
       location: 'Ahmedabad, India',
-      clients: ['SportsGrid, Inc.'],
       summary:
-        'Built and maintained production applications for real-world clients across web, mobile, and Android TV platforms.',
+        'Building internal operations tooling and client platforms end to end with Next.js and Postgres — integrations, auth, background jobs, and AI-assisted features.',
       bullets: [
-        'Developed and maintained React Native apps for mobile and Android TV.',
-        'Contributed to applications for SportsGrid, Inc.',
-        'Built responsive frontend interfaces with React and Next.js.',
-        'Developed backend APIs with Node.js and Express.js.',
-        'Worked with MongoDB and RESTful API integrations.',
-        'Implemented authentication systems and secure user flows.',
-        'Integrated CMS platforms and modern development tooling.',
-        'Owned debugging, optimization, feature work, and production deploys.',
+        'Building Pivotal, an internal operations management portal — Next.js front and back, Postgres, RBAC, and Microsoft OAuth.',
+        'Integrated third-party tooling across Slack, Jira, GitHub, Notion, Zoom, Teams, and Outlook.',
+        'Shipped an AI minutes-of-meeting generation feature, plus Redis-backed jobs and queues.',
+        'Delivered client platforms across creator collaboration, construction, metals, and health.',
       ],
-      tech: ['React Native', 'React', 'Next.js', 'Node.js', 'Express.js', 'MongoDB', 'Payload CMS'],
+      tech: ['Next.js', 'Postgres', 'Redis', 'React Native', 'Payload CMS', 'GetStream'],
     },
     {
-      company: 'Freelance / Contract',
-      role: 'Full Stack Developer',
-      period: '2022 — 2023',
-      location: 'Remote',
+      company: 'Prime Apps',
+      role: 'Software Developer',
+      period: 'May 2024 — May 2025',
+      location: 'Ahmedabad, India',
+      clients: ['SportsGrid'],
       summary:
-        'Delivered end-to-end web applications for small businesses and startups on a project basis.',
+        'React Native work across TV and mobile, backend development in Node.js and Express.js, and full-stack delivery of a learning management system.',
       bullets: [
-        'Built and shipped MERN applications from scratch for multiple clients.',
-        'Designed REST APIs, authentication flows, and MongoDB data models.',
-        'Integrated Stripe payments, Cloudinary media, and third-party APIs.',
-        'Owned deployment, performance tuning, and post-launch support.',
+        'Worked on a React Native project focused on TV and mobile app development for SportsGrid.',
+        'Built backend services with Node.js and Express.js as part of a company assignment.',
+        'Worked on MyUnify, a Learning Management System, as a full-stack developer.',
       ],
-      tech: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Stripe', 'Tailwind CSS'],
+      tech: ['React Native', 'Next.js', 'React', 'Node.js', 'MongoDB', 'Payload CMS'],
     },
     {
-      company: 'Nexus Web Studio',
-      role: 'Frontend Developer',
-      period: '2021 — 2022',
+      company: 'Prime Apps',
+      role: 'Software Intern',
+      period: 'Nov 2023 — May 2024',
       location: 'Ahmedabad, India',
-      summary: 'Built responsive, accessible interfaces for a range of client web products.',
+      summary:
+        'Where the foundation got built — learning the web stack end to end and putting it straight into training projects.',
       bullets: [
-        'Developed responsive UIs in React and Next.js from Figma designs.',
-        'Built reusable component libraries and design-system primitives.',
-        'Implemented authentication, dashboards, and data-driven views.',
-        'Improved Lighthouse performance and accessibility scores.',
+        'Learned the fundamentals hands-on: HTML, CSS, JavaScript, and jQuery.',
+        'Picked up PHP, Laravel, and WordPress alongside SQL and relational data modelling.',
+        'Applied all of it across a series of training projects before moving onto client work.',
       ],
-      tech: ['React', 'Next.js', 'JavaScript', 'CSS3', 'REST APIs'],
-    },
-    {
-      company: 'CodeCraft Labs',
-      role: 'Web Developer Intern',
-      period: '2020 — 2021',
-      location: 'Ahmedabad, India',
-      summary: 'First professional experience building for the web across the stack.',
-      bullets: [
-        'Contributed to production features under senior-developer mentorship.',
-        'Built UI components with HTML, CSS, and JavaScript, then React.',
-        'Wrote and consumed REST APIs with Node.js and Express.',
-        'Learned Git workflows, code review, and agile delivery.',
-      ],
-      tech: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git'],
+      tech: ['HTML5', 'CSS3', 'JavaScript', 'jQuery', 'PHP', 'Laravel', 'WordPress', 'SQL'],
     },
   ],
 
   skills: {
-    frontend: {
-      label: 'Frontend',
-      items: [
-        'React',
-        'Next.js',
-        'React Native',
-        'JavaScript (ES6+)',
-        'TypeScript',
-        'HTML5',
-        'CSS3',
-        'Tailwind CSS',
-        'Redux',
-        'Zustand',
-        'GSAP',
-        'Framer Motion',
-        'SASS/SCSS',
-        'Material UI',
-      ],
-    },
-    backend: {
-      label: 'Backend',
-      items: [
-        'Node.js',
-        'Express.js',
-        'REST APIs',
-        'GraphQL',
-        'MongoDB',
-        'PostgreSQL',
-        'Prisma',
-        'Socket.io',
-        'JWT',
-        'Auth & Authorization',
-      ],
-    },
-    tools: {
-      label: 'Tools & Platforms',
-      items: [
-        'Git',
-        'GitHub',
-        'Docker',
-        'Firebase',
-        'Cloudinary',
-        'Payload CMS',
-        'Vite',
-        'Postman',
-        'Figma',
-        'Vercel',
-        'AWS',
-        'npm',
-        'pnpm',
-      ],
-    },
-    learning: ['Redis', 'AI / LLM APIs'],
+    groups: [
+      {
+        label: 'Languages',
+        items: ['JavaScript', 'TypeScript', 'Python'],
+      },
+      {
+        // shortened from "Framework & Libraries" so the Stack headline fits its box
+        label: 'Frameworks',
+        items: ['React', 'Next.js', 'React Native', 'Express.js', 'Node.js', 'Tailwind CSS'],
+      },
+      {
+        label: 'Databases',
+        items: ['MongoDB', 'MySQL', 'Postgres', 'Redis'],
+      },
+      {
+        label: 'Dev Tools',
+        items: ['VS Code', 'Git & GitHub', 'Jupyter Notebooks'],
+      },
+      {
+        label: 'AI Tools',
+        items: ['Claude Code', 'Cursor'],
+      },
+    ],
+    learning: ['RAG & AI Integration'],
   },
 
   expertise: [
-    { title: 'Full Stack Web Development', blurb: 'End-to-end products from data model to interface, MERN and Next.js.' },
-    { title: 'Cross-platform Mobile Development', blurb: 'React Native apps that ship to mobile and Android TV from one codebase.' },
-    { title: 'React Native TV Development', blurb: 'Media-rich, performance-tuned TV experiences and focus navigation.' },
-    { title: 'API Development', blurb: 'RESTful APIs with Node.js/Express, auth, and clean integration contracts.' },
-    { title: 'Performance Optimization', blurb: 'Profiling, rendering, and delivery work that makes products feel instant.' },
-    { title: 'Responsive UI Development', blurb: 'Interfaces that hold up from small screens to the living-room ten-foot view.' },
-    { title: 'Database Integration', blurb: 'MongoDB modeling, queries, and reliable data flows.' },
-    { title: 'Modern JavaScript Ecosystem', blurb: 'TypeScript-first, current tooling, maintainable architecture.' },
+    {
+      title: 'Full Stack Next.js',
+      blurb: 'Front and back in one codebase — routing, server logic, and data, shipped end to end.',
+    },
+    {
+      title: 'React Native Development',
+      blurb: 'Cross-platform apps for mobile and Android TV, built for the ten-foot view.',
+    },
+    {
+      title: 'Third-party Integrations',
+      blurb: 'Slack, Jira, GitHub, Notion, Zoom, Teams, Outlook, and GetStream wired into product flows.',
+    },
+    {
+      title: 'Auth & RBAC',
+      blurb: 'Role-based access control and Microsoft OAuth across multi-tenant internal tooling.',
+    },
+    {
+      title: 'Database Design',
+      blurb: 'Postgres and MongoDB modelling, queries, and reliable data flows.',
+    },
+    {
+      title: 'Jobs & Queues',
+      blurb: 'Redis-backed background jobs and queues for work that shouldn’t block a request.',
+    },
+    {
+      title: 'AI-assisted Features',
+      blurb: 'Shipping AI into real products — automatic minutes-of-meeting generation from calls.',
+    },
+    {
+      title: 'Headless CMS',
+      blurb: 'Payload CMS-driven content platforms with a fast Next.js front end.',
+    },
   ],
 
   projects: [
     {
-      id: 'rn-tv',
-      title: 'React Native TV Application',
-      year: '2024',
-      role: 'UI · API · Performance',
+      id: 'pivotal',
+      title: 'Pivotal',
+      year: '2025 — 26', // TODO confirm
+      role: 'Full Stack · 9series',
       blurb:
-        'A television application focused on performance, usability, and media-rich experiences — UI development, API integration, performance improvements, feature work, and bug fixing.',
-      tags: ['React Native', 'Android TV', 'Performance', 'Media'],
-      media: { type: 'image', src: '/media/projects/tv-app.svg', alt: 'React Native TV application interface' }, // TODO real media
-      links: {}, // TODO
+        'An internal operations management portal built front-to-back in Next.js on Postgres. Integrates Slack, Jira, GitHub, Notion, Zoom and Teams, generates meeting minutes with AI, and runs background work on Redis jobs and queues behind Microsoft OAuth and RBAC.',
+      tags: ['Next.js', 'Postgres', 'Redis', 'RBAC', 'AI MoM', 'Cloudflare R2'],
+      media: { type: 'image', src: '/media/projects/pivotal.svg', alt: 'Pivotal internal operations management portal' }, // TODO real media
+      links: {},
     },
     {
-      id: 'lms',
-      title: 'Learning Management System',
-      year: '2023',
-      role: 'Frontend',
+      id: 'kavra',
+      title: 'Kavra',
+      year: '2025', // TODO confirm
+      role: 'Full Stack · 9series',
       blurb:
-        'Frontend for an LMS: responsive layouts, authentication flows, interactive dashboards, and a modern React architecture.',
-      tags: ['React', 'Auth', 'Dashboards', 'Responsive'],
-      media: { type: 'image', src: '/media/projects/lms.svg', alt: 'Learning Management System dashboard' }, // TODO real media
-      links: {}, // TODO
+        'A creator collaboration platform on Next.js and Postgres, with role-based access control and an in-product chat experience powered by GetStream.',
+      tags: ['Next.js', 'Postgres', 'RBAC', 'GetStream'],
+      media: { type: 'image', src: '/media/projects/kavra.svg', alt: 'Kavra creator collaboration platform' }, // TODO real media
+      links: {},
     },
     {
-      id: 'mern',
-      title: 'Full Stack MERN Applications',
-      year: '2023',
-      role: 'Full Stack',
+      id: 'myunify',
+      title: 'MyUnify',
+      year: '2024 — 25', // TODO confirm
+      role: 'Full Stack · Prime Apps',
       blurb:
-        'Complete web apps in MongoDB, Express, React, Node — authentication, CRUD, REST APIs, and reusable component architecture.',
-      tags: ['MongoDB', 'Express', 'React', 'Node.js'],
-      media: { type: 'image', src: '/media/projects/mern.svg', alt: 'MERN stack web application' }, // TODO real media
-      links: {}, // TODO
+        'A learning management system built with Next.js, Node.js and React on MongoDB, with Payload CMS behind it and BigBlueButton integrated for live online classes.',
+      tags: ['Next.js', 'Node.js', 'React', 'MongoDB', 'Payload CMS', 'BBB'],
+      media: { type: 'image', src: '/media/projects/myunify.svg', alt: 'MyUnify learning management system' }, // TODO real media
+      links: {},
     },
     {
-      id: 'ecommerce',
-      title: 'E-Commerce Storefront',
-      year: '2024',
-      role: 'Full Stack',
+      id: 'sportsgrid',
+      title: 'SportsGrid',
+      year: '2024', // TODO confirm
+      role: 'React Native · Prime Apps',
       blurb:
-        'A headless commerce storefront with product catalog, cart, checkout, and order management — server-rendered for speed and SEO.',
-      tags: ['Next.js', 'Stripe', 'Payload CMS', 'SSR'],
-      media: { type: 'image', src: '/media/projects/ecommerce.svg', alt: 'E-commerce storefront' }, // TODO real media
-      links: {}, // TODO
+        'A TV and mobile application built in React Native for SportsGrid — screen development and API integration for the living-room ten-foot view.',
+      tags: ['React Native', 'Android TV', 'Mobile', 'API Integration'],
+      media: { type: 'image', src: '/media/projects/sportsgrid.svg', alt: 'SportsGrid React Native TV and mobile app' }, // TODO real media
+      links: {},
     },
     {
-      id: 'chat',
-      title: 'Real-Time Chat Platform',
-      year: '2024',
-      role: 'Full Stack',
+      id: 'ablefinder',
+      title: 'Ablefinder',
+      year: '2025', // TODO confirm
+      role: 'Full Stack · 9series',
       blurb:
-        'A real-time messaging app with presence, typing indicators, and channels — powered by WebSockets and a Node backend.',
-      tags: ['Socket.io', 'Node.js', 'MongoDB', 'React'],
-      media: { type: 'image', src: '/media/projects/chat.svg', alt: 'Real-time chat platform' }, // TODO real media
-      links: {}, // TODO
+        'A health-industry platform on Next.js and Postgres, with a chat experience integrated through GetStream.',
+      tags: ['Next.js', 'Postgres', 'GetStream', 'Health'],
+      media: { type: 'image', src: '/media/projects/ablefinder.svg', alt: 'Ablefinder health industry platform' }, // TODO real media
+      links: {},
     },
     {
-      id: 'analytics',
-      title: 'Analytics Dashboard',
-      year: '2023',
-      role: 'Frontend',
+      id: 'buildchain',
+      title: 'BuildChain',
+      year: '2025', // TODO confirm
+      role: 'Full Stack · 9series',
       blurb:
-        'A data-dense dashboard with interactive charts, filters, and live-updating KPIs built on a reusable component system.',
-      tags: ['React', 'Charts', 'REST', 'Dashboards'],
-      media: { type: 'image', src: '/media/projects/analytics.svg', alt: 'Analytics dashboard' }, // TODO real media
-      links: {}, // TODO
+        'A construction-business website built headless — Payload CMS for content, Postgres for data, and a fast Next.js front end.',
+      tags: ['Next.js', 'Postgres', 'Payload CMS', 'Headless CMS'],
+      media: { type: 'image', src: '/media/projects/buildchain.svg', alt: 'BuildChain headless CMS website' }, // TODO real media
+      links: {},
     },
     {
-      id: 'fitness',
-      title: 'Fitness Tracker App',
-      year: '2023',
-      role: 'Mobile',
+      id: 'rocket',
+      title: 'Rocket',
+      year: '2025', // TODO confirm
+      role: 'React Native · 9series',
       blurb:
-        'A cross-platform mobile app for workout logging, streaks, and progress charts with offline support and cloud sync.',
-      tags: ['React Native', 'Firebase', 'Offline', 'Charts'],
-      media: { type: 'image', src: '/media/projects/fitness.svg', alt: 'Fitness tracker mobile app' }, // TODO real media
-      links: {}, // TODO
+        'A health application in React Native — screen development, API integration, and bug fixing across the app.',
+      tags: ['React Native', 'API Integration', 'Health'],
+      media: { type: 'image', src: '/media/projects/rocket.svg', alt: 'Rocket health mobile app' }, // TODO real media
+      links: {},
     },
     {
-      id: 'booking',
-      title: 'Event Booking System',
-      year: '2022',
-      role: 'Full Stack',
+      id: 'tennant-metals',
+      title: 'Tennant Metals',
+      year: '2025', // TODO confirm
+      role: 'Frontend · 9series',
       blurb:
-        'A booking platform with seat selection, authentication, payments, and an admin panel for managing events and orders.',
-      tags: ['MongoDB', 'Express', 'React', 'Payments'],
-      media: { type: 'image', src: '/media/projects/booking.svg', alt: 'Event booking system' }, // TODO real media
-      links: {}, // TODO
-    },
-    {
-      id: 'cms',
-      title: 'Headless CMS Portal',
-      year: '2022',
-      role: 'Full Stack',
-      blurb:
-        'A content portal on a headless CMS with role-based access, structured collections, and a fast Next.js front end.',
-      tags: ['Payload CMS', 'Next.js', 'Auth', 'TypeScript'],
-      media: { type: 'image', src: '/media/projects/cms.svg', alt: 'Headless CMS portal' }, // TODO real media
-      links: {}, // TODO
+        'A metals-industry platform with a Next.js front end and WebSocket-driven live data — supporting the team on feature development and bug fixing.',
+      tags: ['Next.js', 'WebSockets', 'Frontend'],
+      media: { type: 'image', src: '/media/projects/tennant-metals.svg', alt: 'Tennant Metals platform' }, // TODO real media
+      links: {},
     },
   ],
 
+  certificates: [
+    { title: 'CODE WARS — Certificate of Participation', issuer: 'LDCE' },
+    { title: "Hackout'23 — Certificate of Participation", issuer: 'DAIICT' },
+  ],
+
+  courses: [
+    { title: 'Building with the Claude API', url: 'https://verify.skilljar.com/c/w8i3cfuqepf7' },
+    { title: 'Claude Code in Action', url: 'https://verify.skilljar.com/c/ymmbk4ijvrhh' },
+    { title: 'Introduction to Agent Skills', url: 'https://verify.skilljar.com/c/q6zem5r7eevh' },
+    {
+      title: 'Introduction to Model Context Protocol',
+      url: 'https://verify.skilljar.com/c/982vuce9279u',
+    },
+    { title: 'Exploratory Data Analysis for Machine Learning' },
+    { title: 'Data Structures' },
+  ],
+
   vision:
-    'My long-term objective is to build impactful software that reaches millions — growing as a full stack engineer while exploring AI-powered applications, scalable systems, and premium digital experiences.',
+    'To keep compounding — deeper into backend and system design, further into AI-assisted engineering, and toward software that reaches far more people than it does today.',
 
   contact: {
-    email: 'hello@vrajpatel.dev', // TODO real
-    phone: '+91 00000 00000', // TODO real
-    linkedin: 'https://linkedin.com/in/vrajpatel', // TODO real
-    github: 'https://github.com/vrajpatel', // TODO real
-    resume: '/vraj-patel-resume.pdf', // TODO real
+    email: 'patelvraju07@gmail.com',
+    phone: '+91 98799 71451',
+    linkedin: 'https://www.linkedin.com/in/vraj-patel-725817228/',
+    github: 'https://github.com/vraj-712',
+    resume: '/vraj-patel-resume.pdf', // TODO drop the real PDF in /public
     location: 'Ahmedabad, Gujarat, India',
   },
 };

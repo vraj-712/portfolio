@@ -3,6 +3,9 @@
   top: 0;
   left: 0;
   right: 0;
+  /* match the page cap so the bar (and its rule) never outruns the content */
+  max-width: var(--page-max);
+  margin-inline: auto;
   z-index: var(--z-header);
   transition:
     background-color var(--dur-snappy) var(--ease-power-out),

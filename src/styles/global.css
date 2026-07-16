@@ -170,3 +170,36 @@ html.lenis body { height: auto; }
   transition-duration: 0.001ms !important;
   scroll-behavior: auto !important;
 }
+
+/* --- Page cap -------------------------------------------------------------
+   The site stops expanding at --page-max and centres. Past that the surrounding
+   canvas darkens and the page gets a hairline frame, so the cap reads as a
+   deliberate letterboxed composition rather than content stranded mid-screen.
+   Capping <main> also stops the full-bleed pieces (dot field, marquees, bloom)
+   from stretching thin on ultrawide displays. */
+main {
+  position: relative;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  /* the page canvas owns the paper colour — sections without their own
+     background sit on this, not on <body> (which darkens past the cap) */
+  background: var(--color-base);
+}
+
+/* <main> is the skip-link target and gets focused programmatically after the
+   intro; it must not paint a focus ring around the whole page. Real keyboard
+   focus rings on actual controls are untouched. */
+main[tabindex='-1']:focus,
+main[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
+/* Only once the screen is genuinely WIDER than the page — at exactly --page-max
+   there is no margin, so a frame would just weld a line onto the screen edges.
+   The tonal shift alone defines the page; no border needed (and --color-line is
+   full-strength ink, not a hairline). */
+@media (min-width: 124rem) {
+  body {
+    background: var(--color-base-3);
+  }
+}

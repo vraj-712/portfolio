@@ -1,0 +1,110 @@
+.experience {
+  position: relative;
+}
+
+.stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  /* a little runway so the last card gets a beat parked before the next section */
+  padding-bottom: var(--space-8);
+}
+
+.card {
+  /* Each card parks under the fixed header. The per-index offset leaves a sliver
+     of the cards beneath visible, so the deck reads as a stack. */
+  position: sticky;
+  top: calc(var(--space-9) + var(--i) * 12px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-5);
+  border: var(--bw-thick) solid var(--color-ink);
+  border-radius: var(--skin-radius);
+  box-shadow: var(--skin-shadow);
+  background: var(--color-base);
+  will-change: transform;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+}
+.period {
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+  text-align: right;
+}
+
+.role {
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.company {
+  font-family: var(--font-display);
+  font-size: var(--fs-300);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.client {
+  color: var(--color-ink-muted);
+}
+.summary {
+  font-size: var(--fs-200);
+  line-height: 1.45;
+  color: var(--color-ink-muted);
+}
+
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-1, 0.25rem);
+}
+.bullet {
+  position: relative;
+  padding-left: 1.35em;
+  font-size: var(--fs-200);
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+.bullet::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+}
+
+.tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.techPill {
+  padding: 0.32em 0.6em;
+  border: var(--bw) solid var(--color-line-soft);
+  border-radius: var(--skin-radius);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-muted);
+}

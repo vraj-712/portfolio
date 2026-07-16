@@ -4,11 +4,13 @@ import { useGSAP } from '@gsap/react';
 import { Section } from '../../primitives/Section/Section';
 import { Reveal } from '../../primitives/Reveal/Reveal';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useIsCompact } from '../../../hooks/useIsCompact';
+import { ExperienceMobile } from './ExperienceMobile';
 import { EASE } from '../../../lib/gsap/easings';
 import { content } from '../../../data/content';
 import styles from './Experience.module.css';
 
-export function Experience() {
+function ExperienceDesktop() {
   const reduced = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
@@ -92,4 +94,11 @@ export function Experience() {
       </div>
     </Section>
   );
+}
+
+/** Scroll-drawn timeline on desktop; a sticky peeling card deck on touch/small
+ *  screens (a squeezed timeline ran 3+ screens tall on a phone). */
+export function Experience() {
+  const compact = useIsCompact();
+  return compact ? <ExperienceMobile /> : <ExperienceDesktop />;
 }

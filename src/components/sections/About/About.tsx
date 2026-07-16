@@ -5,7 +5,8 @@ import { content } from '../../../data/content';
 import styles from './About.module.css';
 
 const { about } = content;
-const HIGHLIGHT = 'purpose';
+/** The one word the philosophy turns on — accent-highlighted in the quote. */
+const HIGHLIGHT = 'shipping';
 
 function Philosophy() {
   const idx = about.philosophy.indexOf(HIGHLIGHT);
@@ -37,10 +38,17 @@ export function About() {
         <aside className={styles.side}>
           <Reveal variant="up" className={styles.card}>
             <p className={styles.cardLabel}>Education</p>
-            <p className={styles.degree}>
-              {about.education.degree} — {about.education.field}
-            </p>
-            <p className={styles.school}>{about.education.school}</p>
+            {about.education.map((ed) => (
+              <div key={`${ed.degree}-${ed.period}`} className={styles.eduItem}>
+                <p className={styles.degree}>
+                  {ed.degree} — {ed.field}
+                </p>
+                <p className={styles.school}>{ed.school}</p>
+                <p className={styles.eduMeta}>
+                  {ed.period} · {ed.location}
+                </p>
+              </div>
+            ))}
           </Reveal>
 
           <div>

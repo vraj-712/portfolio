@@ -60,9 +60,15 @@
   --gutter:        calc(clamp(1.5rem, 0.5rem + 3vw, 5rem) * var(--space-scale)); /* page gutter (floor gives small screens breathing room) */
 
   /* --- Containers / measure --- */
-  --container:        90rem;  /* 1440 */
+  --container:        90rem;  /* 1440 — reading/content column */
   --container-narrow: 60rem;  /* 960  */
   --measure:          68ch;   /* reading width */
+
+  /* The whole page stops growing here; past this the canvas is framed and
+     centred. --page-inset is the dead margin outside it (0 below the cap), so
+     viewport-fixed chrome can hug the page edge instead of the screen edge. */
+  --page-max:  120rem;  /* 1920 */
+  --page-inset: max(0px, calc((100vw - var(--page-max)) / 2));
 
   /* --- Borders — brutalist --- */
   --bw-hair: 1px; --bw: 2px; --bw-thick: 3px; --bw-brutal: 4px;

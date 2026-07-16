@@ -84,7 +84,8 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  max-width: min(92vw, 66rem);
+  /* fixed width (not max-width) so the box never resizes as the category flips */
+  width: min(92vw, 66rem);
   padding: clamp(1.5rem, 3vw, 2.75rem) clamp(1.5rem, 4vw, 3.5rem);
   background: color-mix(in srgb, var(--color-base) 55%, transparent);
   -webkit-backdrop-filter: blur(18px);
@@ -117,13 +118,29 @@
   letter-spacing: -0.04em;
   color: var(--color-accent);
 }
+/* every category's chip list shares one grid cell → the row reserves the tallest
+   set, so the frosted box keeps a constant height as the category flips */
+.tokensWrap {
+  display: grid;
+  width: 100%;
+  margin-top: var(--space-2);
+}
 .tokens {
+  grid-area: 1 / 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  /* centred in the reserved band so short sets don't leave dead space below */
+  align-content: center;
   gap: var(--space-2) var(--space-3);
   max-width: min(82vw, 62rem);
-  margin-top: var(--space-2);
+  margin-inline: auto;
+  visibility: hidden;
+  opacity: 0;
+}
+.tokensOn {
+  visibility: visible;
+  opacity: 1;
 }
 .activeToken {
   padding: var(--space-2) var(--space-4);

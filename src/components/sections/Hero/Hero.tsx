@@ -5,7 +5,7 @@ import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSectio
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useLenis } from '../../../hooks/useLenis';
 import { useSettings } from '../../../hooks/useSettings';
-import { useIsCompactHero } from '../../../hooks/useIsCompactHero';
+import { useIsCompact } from '../../../hooks/useIsCompact';
 import { RollingText } from '../../primitives/RollingText/RollingText';
 import { MagneticButton } from '../../primitives/Magnetic/MagneticButton';
 import { HeroField } from './HeroField';
@@ -221,6 +221,6 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
  *  purpose-built compact hero on touch / small screens. The breakpoint matches
  *  the desktop pin's matchMedia condition, so the two never conflict. */
 export function Hero({ started = true }: { started?: boolean }) {
-  const compact = useIsCompactHero();
+  const compact = useIsCompact();
   return compact ? <HeroMobile started={started} /> : <HeroDesktop started={started} />;
 }

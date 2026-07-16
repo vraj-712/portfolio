@@ -8,10 +8,7 @@ export const CITY = brand.location.split(',')[0] ?? brand.location;
 
 export const STATS = [
   { n: projects.length, label: 'Projects' },
-  {
-    n: skills.frontend.items.length + skills.backend.items.length + skills.tools.items.length,
-    label: 'Technologies',
-  },
+  { n: skills.groups.reduce((sum, g) => sum + g.items.length, 0), label: 'Technologies' },
   { n: experience.length, label: 'Roles' },
 ] as const;
 

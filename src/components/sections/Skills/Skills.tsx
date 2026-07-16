@@ -12,7 +12,7 @@ import { cx } from '../../../lib/utils/cx';
 import styles from './Skills.module.css';
 
 const { skills } = content;
-const GROUPS = [skills.frontend, skills.backend, skills.tools];
+const GROUPS = skills.groups;
 const CATEGORIES = GROUPS.map((g) => g.label.toUpperCase());
 const ALL = GROUPS.flatMap((g) => g.items);
 
@@ -27,7 +27,7 @@ export function Skills() {
   const reduced = useReducedMotion();
   const coarse = useIsCoarsePointer();
   const rootRef = useRef<HTMLElement>(null);
-  const tokensRef = useRef<HTMLUListElement>(null);
+  const tokensRef = useRef<HTMLDivElement>(null);
   const [cat, setCat] = useState(0);
   const horizontal = !reduced && !coarse;
 
@@ -48,8 +48,9 @@ export function Skills() {
           scrub: true,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            const p = self.progress;
-            setCat(p < 0.34 ? 0 : p < 0.67 ? 1 : 2);
+            // split the pin evenly across however many categories exist
+            const i = Math.floor(self.progress * GROUPS.length);
+            setCat(Math.max(0, Math.min(GROUPS.length - 1, i)));
           },
         },
       });
@@ -70,18 +71,16 @@ export function Skills() {
   useGSAP(
     () => {
       if (!horizontal || reduced) return;
-      const el = tokensRef.current;
-      if (!el) return;
+      const active = tokensRef.current?.querySelector('[data-tokens="on"]');
+      if (!active) return;
       gsap.fromTo(
-        el.children,
+        active.children,
         { yPercent: 70, autoAlpha: 0 },
         { yPercent: 0, autoAlpha: 1, stagger: 0.03, duration: 0.4, ease: EASE.powerOut, overwrite: true },
       );
     },
     { dependencies: [cat, horizontal], scope: tokensRef },
   );
-
-  const activeGroup = GROUPS[cat] ?? skills.frontend;
 
   const learning = (
     <p className={styles.learning}>
@@ -138,13 +137,23 @@ export function Skills() {
             {String(cat + 1).padStart(2, '0')} / {String(GROUPS.length).padStart(2, '0')}
           </p>
           <RollingText values={CATEGORIES} index={cat} className={styles.category} />
-          <ul ref={tokensRef} className={styles.tokens} aria-hidden="true">
-            {activeGroup.items.map((t) => (
-              <li key={t} className={styles.activeToken}>
-                {t}
-              </li>
+          {/* every category's chips share one grid cell, so the box reserves the
+              tallest set and never resizes as the category flips */}
+          <div ref={tokensRef} className={styles.tokensWrap} aria-hidden="true">
+            {GROUPS.map((g, i) => (
+              <ul
+                key={g.label}
+                data-tokens={i === cat ? 'on' : undefined}
+                className={cx(styles.tokens, i === cat && styles.tokensOn)}
+              >
+                {g.items.map((t) => (
+                  <li key={t} className={styles.activeToken}>
+                    {t}
+                  </li>
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
           <div className={styles.dots} aria-hidden="true">
             {GROUPS.map((g, i) => (
               <span key={g.label} className={cx(styles.dot, i === cat && styles.dotOn)} />
