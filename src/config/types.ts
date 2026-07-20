@@ -1,8 +1,8 @@
 /* =============================================================================
    CONFIG TYPES — the shape every part of site.config.ts must satisfy.
    These interfaces are what stop a rebrand from putting a value in the wrong
-   place: fill the data in ./content.ts, ./labels.ts, ./theme.ts, ./seo.ts and
-   TypeScript checks it here.
+   place: fill the data in ./content.ts, ./labels.ts and ./theme.ts and
+   TypeScript checks it here. (SEO metadata is static HTML in index.html.)
    ============================================================================= */
 
 import type {
@@ -197,25 +197,10 @@ export interface ThemeConfig {
   smoothScroll: boolean;
 }
 
-/* ----------------------------------------------------------------------------
-   SEO — page <title>, meta description, and social-share (Open Graph) preview.
-   Injected into index.html at build time (see vite.config.ts).
-   ---------------------------------------------------------------------------- */
-
-export interface SeoConfig {
-  title: string;
-  description: string;
-  /** Open Graph share card. `image` is a path under /public (or absolute URL). */
-  og: { title: string; description: string; image?: string };
-  /** Browser theme-color; defaults to the base color if omitted. */
-  themeColor?: string;
-  lang: string; // <html lang>
-}
-
-/** The whole site, in one typed object. */
+/** The whole site, in one typed object. (SEO metadata lives as static HTML in
+ *  index.html, not in the config.) */
 export interface SiteConfig {
   content: SiteContent;
   labels: SiteLabels;
   theme: ThemeConfig;
-  seo: SeoConfig;
 }

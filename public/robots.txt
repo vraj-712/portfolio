@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-three-gamma-hmhmsu73xi.vercel.app/sitemap.xml

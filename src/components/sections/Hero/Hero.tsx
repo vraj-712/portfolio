@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ElementType } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSection';
@@ -26,6 +26,11 @@ interface HeroContentProps {
 }
 
 function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
+  // The accent layer is a purely-visual, aria-hidden duplicate; only the base
+  // layer is the real heading. Rendering the duplicate as a <div> (identical
+  // styling — .name resets margin) keeps a single <h1> on the page. The
+  // [data-hero-name] attribute stays on both so the reveal still targets them.
+  const NameTag: ElementType = accent ? 'div' : 'h1';
   return (
     <div className={styles.inner}>
       <div className={styles.metaTop}>
@@ -46,7 +51,11 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
 
       <div className={styles.center}>
         <p className={cx(styles.eyebrow, accent && styles.eyebrowAccent)}>{brand.taglineParts[0]}</p>
-        <h1 className={styles.name} data-hero-name aria-label={brand.name}>
+        <NameTag
+          className={styles.name}
+          data-hero-name
+          {...(accent ? {} : { 'aria-label': brand.name })}
+        >
           <span className={styles.lineOuter}>
             <span className={styles.lineInner} data-hero-line>
               {brand.firstName}
@@ -57,7 +66,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
               {brand.lastName}
             </span>
           </span>
-        </h1>
+        </NameTag>
         <p className={styles.role}>
           <span className={styles.roleStatic}>{brand.role} —&nbsp;</span>
           <RollingText values={brand.roleFacets} index={facet} className={styles.roleRoll} />
