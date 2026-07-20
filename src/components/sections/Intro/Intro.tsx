@@ -1,24 +1,45 @@
-import { useRef } from 'react';
+import { useRef, useState, type JSX } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
+import { useIsCompact } from '../../../hooks/useIsCompact';
 import { useLenis } from '../../../hooks/useLenis';
-import { EASE } from '../../../lib/gsap/easings';
-import { content } from '../../../data/content';
+import { CounterIntro } from './variants/CounterIntro';
+import { TerminalIntro } from './variants/TerminalIntro';
+import { SplitFlapIntro } from './variants/SplitFlapIntro';
+import { GridIntro } from './variants/GridIntro';
+import type { IntroVariantProps } from './variants/types';
+import { labels } from '../../../site.config';
 import styles from './Intro.module.css';
 
-const { brand } = content;
-const LETTERS = Array.from(brand.name);
+type IntroVariant = (p: IntroVariantProps) => JSX.Element;
 
+/** One is chosen at random per visit, so the loader varies. */
+const VARIANTS: IntroVariant[] = [
+  CounterIntro,
+  TerminalIntro,
+  SplitFlapIntro,
+  GridIntro,
+];
+
+/** Loader shell: owns the curtain, skip, scroll-lock, a11y and the exit wipe.
+ *  The chosen variant only plays its content and calls onReady(). */
 export function Intro({ onDone }: { onDone: () => void }) {
   const reduced = useReducedMotion();
+  const compact = useIsCompact();
   const lenis = useLenis();
   const rootRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLSpanElement>(null);
   const skipRef = useRef<HTMLButtonElement>(null);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
   const doneRef = useRef(false);
+  const exitingRef = useRef(false);
+
+  // Pick once per mount (lazy initialiser — keeps the random draw out of the
+  // render body). Small screens always get the plain counter: the busier
+  // variants are built for room the phone doesn't have.
+  const [Variant] = useState<IntroVariant>(() =>
+    compact ? CounterIntro : (VARIANTS[Math.floor(Math.random() * VARIANTS.length)] ?? CounterIntro),
+  );
 
   const finish = () => {
     if (doneRef.current) return;
@@ -29,17 +50,18 @@ export function Intro({ onDone }: { onDone: () => void }) {
     onDone();
   };
 
-  const skip = () => {
-    if (doneRef.current) return;
+  /** Wipe the curtain away and hand off. Safe to call twice (skip + onReady). */
+  const exit = () => {
+    if (exitingRef.current || doneRef.current) return;
+    exitingRef.current = true;
     const root = rootRef.current;
-    tlRef.current?.kill();
     if (reduced || !root) {
       finish();
       return;
     }
     gsap.to(root, {
       clipPath: 'inset(0% 0% 100% 0%)',
-      duration: 0.5,
+      duration: 0.6,
       ease: 'power4.inOut',
       onComplete: finish,
     });
@@ -47,60 +69,25 @@ export function Intro({ onDone }: { onDone: () => void }) {
 
   useGSAP(
     () => {
-      const root = rootRef.current;
-      if (!root) return;
-
       document.body.style.overflow = 'hidden';
       lenis?.current?.stop();
-      // provider effect (ancestor) may run after this child effect — ensure the
-      // lenis instance is stopped once it exists
+      // the provider effect (ancestor) may run after this child effect — make
+      // sure the instance is stopped once it exists
       requestAnimationFrame(() => lenis?.current?.stop());
       skipRef.current?.focus();
 
       const onKey = (e: KeyboardEvent) => {
         if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          skip();
+          exit();
         }
       };
       window.addEventListener('keydown', onKey);
 
-      if (reduced) {
-        if (counterRef.current) counterRef.current.textContent = '100';
-        const t = window.setTimeout(finish, 150);
-        return () => {
-          window.clearTimeout(t);
-          window.removeEventListener('keydown', onKey);
-        };
-      }
-
-      const units = root.querySelectorAll('[data-intro-unit]');
-      const proxy = { v: 0 };
-      const tl = gsap.timeline({ onComplete: finish });
-      tlRef.current = tl;
-      tl.to(
-        proxy,
-        {
-          v: 100,
-          duration: 1.1,
-          ease: 'power2.out',
-          onUpdate: () => {
-            if (counterRef.current) {
-              counterRef.current.textContent = String(Math.round(proxy.v)).padStart(3, '0');
-            }
-          },
-        },
-        0,
-      )
-        .from(
-          units,
-          { yPercent: 120, autoAlpha: 0, stagger: 0.045, duration: 0.7, ease: EASE.expoOut },
-          0.1,
-        )
-        .to(root, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.7, ease: 'power4.inOut' }, '+=0.15');
-
-      // hard-cap safety net
-      const cap = window.setTimeout(finish, 3200);
+      // hard-cap safety net — never trap the visitor behind the curtain.
+      // Must stay clear of the longest variant (~2.9s) so it only ever fires
+      // when a timeline has genuinely stalled.
+      const cap = window.setTimeout(exit, 6000);
 
       return () => {
         window.clearTimeout(cap);
@@ -117,36 +104,19 @@ export function Intro({ onDone }: { onDone: () => void }) {
       role="dialog"
       aria-modal="true"
       aria-label="Site intro"
-      onClick={skip}
+      onClick={exit}
     >
-      <div className={styles.inner}>
-        <span ref={counterRef} className={styles.counter}>
-          000
-        </span>
-        <p className={styles.name} aria-label={brand.name}>
-          {LETTERS.map((ch, i) =>
-            ch === ' ' ? (
-              <span key={i} className={styles.space} aria-hidden="true" />
-            ) : (
-              <span key={i} className={styles.unit} aria-hidden="true">
-                <span data-intro-unit className={styles.unitInner}>
-                  {ch}
-                </span>
-              </span>
-            ),
-          )}
-        </p>
-      </div>
+      <Variant reduced={reduced} onReady={exit} />
       <button
         ref={skipRef}
         type="button"
         className={styles.skip}
         onClick={(e) => {
           e.stopPropagation();
-          skip();
+          exit();
         }}
       >
-        Skip ↵
+        {labels.loader.skip} ↵
       </button>
     </div>
   );

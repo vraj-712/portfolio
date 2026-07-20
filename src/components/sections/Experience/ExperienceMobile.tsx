@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { Section } from '../../primitives/Section/Section';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { getMotionProfile } from '../../../settings/motionProfile';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import styles from './ExperienceMobile.module.css';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -25,8 +25,15 @@ export function ExperienceMobile() {
       cards.forEach((card, i) => {
         const next = cards[i + 1];
 
-        // peel: scrub this card back as the NEXT one climbs over it
+        // Peel: scrub this card back as the NEXT one climbs over it.
+        // The range is measured from where this card actually parks, not from
+        // the viewport edge: with a fixed 'top bottom' start, a short screen
+        // shows the next card long before it covers this one, so this card
+        // would begin fading while it's still the one being read — and being
+        // translucent, it ghosts the card underneath through itself.
         if (next) {
+          // constant while parked, so it's a stable reference for the range
+          const parkTop = () => parseFloat(getComputedStyle(card).top) || 0;
           gsap.to(card, {
             scale: 0.9,
             opacity: 0.35,
@@ -34,9 +41,12 @@ export function ExperienceMobile() {
             transformOrigin: 'center top',
             scrollTrigger: {
               trigger: next,
-              start: 'top bottom',
-              end: 'top top+=140',
+              // start the moment the next card touches this card's bottom edge
+              start: () => `top ${Math.min(window.innerHeight, parkTop() + card.offsetHeight)}px`,
+              // done once it has climbed to just under the park line
+              end: () => `top ${parkTop() + 50}px`,
               scrub: 0.4,
+              invalidateOnRefresh: true,
             },
           });
         }
@@ -58,7 +68,7 @@ export function ExperienceMobile() {
   );
 
   return (
-    <Section id="experience" index={3} label="Experience" className={styles.experience}>
+    <Section id="experience" index={3} label={labels.sections.experience} className={styles.experience}>
       <div ref={rootRef} className={styles.stack}>
         {content.experience.map((job, i) => (
           <article
@@ -81,10 +91,10 @@ export function ExperienceMobile() {
                 <span className={styles.client}> — {job.clients.join(', ')}</span>
               )}
             </p>
-            <p className={styles.summary} data-line>
-              {job.summary}
-            </p>
 
+            {/* No summary here, unlike the desktop card: it restates the bullets
+                almost verbatim, and a sticky card only works while it fits the
+                viewport. The bullets are the more specific telling. */}
             <ul className={styles.bullets}>
               {job.bullets.map((b) => (
                 <li key={b} className={styles.bullet} data-line>

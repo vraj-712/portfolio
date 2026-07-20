@@ -9,10 +9,14 @@ import { AccentWipe } from '../../primitives/AccentWipe/AccentWipe';
 import { SplitReveal } from '../../primitives/AnimatedText/SplitReveal';
 import { Magnetic } from '../../primitives/Magnetic/Magnetic';
 import { wipeIn, wipeOut } from '../../../lib/gsap/clipReveal';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import styles from './Closing.module.css';
 
 const { brand, vision, contact } = content;
+
+/** Compact display handle from a profile URL (strip scheme + www + trailing /),
+ *  so the shown value always tracks the real link in the config. */
+const handle = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/+$/, '');
 
 interface ContactRowProps {
   href: string;
@@ -73,10 +77,10 @@ export function Closing() {
   const year = new Date().getFullYear();
 
   return (
-    <footer ref={rootRef} id="closing" className={styles.closing} aria-label="Contact">
+    <footer ref={rootRef} id="closing" className={styles.closing} aria-label={labels.sections.contact}>
       <AccentWipe ref={curtainRef} className={styles.curtain} />
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>Let’s build something</p>
+        <p className={styles.eyebrow}>{labels.closing.eyebrow}</p>
 
         <h2 className={styles.tagline}>
           <SplitReveal as="span" splitBy="words" stagger={0.05} y={120} className={styles.taglineText}>
@@ -87,15 +91,15 @@ export function Closing() {
         <p className={styles.vision}>{vision}</p>
 
         <ul className={styles.contacts}>
-          <ContactRow href={`mailto:${contact.email}`} label="Email" value={contact.email} cursorLabel="MESSAGE" />
-          <ContactRow href={`tel:${contact.phone.replace(/\s+/g, '')}`} label="Phone" value={contact.phone} cursorLabel="CALL" />
-          <ContactRow href={contact.linkedin} label="LinkedIn" value="in/vrajpatel" cursorLabel="CONNECT" external />
-          <ContactRow href={contact.github} label="GitHub" value="github.com/vrajpatel" cursorLabel="SOURCE" external />
+          <ContactRow href={`mailto:${contact.email}`} label={labels.closing.contacts.email} value={contact.email} cursorLabel="MESSAGE" />
+          <ContactRow href={`tel:${contact.phone.replace(/\s+/g, '')}`} label={labels.closing.contacts.phone} value={contact.phone} cursorLabel="CALL" />
+          <ContactRow href={contact.linkedin} label={labels.closing.contacts.linkedin} value={handle(contact.linkedin)} cursorLabel="CONNECT" external />
+          <ContactRow href={contact.github} label={labels.closing.contacts.github} value={handle(contact.github)} cursorLabel="SOURCE" external />
         </ul>
 
         <div className={styles.footRow}>
           <button type="button" className={styles.backTop} onClick={backToTop} {...backCursor}>
-            ↑ Back to top
+            ↑ {labels.closing.backToTop}
           </button>
           <p className={styles.meta}>
             {contact.location} · © {year} {brand.name}

@@ -6,7 +6,7 @@ import { Section } from '../../primitives/Section/Section';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useCursorTarget } from '../../../hooks/useCursorTarget';
 import { getMotionProfile } from '../../../settings/motionProfile';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import { cx } from '../../../lib/utils/cx';
 import styles from './Credentials.module.css';
 
@@ -106,10 +106,10 @@ export function Credentials() {
   );
 
   return (
-    <Section id="credentials" index={6} label="Credentials" className={styles.credentials}>
+    <Section id="credentials" index={6} label={labels.sections.credentials} className={styles.credentials}>
       <div ref={rootRef}>
         <div className={styles.block}>
-          <p className={styles.blockLabel}>Certificates</p>
+          <p className={styles.blockLabel}>{labels.credentials.certificates}</p>
           <div className={styles.certs}>
             {certificates.map((c, i) => (
               <CertCard key={c.title} index={i + 1} title={c.title} issuer={c.issuer} />
@@ -118,7 +118,7 @@ export function Credentials() {
         </div>
 
         <div className={styles.block}>
-          <p className={styles.blockLabel}>Courses</p>
+          <p className={styles.blockLabel}>{labels.credentials.courses}</p>
           <div className={styles.courses}>
             {courses.map((c, i) => (
               <CourseRow key={c.title} index={i + 1} title={c.title} url={c.url} />

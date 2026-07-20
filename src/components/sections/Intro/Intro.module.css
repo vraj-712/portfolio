@@ -1,3 +1,10 @@
+/* Raw role aliases resolved at the root, so .intro can swap base/ink without a
+   self-referential (cyclic) declaration. */
+:root {
+  --loader-fg: var(--color-ink); /* the page's light ink → loader content */
+  --loader-bg: var(--color-base); /* the page's dark base → loader curtain */
+}
+
 .intro {
   position: fixed;
   inset: 0;
@@ -7,6 +14,12 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-6);
+  /* Flip base↔ink for the whole loader subtree: the curtain becomes the page's
+     dark base (not its light inverse) so the loading screen matches the theme.
+     Every rule below keeps using base-for-content / ink-for-curtain unchanged. */
+  --color-base: var(--loader-fg);
+  --color-ink: var(--loader-bg);
+  --color-ink-muted: color-mix(in srgb, var(--color-ink) 62%, var(--color-base));
   background: var(--color-ink);
   will-change: clip-path;
 }
@@ -71,4 +84,175 @@
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: var(--color-on-accent);
+}
+
+/* ===== variant: Terminal boot log ======================================== */
+.term {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  /* a real window, in the site's card language — accent hard shadow reads on
+     the ink curtain where an ink shadow would vanish */
+  padding: var(--space-6) var(--space-7);
+  border: var(--bw-thick) solid var(--color-base);
+  box-shadow: 10px 10px 0 0 var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  line-height: 1.7;
+  color: var(--color-base);
+}
+.termLine {
+  white-space: nowrap;
+  will-change: clip-path;
+}
+.termLine:last-of-type {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+.caret {
+  width: 0.6em;
+  height: 1.1em;
+  background: var(--color-accent);
+  animation: blink 0.9s steps(2, end) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+
+/* ===== variant: Split-flap =============================================== */
+.flapName {
+  display: flex;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-700);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--color-base);
+}
+.flapCell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0.92em;
+  padding: 0.1em 0.06em;
+  border: var(--bw) solid color-mix(in srgb, var(--color-base) 32%, transparent);
+  background: color-mix(in srgb, var(--color-base) 7%, transparent);
+}
+/* the hinge line that makes it read as a split-flap */
+.flapCell::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-ink) 75%, transparent);
+}
+.bar {
+  display: block;
+  margin-top: var(--space-3);
+  width: min(60vw, 22rem);
+  height: 6px;
+  background: color-mix(in srgb, var(--color-base) 22%, transparent);
+  overflow: hidden;
+}
+.barFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-accent);
+  transform-origin: left center;
+}
+
+/* ===== variant: Block grid =============================================== */
+.grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gridCells {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  /* ink shows through as gridlines — without this the filled grid is just a
+     solid accent rectangle */
+  gap: 3px;
+  padding: 3px;
+}
+.gridBlock {
+  background: var(--color-accent);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .term {
+    font-size: var(--fs-200);
+  }
+  .flapName {
+    font-size: var(--fs-500);
+  }
+}
+
+/* counter plate — the site's card language: paper, thick ink border, hard
+   shadow. Paper (not ink) so the number stays legible on the accent grid. */
+.plate {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: min(70vw, 20rem);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-base);
+  border: var(--bw-thick) solid var(--color-ink);
+  box-shadow: var(--shadow);
+  will-change: transform;
+}
+.plateLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--color-ink-muted);
+}
+.plateNum {
+  font-family: var(--font-display);
+  font-size: var(--fs-700);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+}
+.plateBar {
+  display: block;
+  height: 6px;
+  background: color-mix(in srgb, var(--color-ink) 14%, transparent);
+  overflow: hidden;
+}
+.plateBarFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+@media (max-width: 640px) {
+  .plateNum { font-size: var(--fs-600); }
 }

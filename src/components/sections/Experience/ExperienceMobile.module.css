@@ -9,13 +9,16 @@
   gap: var(--space-5);
   /* a little runway so the last card gets a beat parked before the next section */
   padding-bottom: var(--space-8);
+  /* single source of truth for the park offset — clears the ~76px header row */
+  --stick: calc(var(--space-8) + var(--space-4));
+  --peel: 10px;
 }
 
 .card {
   /* Each card parks under the fixed header. The per-index offset leaves a sliver
      of the cards beneath visible, so the deck reads as a stack. */
   position: sticky;
-  top: calc(var(--space-9) + var(--i) * 12px);
+  top: calc(var(--stick) + var(--i) * var(--peel));
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -66,11 +69,6 @@
 .client {
   color: var(--color-ink-muted);
 }
-.summary {
-  font-size: var(--fs-200);
-  line-height: 1.45;
-  color: var(--color-ink-muted);
-}
 
 .bullets {
   display: flex;
@@ -107,4 +105,32 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-ink-muted);
+}
+
+/* Short viewports (and every phone in landscape): a sticky card taller than the
+   space beneath its `top` can never be scrolled into view — the overhang is
+   simply unreachable, which is what was clipping the tech pills. Tighten the
+   card until it fits the budget instead of letting it get cut. */
+@media (max-height: 780px) {
+  .card {
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+  .role {
+    font-size: var(--fs-400);
+  }
+  .bullets {
+    gap: var(--space-2);
+    margin-top: 0;
+  }
+  .bullet {
+    line-height: 1.35;
+  }
+  .tech {
+    gap: 6px;
+    margin-top: var(--space-1, 0.25rem);
+  }
+  .techPill {
+    padding: 0.24em 0.5em;
+  }
 }

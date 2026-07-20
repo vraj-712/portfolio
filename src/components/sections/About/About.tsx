@@ -1,7 +1,7 @@
 import { Section } from '../../primitives/Section/Section';
 import { SplitReveal } from '../../primitives/AnimatedText/SplitReveal';
 import { Reveal } from '../../primitives/Reveal/Reveal';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import styles from './About.module.css';
 
 const { about } = content;
@@ -24,7 +24,7 @@ function Philosophy() {
 
 export function About() {
   return (
-    <Section id="about" index={1} label="About" className={styles.about}>
+    <Section id="about" index={1} label={labels.sections.about} className={styles.about}>
       <div className={styles.grid}>
         <div className={styles.main}>
           <SplitReveal as="p" splitBy="lines" className={styles.lead} y={110} stagger={0.09}>
@@ -37,7 +37,7 @@ export function About() {
 
         <aside className={styles.side}>
           <Reveal variant="up" className={styles.card}>
-            <p className={styles.cardLabel}>Education</p>
+            <p className={styles.cardLabel}>{labels.about.education}</p>
             {about.education.map((ed) => (
               <div key={`${ed.degree}-${ed.period}`} className={styles.eduItem}>
                 <p className={styles.degree}>
@@ -52,7 +52,7 @@ export function About() {
           </Reveal>
 
           <div>
-            <p className={styles.sideLabel}>Interests</p>
+            <p className={styles.sideLabel}>{labels.about.interests}</p>
             <Reveal as="ul" className={styles.chips} stagger={0.05} variant="up">
               {about.interests.map((it) => (
                 <li key={it} className={styles.chip}>
@@ -63,7 +63,7 @@ export function About() {
           </div>
 
           <div>
-            <p className={styles.sideLabel}>Strengths</p>
+            <p className={styles.sideLabel}>{labels.about.strengths}</p>
             <Reveal as="ul" className={styles.chips} stagger={0.05} variant="up">
               {about.strengths.map((s) => (
                 <li key={s} className={styles.chipGhost}>

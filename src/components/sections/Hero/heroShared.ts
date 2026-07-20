@@ -1,15 +1,15 @@
 /* Data shared by the desktop and mobile hero variants — one source of truth so
    the two purpose-built layouts never drift apart. */
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 
 const { brand, skills, projects, experience, contact } = content;
 
 export const CITY = brand.location.split(',')[0] ?? brand.location;
 
 export const STATS = [
-  { n: projects.length, label: 'Projects' },
-  { n: skills.groups.reduce((sum, g) => sum + g.items.length, 0), label: 'Technologies' },
-  { n: experience.length, label: 'Roles' },
+  { n: projects.length, label: labels.hero.stats.projects },
+  { n: skills.groups.reduce((sum, g) => sum + g.items.length, 0), label: labels.hero.stats.technologies },
+  { n: experience.length, label: labels.hero.stats.roles },
 ] as const;
 
 export const SOCIALS = [

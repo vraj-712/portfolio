@@ -6,7 +6,7 @@ import { useIsCoarsePointer } from '../../../hooks/useIsCoarsePointer';
 import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSection';
 import { ProjectCard } from '../../primitives/ProjectCard/ProjectCard';
 import { SectionLabel } from '../../primitives/Section/SectionLabel';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import { cx } from '../../../lib/utils/cx';
 import styles from './Projects.module.css';
 
@@ -56,10 +56,10 @@ export function Projects() {
       ref={rootRef}
       id="projects"
       className={cx(styles.projects, horizontal && styles.horizontal)}
-      aria-label="Selected Work"
+      aria-label={labels.sections.work}
     >
       <div className={styles.head}>
-        <SectionLabel index={4}>Selected Work</SectionLabel>
+        <SectionLabel index={4}>{labels.sections.work}</SectionLabel>
       </div>
       <div ref={trackRef} className={styles.track}>
         {projects.map((p, i) => (

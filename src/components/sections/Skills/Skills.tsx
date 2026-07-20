@@ -7,7 +7,7 @@ import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSectio
 import { RollingText } from '../../primitives/RollingText/RollingText';
 import { SectionLabel } from '../../primitives/Section/SectionLabel';
 import { EASE } from '../../../lib/gsap/easings';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import { cx } from '../../../lib/utils/cx';
 import styles from './Skills.module.css';
 
@@ -91,9 +91,9 @@ export function Skills() {
 
   if (!horizontal) {
     return (
-      <section ref={rootRef} id="skills" className={styles.skills} aria-label="Tech Stack">
+      <section ref={rootRef} id="skills" className={styles.skills} aria-label={labels.sections.stack}>
         <div className={styles.inner}>
-          <SectionLabel index={5}>Tech Stack</SectionLabel>
+          <SectionLabel index={5}>{labels.sections.stack}</SectionLabel>
           {GROUPS.map((g) => (
             <div key={g.label} className={styles.group}>
               <h3 className={styles.groupLabel}>{g.label}</h3>
@@ -113,7 +113,7 @@ export function Skills() {
   }
 
   return (
-    <section ref={rootRef} id="skills" className={cx(styles.skills, styles.pinned)} aria-label="Tech Stack">
+    <section ref={rootRef} id="skills" className={cx(styles.skills, styles.pinned)} aria-label={labels.sections.stack}>
       {/* full-background sliding marquee */}
       <div className={styles.bg} aria-hidden="true">
         {Array.from({ length: BG_ROWS }, (_, i) => (

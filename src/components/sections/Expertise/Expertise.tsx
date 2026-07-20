@@ -1,7 +1,7 @@
 import { Section } from '../../primitives/Section/Section';
 import { Reveal } from '../../primitives/Reveal/Reveal';
 import { useCursorTarget } from '../../../hooks/useCursorTarget';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import styles from './Expertise.module.css';
 
 function ExpertiseRow({ index, title, blurb }: { index: number; title: string; blurb: string }) {
@@ -20,7 +20,7 @@ function ExpertiseRow({ index, title, blurb }: { index: number; title: string; b
 
 export function Expertise() {
   return (
-    <Section id="expertise" index={2} label="Areas of Expertise" className={styles.expertise}>
+    <Section id="expertise" index={2} label={labels.sections.expertise} className={styles.expertise}>
       <Reveal className={styles.rows} stagger={0.06} variant="up" start="top 82%">
         {content.expertise.map((item, i) => (
           <ExpertiseRow key={item.title} index={i + 1} title={item.title} blurb={item.blurb} />

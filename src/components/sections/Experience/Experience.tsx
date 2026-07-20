@@ -7,7 +7,7 @@ import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useIsCompact } from '../../../hooks/useIsCompact';
 import { ExperienceMobile } from './ExperienceMobile';
 import { EASE } from '../../../lib/gsap/easings';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import styles from './Experience.module.css';
 
 function ExperienceDesktop() {
@@ -54,11 +54,11 @@ function ExperienceDesktop() {
   );
 
   return (
-    <Section id="experience" index={3} label="Experience" className={styles.experience}>
+    <Section id="experience" index={3} label={labels.sections.experience} className={styles.experience}>
       <div ref={rootRef} className={styles.timeline}>
         <span ref={lineRef} className={styles.line} aria-hidden="true" />
         {content.experience.map((job) => (
-          <article key={job.company} className={styles.item}>
+          <article key={`${job.company}-${job.period}`} className={styles.item}>
             <span data-marker className={styles.marker} aria-hidden="true" />
             <div className={styles.content}>
               <p className={styles.period}>

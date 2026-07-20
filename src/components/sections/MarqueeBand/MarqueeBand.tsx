@@ -1,5 +1,5 @@
 import { Marquee } from '../../primitives/Marquee/Marquee';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import styles from './MarqueeBand.module.css';
 
 export function MarqueeBand() {
@@ -10,7 +10,7 @@ export function MarqueeBand() {
   ));
 
   return (
-    <section id="marquee" className={styles.band} aria-label="Keywords">
+    <section id="marquee" className={styles.band} aria-label={labels.sections.marquee}>
       <Marquee items={items} speed={28} ariaLabel="Skills and strengths ticker" />
     </section>
   );

@@ -11,7 +11,7 @@ import { MagneticButton } from '../../primitives/Magnetic/MagneticButton';
 import { HeroField } from './HeroField';
 import { HeroMobile } from './HeroMobile';
 import { EASE } from '../../../lib/gsap/easings';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import { cx } from '../../../lib/utils/cx';
 import { CITY, STATS, SOCIALS, pad, istTime, bloomShapeAt } from './heroShared';
 import styles from './Hero.module.css';
@@ -31,7 +31,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
       <div className={styles.metaTop}>
         <p className={styles.status}>
           <span className={styles.statusDot} aria-hidden="true" />
-          Available for work
+          {labels.hero.status}
         </p>
         <p className={styles.place}>
           <span>
@@ -39,7 +39,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
           </span>
           <span className={styles.time}>
             {time}
-            <span className={styles.tz}> IST</span>
+            <span className={styles.tz}> {labels.hero.clock}</span>
           </span>
         </p>
       </div>
@@ -70,7 +70,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
             className={styles.ctaPrimary}
             onClick={() => onNav('projects')}
           >
-            View Work <span aria-hidden="true">↓</span>
+            {labels.hero.ctaPrimary} <span aria-hidden="true">↓</span>
           </MagneticButton>
           <MagneticButton
             variant="outline"
@@ -78,7 +78,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
             className={styles.ctaGhost}
             onClick={() => onNav('closing')}
           >
-            Get in touch
+            {labels.hero.ctaSecondary}
           </MagneticButton>
         </div>
       </div>

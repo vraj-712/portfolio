@@ -12,23 +12,30 @@
   --space-scale: 1; /* global density multiplier */
   --dur-scale: 1;   /* CSS transition/animation duration multiplier (1/speed) */
 
+  /* First-paint fallback ONLY. At boot, main.tsx calls applySettings() which
+     overrides every --color-* below with the site-config default (inline on
+     <html>, so it wins). These values must MIRROR that default — derived from
+     src/config/theme.ts's triad — so the pre-JS frame doesn't flash the wrong
+     palette. Change the palette in src/config/theme.ts, then update these to
+     match (deriveColors in src/settings/colors.ts computes the shades). */
+
   /* --- Base / surfaces --- */
-  --color-base:        #ECE7DA; /* bone paper — page canvas */
-  --color-base-2:      #E3DCCB; /* elevated paper — cards, panels, wells */
-  --color-base-3:      #DAD2BE; /* deepest paper — insets, marquee track */
+  --color-base:        #0C0F12; /* page canvas */
+  --color-base-2:      #191C1F; /* elevated — cards, panels, wells */
+  --color-base-3:      #292C2F; /* deepest — insets, marquee track */
 
   /* --- Ink / text --- */
-  --color-ink:         #111110; /* near-black warm ink — primary text, borders */
-  --color-ink-muted:   #57534A; /* warm gray — meta, captions, secondary (6.2:1) */
+  --color-ink:         #E9EEF0; /* primary text, borders */
+  --color-ink-muted:   #9EA2A5; /* meta, captions, secondary */
 
   /* --- Accent (rationed: reveal / focus / emphasis) --- */
-  --color-accent:      #1F1BEB; /* electric ultramarine (7.05:1 on base) */
-  --color-accent-press:#1512B0; /* darker ultramarine — active/pressed */
-  --color-on-accent:   #F7F4EC; /* paper-white — the ONLY text color allowed on accent */
+  --color-accent:      #29E0D4; /* cyan */
+  --color-accent-press:#5FE4DC; /* pressed/active */
+  --color-on-accent:   #111110; /* the ONLY text color allowed on accent */
 
   /* --- Lines --- */
-  --color-line:        #111110; /* full-strength brutalist divider/frame (= ink) */
-  --color-line-soft:   #C9C0AD; /* hairline on paper where full ink is too loud */
+  --color-line:        #E9EEF0; /* full-strength brutalist divider/frame (= ink) */
+  --color-line-soft:   #4A4D50; /* hairline where full ink is too loud */
 
   /* --- Selection --- */
   --color-selection-bg: var(--color-accent);

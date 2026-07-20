@@ -1,5 +1,7 @@
 /* Settings model for the runtime customization panel. Temporary state only —
-   never persisted, so a refresh restores theme.css defaults. */
+   never persisted, so a refresh restores the site-config defaults. */
+
+import { theme } from '../config/theme';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -35,20 +37,22 @@ export interface Settings {
   cursorTheme: CursorThemeId;
 }
 
+// The boot defaults come straight from the site config's theme block — the one
+// place a rebrand sets the default look (src/config/theme.ts).
 export const DEFAULT_SETTINGS: Settings = {
-  themeMode: 'light',
-  paletteId: 'bone-ultramarine',
-  colorBase: '#ECE7DA',
-  colorInk: '#111110',
-  colorAccent: '#1F1BEB',
-  fontPair: 'bricolage-mono',
-  typeScale: 1,
-  spacing: 1,
-  radius: 0,
-  borderWidth: 2,
-  hardShadows: true,
-  reduceMotion: false,
-  motionSpeed: 1,
-  smoothScroll: true,
-  cursorTheme: 'precision',
+  themeMode: theme.mode,
+  paletteId: theme.paletteId,
+  colorBase: theme.colorBase,
+  colorInk: theme.colorInk,
+  colorAccent: theme.colorAccent,
+  fontPair: theme.fontPair,
+  typeScale: theme.typeScale,
+  spacing: theme.spacing,
+  radius: theme.radius,
+  borderWidth: theme.borderWidth,
+  hardShadows: theme.hardShadows,
+  reduceMotion: theme.reduceMotion,
+  motionSpeed: theme.motionSpeed,
+  smoothScroll: theme.smoothScroll,
+  cursorTheme: theme.cursorTheme,
 };

@@ -32,6 +32,13 @@
   padding: var(--space-4) var(--gutter);
 }
 
+/* While the menu is open the sheet scrolls under this row; without an opaque
+   fill the transparent row lets that content show through behind the logo/X. */
+.rowOpen {
+  background: var(--color-base);
+  border-bottom: var(--bw) solid var(--color-line);
+}
+
 .logo {
   font-family: var(--font-mono);
   font-size: var(--fs-400);
@@ -140,26 +147,86 @@
   position: fixed;
   inset: 0;
   z-index: 1; /* under .row so the burger stays tappable as the close (X) button */
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: var(--color-base);
+  /* THE sheet is the scroll container; centring happens on .sheetInner. Doing
+     both on one element (overflow + flex-centre) makes the overflowing end
+     unreachable — which is exactly what buried the Résumé button. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /* hidden up front so the row reveal can't flash before the JS timeline runs */
+  clip-path: inset(0% 0% 100% 0%);
+  will-change: clip-path;
 }
-.sheetList {
+
+.sheetInner {
+  box-sizing: border-box;
+  /* min-height (not height): centres when it fits, grows and scrolls when it
+     doesn't — with the whole block reachable because .sheet owns the scroll. */
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  text-align: center;
+  justify-content: center;
+  /* Reserve the two zones the sheet used to collide with: the header row above
+     (logo + burger) and the settings trigger below (52px + its own inset). */
+  padding:
+    calc(var(--space-4) * 2 + 44px + var(--space-4))
+    var(--gutter)
+    calc(clamp(1rem, 3vw, 2rem) + 52px + var(--space-5));
 }
+
+.sheetFoot {
+  margin-top: var(--space-6);
+  overflow: hidden; /* mask for the row reveal */
+}
+
+.sheetItem {
+  overflow: hidden; /* mask for the row reveal */
+}
+
 .sheetLink {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  /* no dividers — the mono index + this breathing room carry the separation */
+  padding-block: var(--space-4);
   font-family: var(--font-display);
-  font-size: var(--fs-700);
-  font-weight: 700;
+  font-size: clamp(1.75rem, 1rem + 5.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
   text-transform: uppercase;
   letter-spacing: -0.02em;
+  color: var(--color-ink);
+  transition: color var(--dur-fast) var(--ease-power-out);
 }
-.sheetLink:hover {
+.sheetIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+}
+.sheetLink:hover,
+.sheetLinkActive {
   color: var(--color-accent);
+}
+.sheetLinkActive .sheetIndex {
+  color: var(--color-accent);
+}
+
+.sheetResume {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-ink);
+  border: var(--bw-thick) solid var(--color-ink);
+  color: var(--color-base);
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 
 @media (max-width: 820px) {

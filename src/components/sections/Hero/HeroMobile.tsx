@@ -9,7 +9,7 @@ import { useSettings } from '../../../hooks/useSettings';
 import { RollingText } from '../../primitives/RollingText/RollingText';
 import { MagneticButton } from '../../primitives/Magnetic/MagneticButton';
 import { getMotionProfile } from '../../../settings/motionProfile';
-import { content } from '../../../data/content';
+import { content, labels } from '../../../site.config';
 import { cx } from '../../../lib/utils/cx';
 import { CITY, STATS, SOCIALS, pad, istTime, bloomShapeAt } from './heroShared';
 import styles from './HeroMobile.module.css';
@@ -28,13 +28,13 @@ function MobileContent({ facet, time, onNav }: MobileContentProps) {
       <header className={styles.top}>
         <p className={styles.status} data-rise>
           <span className={styles.statusDot} aria-hidden="true" />
-          Available for work
+          {labels.hero.status}
         </p>
         <p className={styles.place} data-rise>
           <span>{CITY}, IN</span>
           <span className={styles.time}>
             {time}
-            <span className={styles.tz}> IST</span>
+            <span className={styles.tz}> {labels.hero.clock}</span>
           </span>
         </p>
       </header>
@@ -68,7 +68,7 @@ function MobileContent({ facet, time, onNav }: MobileContentProps) {
           onClick={() => onNav('projects')}
           data-rise
         >
-          View Work <span aria-hidden="true">↓</span>
+          {labels.hero.ctaPrimary} <span aria-hidden="true">↓</span>
         </MagneticButton>
         <MagneticButton
           variant="outline"
@@ -76,7 +76,7 @@ function MobileContent({ facet, time, onNav }: MobileContentProps) {
           onClick={() => onNav('closing')}
           data-rise
         >
-          Get in touch
+          {labels.hero.ctaSecondary}
         </MagneticButton>
       </div>
 
