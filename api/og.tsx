@@ -4,17 +4,28 @@
  * Renders the site's social-share card at request time (1200×630) instead of
  * shipping a static PNG, so it can never drift from the live brand.
  *
- * IMPORTANT: this is a Vercel Edge Function living at the project ROOT (not in
- * src/, not part of the Vite build). It does NOT run under `vite dev` — Vite
- * knows nothing about /api. To exercise it locally use `bunx vercel dev`
- * (or `npx vercel dev`); otherwise test it on a Vercel preview deployment.
+ * IMPORTANT: this is a Vercel Function living at the project ROOT (not in src/,
+ * not part of the Vite build). It does NOT run under `vite dev` — Vite knows
+ * nothing about /api. To exercise it locally use `bunx vercel dev` (or
+ * `npx vercel dev`); otherwise test it on a Vercel preview deployment.
  *
  * @vercel/og is the framework-agnostic package that next/og wraps — it renders
  * JSX to an image via satori + resvg, no Next.js and no app/ directory needed.
+ *
+ * RUNTIME = nodejs (NOT edge). @vercel/og cannot run on the Edge runtime
+ * *outside* Next.js: its own bundled fallback font is loaded with
+ * `fetch(new URL('./noto-sans…ttf', import.meta.url))`, which the standalone
+ * Edge bundler rejects as an unsupported `vc-blob-asset:` module (Next.js has
+ * private handling for this that a bare Vite/Vercel deploy lacks — see
+ * github.com/vercel/satori#582). The Node serverless runtime has no such
+ * restriction: @vercel/og resolves to its Node build and reads local font
+ * files straight off disk. OG images are CDN-cached after first render, so the
+ * Node cold-start cost is paid at most once per deploy.
  */
+import { readFileSync } from 'node:fs';
 import { ImageResponse } from '@vercel/og';
 
-export const config = { runtime: 'edge' };
+export const config = { runtime: 'nodejs' };
 
 /* --- Brand tokens — copied verbatim from src/styles/theme.css :root (the
    "Midnight · Cyan" default in src/config/theme.ts). Keep in sync with those. */
@@ -35,19 +46,19 @@ function experienceYears(now: Date): number {
   return Math.max(1, Math.floor(ms / (365.25 * 24 * 60 * 60 * 1000)));
 }
 
-export default async function handler(): Promise<ImageResponse> {
-  // satori cannot use system fonts — the real display + mono faces are loaded
-  // as ArrayBuffers. Vercel bundles anything referenced via `new URL(..., import.meta.url)`
-  // as a build asset, so these ship with the edge function. Static TTF instances
-  // of the site's Bricolage Grotesque (display) and Space Mono (mono) faces —
-  // satori can't read the woff2/variable files the site serves to browsers.
-  const [displayBold, displayRegular, monoRegular, monoBold] = await Promise.all([
-    fetch(new URL('./assets/BricolageGrotesque-Bold.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-    fetch(new URL('./assets/BricolageGrotesque-Regular.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-    fetch(new URL('./assets/SpaceMono-Regular.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-    fetch(new URL('./assets/SpaceMono-Bold.ttf', import.meta.url)).then((r) => r.arrayBuffer()),
-  ]);
+// satori cannot use system fonts — the real display + mono faces are read off
+// disk as Buffers. Static TTF instances of the site's Bricolage Grotesque
+// (display) and Space Mono (mono) faces; satori can't read the woff2/variable
+// files the site serves to browsers. Each path MUST be a static string literal
+// inside `new URL(..., import.meta.url)` so Vercel's file tracer (@vercel/nft)
+// can see it and bundle the TTF with the function. Loaded once at module scope
+// so warm invocations reuse them instead of re-reading on every request.
+const displayBold = readFileSync(new URL('./assets/BricolageGrotesque-Bold.ttf', import.meta.url));
+const displayRegular = readFileSync(new URL('./assets/BricolageGrotesque-Regular.ttf', import.meta.url));
+const monoRegular = readFileSync(new URL('./assets/SpaceMono-Regular.ttf', import.meta.url));
+const monoBold = readFileSync(new URL('./assets/SpaceMono-Bold.ttf', import.meta.url));
 
+export default function handler(): ImageResponse {
   const now = new Date();
   const years = experienceYears(now);
   const year = now.getUTCFullYear();
