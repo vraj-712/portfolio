@@ -61,11 +61,7 @@ const displayBoldBuf = decode(displayBold);
 const monoRegularBuf = decode(monoRegular);
 const monoBoldBuf = decode(monoBold);
 
-// Web Standard method export (GET). On the Node runtime a function must return
-// a `Response` via the fetch/method-export signature — a bare default export can
-// be misread as the legacy (req, res) handler, where a returned Response is
-// dropped. OG images are only ever fetched with GET.
-export function GET(): Response {
+export default function handler(): Response {
   try {
     return render();
   } catch (err) {
