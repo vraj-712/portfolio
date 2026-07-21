@@ -18,20 +18,14 @@
  * Edge bundler rejects as an unsupported `vc-blob-asset:` module (Next.js has
  * private handling for this that a bare Vite/Vercel deploy lacks — see
  * github.com/vercel/satori#582). The Node serverless runtime has no such
- * restriction: @vercel/og resolves to its Node build. OG images are CDN-cached
- * after first render, so the Node cold-start cost is paid at most once per deploy.
+ * restriction: @vercel/og resolves to its Node build and reads local font
+ * files straight off disk. OG images are CDN-cached after first render, so the
+ * Node cold-start cost is paid at most once per deploy.
  */
+import { readFileSync } from 'node:fs';
 import { ImageResponse } from '@vercel/og';
-// Fonts are base64-inlined (see api/fonts.data.ts + scripts/gen-og-fonts.mjs)
-// rather than read from api/assets/*.ttf at runtime: a bundled JS import is
-// always included in the serverless bundle, whereas file assets loaded via
-// import.meta.url depend on Vercel's file tracer — which silently failed to
-// bundle them here, crashing the function with ENOENT (FUNCTION_INVOCATION_FAILED).
-import { displayBold, monoRegular, monoBold } from './fonts.data';
 
 export const config = { runtime: 'nodejs' };
-
-const decode = (b64: string) => Buffer.from(b64, 'base64');
 
 /* --- Brand tokens — copied verbatim from src/styles/theme.css :root (the
    "Midnight · Cyan" default in src/config/theme.ts). Keep in sync with those. */
@@ -52,31 +46,19 @@ function experienceYears(now: Date): number {
   return Math.max(1, Math.floor(ms / (365.25 * 24 * 60 * 60 * 1000)));
 }
 
-// satori cannot use system fonts. Decode the inlined faces once at module scope
-// so warm invocations reuse the Buffers. Bricolage Grotesque is the site's
-// display face (--font-display); Space Mono is its mono face (--font-mono).
-// satori can't read the woff2/variable files the browser gets, so these are
-// static TTF instances.
-const displayBoldBuf = decode(displayBold);
-const monoRegularBuf = decode(monoRegular);
-const monoBoldBuf = decode(monoBold);
+// satori cannot use system fonts — the real display + mono faces are read off
+// disk as Buffers. Static TTF instances of the site's Bricolage Grotesque
+// (display) and Space Mono (mono) faces; satori can't read the woff2/variable
+// files the site serves to browsers. Each path MUST be a static string literal
+// inside `new URL(..., import.meta.url)` so Vercel's file tracer (@vercel/nft)
+// can see it and bundle the TTF with the function. Loaded once at module scope
+// so warm invocations reuse them instead of re-reading on every request.
+const displayBold = readFileSync(new URL('./assets/BricolageGrotesque-Bold.ttf', import.meta.url));
+const displayRegular = readFileSync(new URL('./assets/BricolageGrotesque-Regular.ttf', import.meta.url));
+const monoRegular = readFileSync(new URL('./assets/SpaceMono-Regular.ttf', import.meta.url));
+const monoBold = readFileSync(new URL('./assets/SpaceMono-Bold.ttf', import.meta.url));
 
-export default function handler(): Response {
-  try {
-    return render();
-  } catch (err) {
-    // Surface the real failure instead of a generic FUNCTION_INVOCATION_FAILED
-    // 500, so a broken deploy is diagnosable from the response body itself.
-    // Safe to keep: it only ever fires when the image can't be produced.
-    const message = err instanceof Error ? `${err.message}\n\n${err.stack ?? ''}` : String(err);
-    return new Response(`OG render failed:\n\n${message}`, {
-      status: 500,
-      headers: { 'content-type': 'text/plain; charset=utf-8' },
-    });
-  }
-}
-
-function render(): ImageResponse {
+export default function handler(): ImageResponse {
   const now = new Date();
   const years = experienceYears(now);
   const year = now.getUTCFullYear();
@@ -207,9 +189,10 @@ function render(): ImageResponse {
       width: 1200,
       height: 630,
       fonts: [
-        { name: 'Bricolage Grotesque', data: displayBoldBuf, weight: 700, style: 'normal' },
-        { name: 'Space Mono', data: monoRegularBuf, weight: 400, style: 'normal' },
-        { name: 'Space Mono', data: monoBoldBuf, weight: 700, style: 'normal' },
+        { name: 'Bricolage Grotesque', data: displayBold, weight: 700, style: 'normal' },
+        { name: 'Bricolage Grotesque', data: displayRegular, weight: 400, style: 'normal' },
+        { name: 'Space Mono', data: monoRegular, weight: 400, style: 'normal' },
+        { name: 'Space Mono', data: monoBold, weight: 700, style: 'normal' },
       ],
     },
   );
