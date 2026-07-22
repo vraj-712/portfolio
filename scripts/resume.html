@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Vraj Patel  Resume</title>
+<style>
+  :root {
+    --navy: #1a3a5c;      /* primary tone */
+    --teal: #2b7a78;      /* secondary tone */
+    --ink:  #22272e;      /* body text */
+    --muted:#55606b;      /* secondary text */
+    --rule: #c9d4de;      /* light rule */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page {
+    size: A4;
+    margin: 13mm 14mm;
+  }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--ink);
+    font-size: 10.4pt;
+    line-height: 1.42;
+  }
+
+  a { color: var(--teal); text-decoration: none; }
+
+  /* ---------- Header ---------- */
+  header { margin-bottom: 10px; }
+
+  .name {
+    font-size: 27pt;
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .title {
+    margin-top: 5px;
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+
+  .contact {
+    margin-top: 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 9.4pt;
+    color: var(--muted);
+  }
+  .contact span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .contact svg { width: 12px; height: 12px; fill: var(--navy); flex: none; }
+  .contact a { color: var(--muted); }
+
+  /* ---------- Section ---------- */
+  section { margin-top: 11px; }
+
+  h2 {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 3px;
+    border-bottom: 1.6px solid var(--navy);
+    margin-bottom: 6px;
+  }
+  /* thin teal accent sitting under the navy rule */
+  h2::after {
+    content: "";
+    display: block;
+    height: 1.6px;
+    width: 58px;
+    background: var(--teal);
+    margin-top: 1.6px;
+    margin-bottom: -4.6px;
+  }
+
+  p.summary { text-align: justify; color: var(--ink); }
+
+  /* ---------- Two-column band ---------- */
+  .band {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+  }
+
+  /* ---------- Education ---------- */
+  .edu-item { margin-bottom: 8px; }
+  .edu-item:last-child { margin-bottom: 0; }
+  .edu-deg { font-weight: 700; color: var(--navy); }
+  .edu-school { font-style: italic; color: var(--ink); }
+  .edu-meta { color: var(--muted); font-size: 9.4pt; }
+
+  /* ---------- Skills ---------- */
+  .skill-row { margin-bottom: 5.5px; }
+  .skill-row:last-child { margin-bottom: 0; }
+  .skill-label { font-weight: 700; color: var(--navy); }
+  .skill-vals { color: var(--ink); }
+
+  /* ---------- Experience ---------- */
+  .job { display: grid; grid-template-columns: 118px 1fr; gap: 16px; margin-bottom: 11px; }
+  .job:last-child { margin-bottom: 0; }
+  .job-when { color: var(--muted); font-size: 9.4pt; }
+  .job-when .loc { display: block; margin-top: 2px; }
+  .job-role { font-weight: 700; color: var(--ink); font-size: 10.8pt; }
+  .job-co { font-style: italic; color: var(--teal); font-weight: 700; margin-top: 1px; }
+  ul { list-style: none; margin-top: 5px; }
+  li { position: relative; padding-left: 13px; margin-bottom: 2px; }
+  li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 6.5px;
+    width: 4px; height: 4px;
+    background: var(--teal);
+    border-radius: 50%;
+  }
+  strong { color: var(--navy); font-weight: 700; }
+
+  /* ---------- Projects ---------- */
+  .proj { margin-bottom: 4px; }
+  .proj:last-child { margin-bottom: 0; }
+  .proj-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .proj-name { font-weight: 700; color: var(--navy); }
+  .proj-role { font-style: italic; color: var(--teal); font-weight: 700; font-size: 9.3pt; white-space: nowrap; }
+  .proj-desc { margin-top: 1px; color: var(--ink); }
+  .proj ul { margin-top: 2px; }
+  .proj .proj-stack { margin-top: 2px; }
+  .proj-stack { font-style: italic; color: var(--muted); font-size: 9.3pt; }
+
+  /* ---------- Certs / Courses ---------- */
+  .cred { margin-bottom: 3.5px; break-inside: avoid; }
+  .cred-title { font-weight: 700; color: var(--ink); }
+  .cred-issuer { color: var(--muted); font-size: 9.3pt; }
+
+  section, .job, .edu-item, .proj { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="name">Vraj Patel</div>
+  <div class="title">Full Stack Developer</div>
+  <div class="contact">
+    <span><svg viewBox="0 0 24 24"><path d="M2 4h20v16H2V4zm10 7L4 6v1l8 5 8-5V6l-8 5z"/></svg><a href="mailto:patelvraju07@gmail.com">patelvraju07@gmail.com</a></span>
+    <span><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>+91 98799 71451</span>
+    <span><svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Ahmedabad, Gujarat, India</span>
+    <span><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3V9zm6 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.3 8.65 21 11 21 14.1V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2 0-2.3 1.57-2.3 3.2V21H9V9z"/></svg><a href="https://www.linkedin.com/in/vraj-patel-725817228/">LinkedIn</a></span>
+    <span><svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5 3.9-1.3 6.8-5.1 6.8-9.6C22 6.6 17.5 2 12 2z"/></svg><a href="https://github.com/vraj-712">GitHub</a></span>
+  </div>
+</header>
+
+<section>
+  <h2>Profile</h2>
+  <p class="summary">Full Stack Developer with 2+ years of experience building production web, mobile, and TV applications end to end with Next.js, Node.js, and React Native. Ships internal operations tooling and client platforms on Postgres and MongoDB  covering authentication, RBAC, third-party integrations, background jobs, and AI-assisted features. Computer Engineering graduate with a strong focus on backend engineering, scalable architecture, and maintainable code.</p>
+</section>
+
+<div class="band">
+  <section>
+    <h2>Education</h2>
+    <div class="edu-item">
+      <div class="edu-deg">B.E. in Computer Engineering</div>
+      <div class="edu-school">LJ Institute of Engineering and Technology</div>
+      <div class="edu-meta">2021 – 2025 | Ahmedabad, India</div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-deg">12th Science (GSEB)</div>
+      <div class="edu-school">H. B. Kapadiya School</div>
+      <div class="edu-meta">2020 – 2021 | Ahmedabad, India</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <div class="skill-row"><span class="skill-label">Languages:</span> <span class="skill-vals">JavaScript | TypeScript | Python | SQL | PHP</span></div>
+    <div class="skill-row"><span class="skill-label">Frameworks:</span> <span class="skill-vals">React | Next.js | React Native | Node.js | Express.js | Tailwind CSS</span></div>
+    <div class="skill-row"><span class="skill-label">Databases:</span> <span class="skill-vals">PostgreSQL | MongoDB | Redis</span></div>
+    <div class="skill-row"><span class="skill-label">Tools & Platforms:</span> <span class="skill-vals">VS Code | Git & Github | Firebase | GetStream | Payload CMS</span></div>
+    <!-- <div class="skill-row"><span class="skill-label">AI Tools:</span> <span class="skill-vals">Claude Code | Cursor</span></div> -->
+  </section>
+</div>
+
+<section>
+  <h2>Professional Experience</h2>
+
+  <div class="job">
+    <div class="job-when">Jul 2025 – Present<span class="loc">Ahmedabad, India</span></div>
+    <div>
+      <div class="job-role">Jr. Software Engineer</div>
+      <div class="job-co">9series</div>
+      <ul>
+        <li>Build production web platforms end to end with Next.js and PostgreSQL, owning both front-end interfaces and server-side logic across multiple client domains.</li>
+        <li>Implement authentication and authorization with role-based access control (RBAC) and Microsoft OAuth for multi-tenant internal tooling.</li>
+        <li>Integrate third-party services like Slack, Jira, GitHub, Notion, Zoom, Teams, Outlook, and GetStream into core product workflows.</li>
+        <li>Engineer Redis-backed background jobs and queues and ship AI-assisted features into production.</li>
+        <li>Deliver client platforms across creator collaboration, construction, metals, and health-industry domains.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job">
+    <div class="job-when">May 2024 – May 2025<span class="loc">Ahmedabad, India</span></div>
+    <div>
+      <div class="job-role">Software Developer</div>
+      <div class="job-co">Prime Apps</div>
+      <ul>
+        <li>Developed React Native applications for TV and mobile platforms for <strong>SportsGrid</strong>, handling screen development and API integration for the ten-foot living-room view.</li>
+        <li>Built backend services with Node.js and Express.js as part of company assignments.</li>
+        <li>Delivered <strong>MyUnify</strong>, a Learning Management System, as a full-stack developer using Next.js, React, Node.js, and MongoDB with Payload CMS.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="job">
+    <div class="job-when">Nov 2023 – May 2024<span class="loc">Ahmedabad, India</span></div>
+    <div>
+      <div class="job-role">Software Intern</div>
+      <div class="job-co">Prime Apps</div>
+      <ul>
+        <li>Built web fundamentals hands-on with HTML5, CSS3, JavaScript, and jQuery.</li>
+        <li>Learned PHP, Laravel, and WordPress alongside SQL and relational data modeling.</li>
+        <li>Applied the full stack across a series of training projects before moving to client work.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-name">Pivotal</span><span class="proj-role">Full Stack · 9series</span></div>
+    <div class="proj-desc">An internal company portal managing end-to-end operations  from employee handling to project management  <strong>used by 100+ users</strong> across higher management, HR, finance, and project clients.</div>
+    <ul>
+      <li>Implemented Microsoft OAuth and role-based access control (RBAC) for management, HR, finance, and client roles.</li>
+      <li>Integrated Slack, Jira, GitHub, Notion, Zoom, and Teams into project-management workflows.</li>
+      <li>Added AI-generated meeting minutes with Redis-backed background jobs and queues.</li>
+    </ul>
+    <div class="proj-stack">Next.js · PostgreSQL · Redis · RBAC · Cloudflare R2</div>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-name">Kavra</span><span class="proj-role">Full Stack · 9series</span></div>
+    <div class="proj-desc">A creator collaboration platform where companies create campaigns and assign them to creators, who produce reels and product shoots  covering the full campaign lifecycle from briefing to delivery.</div>
+    <ul>
+      <li>Built campaign creation and creator assignment with deliverable tracking and budget management.</li>
+      <li>Added AI-generated product image descriptions, banner creation, and inventory management.</li>
+      <li>Integrated in-product chat via GetStream, secured with role-based access control.</li>
+    </ul>
+    <div class="proj-stack">Next.js · PostgreSQL · RBAC · GetStream · AI</div>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-name">MyUnify</span><span class="proj-role">Full Stack · Prime Apps</span></div>
+    <div class="proj-desc">A learning management system built with Next.js, Node.js, and React on MongoDB with Payload CMS.</div>
+    <ul>
+      <li>Added an <strong>online live-classes feature using BigBlueButton (BBB)</strong>.</li>
+      <li>Built responsive dashboards, authentication flows, and reusable components.</li>
+      <li>Delivered course management and interactive student workflows.</li>
+    </ul>
+    <div class="proj-stack">Next.js · Node.js · React · MongoDB · Payload CMS · BBB</div>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-name">SportsGrid</span><span class="proj-role">React Native · Prime Apps</span></div>
+    <div class="proj-desc">A sports TV and mobile application delivering live match scores and coverage across multiple sports for the ten-foot living-room view.</div>
+    <ul>
+      <li>Developed screens for live scores and multi-sport content across Android TV and mobile.</li>
+      <li>Integrated APIs for real-time match data and resolved cross-platform bugs.</li>
+    </ul>
+    <div class="proj-stack">React Native · Android TV · API Integration</div>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-name">BuildChain</span><span class="proj-role">Full Stack · 9series</span></div>
+    <div class="proj-desc">A construction-company business website built as a fully headless CMS platform, with all content managed through Payload CMS.</div>
+    <ul>
+      <li>Built a headless architecture with Payload CMS driving content and a fast Next.js front end.</li>
+      <li>Delivered fully content-managed marketing pages editable without code.</li>
+    </ul>
+    <div class="proj-stack">Next.js · PostgreSQL · Payload CMS · Headless CMS</div>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-name">Ablefinder</span><span class="proj-role">Full Stack · 9series</span></div>
+    <div class="proj-desc">A health-industry platform built on Next.js and PostgreSQL.</div>
+    <ul>
+      <li>Built admin dashboard UI panels for platform management.</li>
+      <li>Integrated a GetStream-powered chat experience.</li>
+    </ul>
+    <div class="proj-stack">Next.js · PostgreSQL · GetStream</div>
+  </div>
+</section>
+
+<div class="band">
+  <section>
+    <h2>Certificates</h2>
+    <div class="cred"><span class="cred-title">CODE WARS  Certificate of Participation</span> <span class="cred-issuer">· LDCE</span></div>
+    <div class="cred"><span class="cred-title">Hackout'23  Certificate of Participation</span> <span class="cred-issuer">· DA-IICT</span></div>
+  </section>
+
+  <section>
+    <h2>Courses</h2>
+    <div class="cred"><span class="cred-title">Building with the Claude API</span> <span class="cred-issuer">· Anthropic</span></div>
+    <div class="cred"><span class="cred-title">Claude Code in Action</span> <span class="cred-issuer">· Anthropic</span></div>
+    <div class="cred"><span class="cred-title">Introduction to Model Context Protocol</span> <span class="cred-issuer">· Anthropic</span></div>
+    <div class="cred"><span class="cred-title">Introduction to Agent Skills</span> <span class="cred-issuer">· Anthropic</span></div>
+  </section>
+</div>
+
+</body>
+</html>

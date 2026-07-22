@@ -311,7 +311,7 @@ export const content: SiteContent = {
     phone: '+91 98799 71451',
     linkedin: 'https://www.linkedin.com/in/vraj-patel-725817228/',
     github: 'https://github.com/vraj-712',
-    resume: '/vraj-patel-resume.pdf', // TODO drop the real PDF in /public
+    resume: '/vraj-patel-resume.pdf',
     location: 'Ahmedabad, Gujarat, India',
   },
 };
