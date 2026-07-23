@@ -199,84 +199,84 @@ export const content: SiteContent = {
     {
       id: 'pivotal',
       title: 'Pivotal',
-      year: '2025 — 26', // TODO confirm
+      year: '2025 — present',
       role: 'Full Stack · 9series',
       blurb:
         'An internal operations management portal built front-to-back in Next.js on Postgres. Integrates Slack, Jira, GitHub, Notion, Zoom and Teams, generates meeting minutes with AI, and runs background work on Redis jobs and queues behind Microsoft OAuth and RBAC.',
       tags: ['Next.js', 'Postgres', 'Redis', 'RBAC', 'AI MoM', 'Cloudflare R2'],
-      media: { type: 'image', src: '/media/projects/pivotal.svg', alt: 'Pivotal internal operations management portal' }, // TODO real media
+      media: { type: 'image', src: '/media/cover-dashboard.png', alt: 'Pivotal internal operations management portal' }, // TODO real media
       links: {},
     },
     {
       id: 'kavra',
       title: 'Kavra',
-      year: '2025', // TODO confirm
+      year: '2025',
       role: 'Full Stack · 9series',
       blurb:
         'A creator collaboration platform on Next.js and Postgres, with role-based access control and an in-product chat experience powered by GetStream.',
       tags: ['Next.js', 'Postgres', 'RBAC', 'GetStream'],
-      media: { type: 'image', src: '/media/projects/kavra.svg', alt: 'Kavra creator collaboration platform' }, // TODO real media
-      links: {},
-    },
-    {
-      id: 'myunify',
-      title: 'MyUnify',
-      year: '2024 — 25', // TODO confirm
-      role: 'Full Stack · Prime Apps',
-      blurb:
-        'A learning management system built with Next.js, Node.js and React on MongoDB, with Payload CMS behind it and BigBlueButton integrated for live online classes.',
-      tags: ['Next.js', 'Node.js', 'React', 'MongoDB', 'Payload CMS', 'BBB'],
-      media: { type: 'image', src: '/media/projects/myunify.svg', alt: 'MyUnify learning management system' }, // TODO real media
+      media: { type: 'image', src: '/media/cover-kavra.png', alt: 'Kavra creator collaboration platform' }, // TODO real media
       links: {},
     },
     {
       id: 'sportsgrid',
       title: 'SportsGrid',
-      year: '2024', // TODO confirm
+      year: '2024 - 25',
       role: 'React Native · Prime Apps',
       blurb:
-        'A TV and mobile application built in React Native for SportsGrid — screen development and API integration for the living-room ten-foot view.',
+      'A TV and mobile application built in React Native for SportsGrid — screen development and API integration for the living-room ten-foot view.',
       tags: ['React Native', 'Android TV', 'Mobile', 'API Integration'],
-      media: { type: 'image', src: '/media/projects/sportsgrid.svg', alt: 'SportsGrid React Native TV and mobile app' }, // TODO real media
+      media: { type: 'image', src: '/media/cover-sportsgrid.png', alt: 'SportsGrid React Native TV and mobile app' }, // TODO real media
       links: {},
     },
     {
-      id: 'ablefinder',
-      title: 'Ablefinder',
-      year: '2025', // TODO confirm
-      role: 'Full Stack · 9series',
+      id: 'myunify',
+      title: 'MyUnify',
+      year: '2024 — 25',
+      role: 'Full Stack · Prime Apps',
       blurb:
-        'A health-industry platform on Next.js and Postgres, with a chat experience integrated through GetStream.',
-      tags: ['Next.js', 'Postgres', 'GetStream', 'Health'],
-      media: { type: 'image', src: '/media/projects/ablefinder.svg', alt: 'Ablefinder health industry platform' }, // TODO real media
+        'A learning management system built with Next.js, Node.js and React on MongoDB, with Payload CMS behind it and BigBlueButton integrated for live online classes.',
+      tags: ['Next.js', 'Node.js', 'React', 'MongoDB', 'Payload CMS', 'BBB'],
+      media: { type: 'image', src: '/media/cover-myunify.png', alt: 'MyUnify learning management system' }, // TODO real media
       links: {},
     },
     {
       id: 'buildchain',
       title: 'BuildChain',
-      year: '2025', // TODO confirm
+      year: '2026',
       role: 'Full Stack · 9series',
       blurb:
-        'A construction-business website built headless — Payload CMS for content, Postgres for data, and a fast Next.js front end.',
+      'A construction-business website built headless — Payload CMS for content, Postgres for data, and a fast Next.js front end.',
       tags: ['Next.js', 'Postgres', 'Payload CMS', 'Headless CMS'],
-      media: { type: 'image', src: '/media/projects/buildchain.svg', alt: 'BuildChain headless CMS website' }, // TODO real media
+      media: { type: 'image', src: '/media/cover-buildchain.png', alt: 'BuildChain headless CMS website' }, // TODO real media
+      links: {},
+    },
+    {
+      id: 'ablefinder',
+      title: 'Ablefinder',
+      year: '2026',
+      role: 'Full Stack · 9series',
+      blurb:
+        'A health-industry platform on Next.js and Postgres, with a chat experience integrated through GetStream.',
+      tags: ['Next.js', 'Postgres', 'GetStream', 'Health'],
+      media: { type: 'image', src: '/media/cover-ablefinder.png', alt: 'Ablefinder health industry platform' }, // TODO real media
       links: {},
     },
     {
       id: 'rocket',
       title: 'Rocket',
-      year: '2025', // TODO confirm
+      year: '2026',
       role: 'React Native · 9series',
       blurb:
         'A health application in React Native — screen development, API integration, and bug fixing across the app.',
       tags: ['React Native', 'API Integration', 'Health'],
-      media: { type: 'image', src: '/media/projects/rocket.svg', alt: 'Rocket health mobile app' }, // TODO real media
+      media: { type: 'image', src: '/media/cover-rocket.png', alt: 'Rocket health mobile app' }, // TODO real media
       links: {},
     },
     {
       id: 'tennant-metals',
       title: 'Tennant Metals',
-      year: '2025', // TODO confirm
+      year: '2025',
       role: 'Frontend · 9series',
       blurb:
         'A metals-industry platform with a Next.js front end and WebSocket-driven live data — supporting the team on feature development and bug fixing.',
