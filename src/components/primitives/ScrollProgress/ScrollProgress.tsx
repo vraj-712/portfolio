@@ -38,7 +38,7 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
         },
       );
     },
-    { dependencies: [reduced], scope: railRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: railRef },
   );
 
   const jump = (id: string) => {

@@ -48,7 +48,7 @@ export function KineticCursor({ variant, label, reduced }: CursorViewProps) {
       window.addEventListener('pointermove', onMove, { passive: true });
       return () => window.removeEventListener('pointermove', onMove);
     },
-    { dependencies: [reduced], scope: scopeRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: scopeRef },
   );
 
   return (

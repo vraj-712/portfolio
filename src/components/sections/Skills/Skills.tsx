@@ -64,7 +64,7 @@ export function Skills() {
         tl.to(row, { xPercent: to, ease: 'none' }, 0);
       });
     },
-    { dependencies: [horizontal], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [horizontal], scope: rootRef },
   );
 
   // Animate the active-category chips in whenever the category flips.

@@ -103,7 +103,7 @@ export function HeroField() {
         window.removeEventListener('resize', measure);
       };
     },
-    { dependencies: [reduced, coarse], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced, coarse], scope: rootRef },
   );
 
   return (

@@ -189,7 +189,7 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
         tl.to(names, { scale: 1, letterSpacing: '-0.04em', ease: 'none' }, 0);
       });
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   // Entrance — clip-reveal the base name, but only once the intro has handed off
@@ -212,7 +212,7 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
         stagger: 0.1,
       });
     },
-    { dependencies: [reduced, started], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced, started], scope: rootRef },
   );
 
   return (

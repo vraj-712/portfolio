@@ -107,7 +107,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
         lenis?.current?.start();
       };
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   return (

@@ -50,7 +50,7 @@ function ExperienceDesktop() {
         );
       });
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   return (

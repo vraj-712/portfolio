@@ -79,7 +79,7 @@ export function Projects() {
       // kept so focus handling can map a card position back to a scroll position
       stRef.current = tween.scrollTrigger ?? null;
     },
-    { dependencies: [horizontal], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [horizontal], scope: rootRef },
   );
 
   return (

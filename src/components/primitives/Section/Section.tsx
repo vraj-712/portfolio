@@ -48,7 +48,7 @@ export function Section({
       });
       return () => st.kill();
     },
-    { dependencies: [id, registerActive], scope: ref },
+    { revertOnUpdate: true, dependencies: [id, registerActive], scope: ref },
   );
 
   const Tag = as;

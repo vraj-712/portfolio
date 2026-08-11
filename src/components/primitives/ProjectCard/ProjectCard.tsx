@@ -66,7 +66,7 @@ export function ProjectCard({ project, index, total, distort = true }: ProjectCa
         media.removeEventListener('pointerleave', onLeave);
       };
     },
-    { dependencies: [distort, coarse], scope: cardRef },
+    { revertOnUpdate: true, dependencies: [distort, coarse], scope: cardRef },
   );
 
   const { media } = project;

@@ -65,7 +65,7 @@ export function Closing() {
         '+=0.05',
       );
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   const backToTop = () => {

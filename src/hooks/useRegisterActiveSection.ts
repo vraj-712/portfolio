@@ -21,6 +21,6 @@ export function useRegisterActiveSection(ref: React.RefObject<HTMLElement | null
       });
       return () => st.kill();
     },
-    { dependencies: [id], scope: ref },
+    { revertOnUpdate: true, dependencies: [id], scope: ref },
   );
 }

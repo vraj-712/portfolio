@@ -42,7 +42,7 @@ export function TerminalIntro({ reduced, onReady }: IntroVariantProps) {
       });
       tl.to({}, { duration: 0.35 });
     },
-    { dependencies: [reduced], scope: ref },
+    { revertOnUpdate: true, dependencies: [reduced], scope: ref },
   );
 
   return (

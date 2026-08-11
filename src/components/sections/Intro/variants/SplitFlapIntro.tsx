@@ -47,7 +47,7 @@ export function SplitFlapIntro({ reduced, onReady }: IntroVariantProps) {
       // hold on the locked word
       tl.to({}, { duration: 0.45 });
     },
-    { dependencies: [reduced], scope: ref },
+    { revertOnUpdate: true, dependencies: [reduced], scope: ref },
   );
 
   return (

@@ -174,7 +174,7 @@ export function HeroMobile({ started = true }: { started?: boolean }) {
         0.2,
       );
     },
-    { dependencies: [reduced, started], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced, started], scope: rootRef },
   );
 
   // accent bloom, scrubbed to the hero's own scroll (no pin on touch)
@@ -197,7 +197,7 @@ export function HeroMobile({ started = true }: { started?: boolean }) {
         },
       });
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   return (

@@ -36,7 +36,7 @@ export function FluidCursor({ variant, label, reduced }: CursorViewProps) {
       window.addEventListener('pointermove', onMove, { passive: true });
       return () => window.removeEventListener('pointermove', onMove);
     },
-    { dependencies: [reduced] },
+    { revertOnUpdate: true, dependencies: [reduced] },
   );
 
   return (
