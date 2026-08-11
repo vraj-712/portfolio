@@ -1,7 +1,7 @@
 /* =============================================================================
    THEME TOKENS — the single source of truth for the whole site.
    Every component consumes var(--token). No hardcoded hex outside this file.
-   Palette: Light Editorial-Brutalist — Bone + Ink + Ultramarine.
+   Palette: Dark Editorial-Brutalist — Midnight + Bone + Cyan (see config/theme.ts).
    Re-theme (even a full dark flip) by editing only this file — or at runtime via
    the Settings panel, which overrides these vars on <html> (temporary).
    ============================================================================= */
@@ -35,7 +35,7 @@
 
   /* --- Lines --- */
   --color-line:        #E9EEF0; /* full-strength brutalist divider/frame (= ink) */
-  --color-line-soft:   #4A4D50; /* hairline where full ink is too loud */
+  --color-line-soft:   #5C6062; /* hairline where full ink is too loud (contrast-solved to 3:1 on base) */
 
   /* --- Selection --- */
   --color-selection-bg: var(--color-accent);
