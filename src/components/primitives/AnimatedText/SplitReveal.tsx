@@ -91,7 +91,13 @@ export function SplitReveal({
         });
       }, el);
 
-      ScrollTrigger.refresh();
+      // No ScrollTrigger.refresh() here. ScrollTrigger.create() already refreshes
+      // the trigger it just built (which is what fires the onRefresh above), and a
+      // global refresh from a per-instance ResizeObserver re-measures every pin on
+      // the page mid-gesture. Document-height changes are refreshed centrally in
+      // App.tsx (fonts.ready, intro dismissal); a window resize is covered by
+      // ScrollTrigger's own debounced autoRefreshEvents pass, which lands after the
+      // re-split.
       return () => ctx.revert();
     },
   });
