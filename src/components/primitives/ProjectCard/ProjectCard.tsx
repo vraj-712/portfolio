@@ -28,7 +28,14 @@ export function ProjectCard({ project, index, total, distort = true }: ProjectCa
       if (!media) return;
 
       const skewTo = gsap.quickTo(media, 'skewX', { duration: 0.5, ease: 'power3' });
-      const scaleTo = gsap.quickTo(media, 'scale', { duration: 0.5, ease: 'power3' });
+      // `scale` is a shorthand with no PropTween of its own, so quickTo() can't
+      // reset it — it re-inits the whole tween and warns on every call. Split it.
+      const scaleXTo = gsap.quickTo(media, 'scaleX', { duration: 0.5, ease: 'power3' });
+      const scaleYTo = gsap.quickTo(media, 'scaleY', { duration: 0.5, ease: 'power3' });
+      const scaleTo = (v: number) => {
+        scaleXTo(v);
+        scaleYTo(v);
+      };
       let prevX = 0;
       let prevT = 0;
 
@@ -59,7 +66,7 @@ export function ProjectCard({ project, index, total, distort = true }: ProjectCa
         media.removeEventListener('pointerleave', onLeave);
       };
     },
-    { dependencies: [distort, coarse], scope: cardRef },
+    { revertOnUpdate: true, dependencies: [distort, coarse], scope: cardRef },
   );
 
   const { media } = project;
@@ -93,6 +100,8 @@ export function ProjectCard({ project, index, total, distort = true }: ProjectCa
           <img
             className={styles.mediaEl}
             src={media.src}
+            srcSet={media.srcSet}
+            sizes="min(78vw, 640px)" // matches .media's width in ProjectCard.module.css
             alt={media.alt}
             loading="lazy"
             decoding="async"

@@ -102,7 +102,7 @@ export function Credentials() {
       });
       return () => st.kill();
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   return (

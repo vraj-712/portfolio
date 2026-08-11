@@ -239,6 +239,9 @@
 .bloom .metaBottom,
 .bloom .status,
 .bloom .time,
+/* .tz sets --color-ink-muted explicitly, so it does not inherit the flip from
+   .metaTop — it has to be listed (matches HeroMobile's inversion list). */
+.bloom .tz,
 .bloom .statNum {
   color: var(--color-on-accent);
 }

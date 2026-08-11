@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSettings } from '../../../hooks/useSettings';
 import { useFocusTrap } from '../../../hooks/useFocusTrap';
+import { useLenis } from '../../../hooks/useLenis';
 import { PALETTES, FONT_PAIRS } from '../../../data/settingsSchema';
-import type { FontPairId, ThemeMode } from '../../../settings/types';
+import type { FontPairId } from '../../../settings/types';
 import { ToggleControl } from '../controls/ToggleControl';
 import { SliderControl } from '../controls/SliderControl';
 import { SegmentedControl } from '../controls/SegmentedControl';
@@ -23,7 +24,25 @@ const pct = (v: number) => `${Math.round(v * 100)}%`;
 export function SettingsPanel() {
   const { settings, isOpen, setSetting, applyPreset, reset, close } = useSettings();
   const panelRef = useRef<HTMLDivElement>(null);
+  const lenis = useLenis();
   useFocusTrap(panelRef, isOpen, close);
+
+  // The panel claims role="dialog" aria-modal="true" and has a click-to-dismiss
+  // backdrop, but nothing stopped the page scrolling underneath it. On a phone,
+  // where the panel is full-screen, content moved behind a sheet the visitor
+  // could not see past. Mirrors the mobile sheet's lock in Header.
+  // data-lenis-prevent on the panel body only stops Lenis eating INNER scroll.
+  useEffect(() => {
+    if (!isOpen) return;
+    const lenisRef = lenis;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    lenisRef?.current?.stop();
+    return () => {
+      document.body.style.overflow = prev;
+      lenisRef?.current?.start();
+    };
+  }, [isOpen, lenis]);
 
   return (
     <>
@@ -63,7 +82,7 @@ export function SettingsPanel() {
                 { value: 'light', label: 'Light' },
                 { value: 'dark', label: 'Dark' },
               ]}
-              onChange={(v) => setSetting('themeMode', v as ThemeMode)}
+              onChange={(v) => setSetting('themeMode', v)}
             />
             <p className={s.subLabel}>Palettes</p>
             <PresetSwatches palettes={PALETTES} activeId={settings.paletteId} onSelect={applyPreset} />

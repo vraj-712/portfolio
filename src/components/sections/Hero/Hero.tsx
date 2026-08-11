@@ -121,9 +121,13 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
   const { settings } = useSettings();
   const theme = settings.cursorTheme;
   // read live inside the pin's onUpdate so the bloom shape follows the Mode
-  // without rebuilding the (pinned) ScrollTrigger
+  // without rebuilding the (pinned) ScrollTrigger. Assigned in an effect, not
+  // during render: a render can be discarded under concurrent rendering, so a
+  // render-phase write may not match the committed tree (react-hooks/refs).
   const themeRef = useRef(theme);
-  themeRef.current = theme;
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
   const rootRef = useRef<HTMLElement>(null);
   const bloomRef = useRef<HTMLDivElement>(null);
   const [facet, setFacet] = useState(0);
@@ -185,7 +189,7 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
         tl.to(names, { scale: 1, letterSpacing: '-0.04em', ease: 'none' }, 0);
       });
     },
-    { dependencies: [reduced], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
   );
 
   // Entrance — clip-reveal the base name, but only once the intro has handed off
@@ -208,7 +212,7 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
         stagger: 0.1,
       });
     },
-    { dependencies: [reduced, started], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced, started], scope: rootRef },
   );
 
   return (

@@ -83,7 +83,7 @@ export function Marquee({
         outer.removeEventListener('focusout', play);
       };
     },
-    { dependencies: [reduced, direction, speed, loopScale, loopEase], scope: outerRef },
+    { revertOnUpdate: true, dependencies: [reduced, direction, speed, loopScale, loopEase], scope: outerRef },
   );
 
   const sep = separator ?? <span className={styles.sep} aria-hidden="true">◆</span>;

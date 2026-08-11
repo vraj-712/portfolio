@@ -43,7 +43,7 @@ export function useMagnetic<T extends HTMLElement>(opts: UseMagneticOptions = {}
         el.removeEventListener('pointerleave', onLeave);
       };
     },
-    { dependencies: [strength, disabled] },
+    { revertOnUpdate: true, dependencies: [strength, disabled] },
   );
 
   return ref;

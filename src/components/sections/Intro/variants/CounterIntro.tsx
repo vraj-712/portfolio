@@ -44,7 +44,7 @@ export function CounterIntro({ reduced, onReady }: IntroVariantProps) {
         // hold on 100 so the count actually lands before the curtain lifts
         .to({}, { duration: 0.4 });
     },
-    { dependencies: [reduced], scope: ref },
+    { revertOnUpdate: true, dependencies: [reduced], scope: ref },
   );
 
   return (

@@ -64,7 +64,7 @@ export function Reveal({
         },
       );
     },
-    { dependencies: [reduced, variant], scope: ref },
+    { revertOnUpdate: true, dependencies: [reduced, variant], scope: ref },
   );
 
   const Tag = as;

@@ -80,6 +80,11 @@ export interface ExpertiseItem {
 export interface ProjectMedia {
   type: 'image' | 'video';
   src: string; // path under /public, e.g. /media/projects/foo.svg
+  /** Optional responsive candidates, e.g. "/media/x-640.webp 640w, /media/x-1280.webp 1280w".
+   *  Stated explicitly rather than derived from `src` by filename convention —
+   *  the card renders at min(78vw, 640px), so the browser takes 640w on a 1x
+   *  display and 1280w on a 2x one. */
+  srcSet?: string;
   poster?: string;
   alt: string;
 }

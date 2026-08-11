@@ -63,7 +63,7 @@ export function GridIntro({ reduced, onReady }: IntroVariantProps) {
           stagger: { amount: 0.5, from: 'end', grid: [ROWS, COLS] },
         }, '>0.2');
     },
-    { dependencies: [reduced], scope: ref },
+    { revertOnUpdate: true, dependencies: [reduced], scope: ref },
   );
 
   return (

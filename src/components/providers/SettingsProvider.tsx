@@ -9,7 +9,7 @@ import { setReduceMotion } from '../../settings/motionFlag';
 import { setMotionProfile } from '../../settings/motionProfile';
 import { isDark } from '../../settings/colors';
 import { PALETTES } from '../../data/settingsSchema';
-import { CURSOR_PROFILES } from '../../data/cursorThemes';
+import { cursorMotion } from '../../data/cursorThemes';
 
 const LIGHT_PRESET = { id: 'bone-ultramarine' as PaletteId, base: '#ECE7DA', ink: '#111110', accent: '#1F1BEB' };
 const DARK_PRESET = { id: 'midnight-cyan' as PaletteId, base: '#0C0F12', ink: '#E9EEF0', accent: '#29E0D4' };
@@ -57,7 +57,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     applySettings(settings);
     setReduceMotion(settings.reduceMotion);
-    setMotionProfile(CURSOR_PROFILES[settings.cursorTheme]);
+    setMotionProfile(cursorMotion(settings.cursorTheme));
     gsap.globalTimeline.timeScale(settings.motionSpeed);
   }, [settings]);
 

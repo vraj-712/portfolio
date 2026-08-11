@@ -1,8 +1,10 @@
 import { useRef } from 'react';
 import { gsap } from 'gsap';
+import type { ScrollTrigger as ScrollTriggerInstance } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useIsCoarsePointer } from '../../../hooks/useIsCoarsePointer';
+import { useLenis } from '../../../hooks/useLenis';
 import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSection';
 import { ProjectCard } from '../../primitives/ProjectCard/ProjectCard';
 import { SectionLabel } from '../../primitives/Section/SectionLabel';
@@ -15,9 +17,36 @@ const { projects } = content;
 export function Projects() {
   const reduced = useReducedMotion();
   const coarse = useIsCoarsePointer();
+  const lenis = useLenis();
   const rootRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const stRef = useRef<ScrollTriggerInstance | null>(null);
   const horizontal = !reduced && !coarse;
+
+  /* Keyboard reachability for the pinned track.
+     The track moves horizontally as a transform driven by VERTICAL scroll, and
+     .projects is overflow:hidden with no scrollable axis — so the browser's own
+     "scroll the focused element into view" has nothing to act on, and a card's
+     links can take focus while sitting off-canvas, invisible.
+     Both rects live under the same transform, so their difference is the
+     element's offset in the track's untransformed space; the trigger maps that
+     1:1 onto scroll distance, so start + offset is the scroll position that
+     brings it into view. */
+  const revealFocused = (e: React.FocusEvent<HTMLDivElement>) => {
+    const st = stRef.current;
+    const track = trackRef.current;
+    if (!horizontal || !st || !track) return;
+
+    const x = e.target.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const target = st.start + Math.max(0, x - window.innerWidth * 0.2);
+    if (Math.abs(window.scrollY - target) < 8) return;
+
+    const inst = lenis?.current;
+    if (inst) inst.scrollTo(target, { immediate: reduced });
+    // Lenis is null exactly when smooth scroll is off or motion is reduced, so
+    // an instant jump is the right fallback here rather than a smooth one.
+    else window.scrollTo({ top: target, behavior: 'auto' });
+  };
 
   useRegisterActiveSection(rootRef, 'projects');
 
@@ -34,7 +63,7 @@ export function Projects() {
       const trail = () => Math.round(window.innerWidth * 0.25);
       const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + trail());
 
-      gsap.to(track, {
+      const tween = gsap.to(track, {
         x: () => -dist(),
         ease: 'none',
         scrollTrigger: {
@@ -47,8 +76,10 @@ export function Projects() {
           invalidateOnRefresh: true,
         },
       });
+      // kept so focus handling can map a card position back to a scroll position
+      stRef.current = tween.scrollTrigger ?? null;
     },
-    { dependencies: [horizontal], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [horizontal], scope: rootRef },
   );
 
   return (
@@ -61,7 +92,7 @@ export function Projects() {
       <div className={styles.head}>
         <SectionLabel index={4}>{labels.sections.work}</SectionLabel>
       </div>
-      <div ref={trackRef} className={styles.track}>
+      <div ref={trackRef} className={styles.track} onFocusCapture={revealFocused}>
         {projects.map((p, i) => (
           <ProjectCard key={p.id} project={p} index={i} total={projects.length} distort={horizontal} />
         ))}

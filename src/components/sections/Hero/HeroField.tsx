@@ -27,10 +27,15 @@ export function HeroField() {
       if (!root) return;
 
       const dots = gsap.utils.toArray<HTMLElement>('[data-dot]', root);
+      // `scale` is a CSSPlugin shorthand — no PropTween of that name exists, so
+      // quickTo() cannot reset it and falls back to a full tween re-init (plus a
+      // console warning) on EVERY call. Drive scaleX/scaleY instead: same pose,
+      // real fast path.
       const setters = dots.map((d) => ({
         x: gsap.quickTo(d, 'x', { duration: 0.5, ease: 'power3' }),
         y: gsap.quickTo(d, 'y', { duration: 0.5, ease: 'power3' }),
-        s: gsap.quickTo(d, 'scale', { duration: 0.5, ease: 'power3' }),
+        sx: gsap.quickTo(d, 'scaleX', { duration: 0.5, ease: 'power3' }),
+        sy: gsap.quickTo(d, 'scaleY', { duration: 0.5, ease: 'power3' }),
       }));
 
       // dots only translate (transform), so their rest-centres are stable once
@@ -60,13 +65,16 @@ export function HeroField() {
           const dist = Math.hypot(dx, dy);
           if (dist < RADIUS) {
             const f = 1 - dist / RADIUS;
+            const s = 1 + f * GROW;
             set.x(dx * PULL * f);
             set.y(dy * PULL * f);
-            set.s(1 + f * GROW);
+            set.sx(s);
+            set.sy(s);
           } else {
             set.x(0);
             set.y(0);
-            set.s(1);
+            set.sx(1);
+            set.sy(1);
           }
         }
       };
@@ -95,7 +103,7 @@ export function HeroField() {
         window.removeEventListener('resize', measure);
       };
     },
-    { dependencies: [reduced, coarse], scope: rootRef },
+    { revertOnUpdate: true, dependencies: [reduced, coarse], scope: rootRef },
   );
 
   return (

@@ -24,6 +24,11 @@ export function Header() {
   // mount flag — set during render on open so it appears in the same commit
   const [sheetMounted, setSheetMounted] = useState(false);
   if (menuOpen && !sheetMounted) setSheetMounted(true);
+  // With no exit animation to wait for, the sheet can go in the same commit
+  // that closes the menu. Same render-phase adjustment as the open case above —
+  // doing it from the effect instead would be a cascading render
+  // (react-hooks/set-state-in-effect).
+  if (!menuOpen && sheetMounted && reduced) setSheetMounted(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const linkCursor = useCursorTarget('hover');
@@ -38,6 +43,10 @@ export function Header() {
   }, []);
 
   const jump = (id: string) => {
+    // The activated link is about to unmount with the sheet. Without this,
+    // focus falls to <body> and a keyboard user is dumped back to the start of
+    // the tab order. The Escape path already does this; the link path did not.
+    if (menuOpen) burgerRef.current?.focus();
     setMenuOpen(false);
     // The scroll-lock effect only releases Lenis on cleanup, which runs after
     // this handler returns — scrolling now would be swallowed while it's still
@@ -81,10 +90,8 @@ export function Header() {
       return () => { tl.kill(); };
     }
 
-    if (reduced) {
-      setSheetMounted(false);
-      return;
-    }
+    // reduced motion already dropped the sheet during render, so we only reach
+    // here when there is an exit animation to play
     const tl = gsap
       .timeline({ onComplete: () => setSheetMounted(false) })
       .to(rows, { yPercent: -110, duration: 0.25, ease: 'power2.in', stagger: 0.03 })
@@ -97,14 +104,18 @@ export function Header() {
   // step aside for the full-screen sheet.
   useEffect(() => {
     if (!menuOpen) return;
+    // Hold the ref object, not its value: the Lenis instance is replaced when
+    // the smooth-scroll setting toggles, so teardown must start whichever
+    // instance is live *then*, not the one captured at setup.
+    const lenisRef = lenis;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.documentElement.dataset.menuOpen = 'true';
-    lenis?.current?.stop();
+    lenisRef?.current?.stop();
     return () => {
       document.body.style.overflow = prev;
       delete document.documentElement.dataset.menuOpen;
-      lenis?.current?.start();
+      lenisRef?.current?.start();
     };
   }, [menuOpen, lenis]);
 
