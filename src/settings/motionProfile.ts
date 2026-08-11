@@ -3,11 +3,11 @@
    reveal hooks) read the current easing/distance/stagger without prop-drilling, exactly
    like motionFlag.ts does for reduce-motion. Reduced-motion still overrides at call sites. */
 import type { MotionProfile } from '../data/cursorThemes';
-import { CURSOR_PROFILES } from '../data/cursorThemes';
+import { cursorMotion } from '../data/cursorThemes';
 
 type Listener = () => void;
 
-let current: MotionProfile = CURSOR_PROFILES.precision;
+let current: MotionProfile = cursorMotion('precision');
 const listeners = new Set<Listener>();
 
 export const getMotionProfile = (): MotionProfile => current;

@@ -24,39 +24,45 @@ export interface CursorTheme {
   motion: MotionProfile;
 }
 
-export const CURSOR_THEMES: CursorTheme[] = [
-  {
-    id: 'precision',
+/* Keyed by id, so the compiler enforces that every Mode has a definition.
+   `satisfies` keeps the literal key types while still checking completeness:
+   adding a value to CursorThemeId without an entry here is now a compile error.
+   It used to compile and surface as a TypeError at the first reveal instead. */
+const DEFS = {
+  precision: {
     name: 'Precision',
     blurb: 'Sharp · brutalist',
     motion: { ease: 'power4.out', revealY: 32, stagger: 0.08, durScale: 1, rotate: 0, blur: 0, loopScale: 1, loopEase: 'none' },
   },
-  {
-    id: 'fluid',
+  fluid: {
     name: 'Fluid',
     blurb: 'Soft · premium',
     motion: { ease: 'power2.out', revealY: 60, stagger: 0.12, durScale: 1.35, rotate: 0, blur: 12, loopScale: 1.6, loopEase: 'none' },
   },
-  {
-    id: 'terminal',
+  terminal: {
     name: 'Terminal',
     blurb: 'Technical · retro',
     motion: { ease: 'steps(6)', revealY: 18, stagger: 0.05, durScale: 0.8, rotate: 0, blur: 0, loopScale: 1, loopEase: 'steps(30)' },
   },
-  {
-    id: 'kinetic',
+  kinetic: {
     name: 'Kinetic',
     blurb: 'Playful · bouncy',
     motion: { ease: 'back.out(1.6)', revealY: 44, stagger: 0.06, durScale: 1.1, rotate: 6, blur: 0, loopScale: 0.55, loopEase: 'none' },
   },
-  {
-    id: 'off',
+  off: {
     name: 'Off',
     blurb: 'Native cursor',
     motion: { ease: 'power4.out', revealY: 32, stagger: 0.08, durScale: 1, rotate: 0, blur: 0, loopScale: 1, loopEase: 'none' },
   },
-];
+} satisfies Record<CursorThemeId, Omit<CursorTheme, 'id'>>;
 
-export const CURSOR_PROFILES = Object.fromEntries(
-  CURSOR_THEMES.map((t) => [t.id, t.motion]),
-) as Record<CursorThemeId, MotionProfile>;
+/** Picker order — object key order, i.e. the declaration order above. */
+export const CURSOR_THEMES: CursorTheme[] = (Object.keys(DEFS) as (keyof typeof DEFS)[]).map(
+  (id) => ({ id, ...DEFS[id] }),
+);
+
+/** Total lookup. A Record over a finite union has no optional member, so this
+ *  needs no cast and cannot return undefined. */
+export function cursorMotion(id: CursorThemeId): MotionProfile {
+  return DEFS[id].motion;
+}
