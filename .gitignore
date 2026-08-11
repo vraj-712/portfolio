@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Agent / tooling scratch
+.playwright-mcp
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
