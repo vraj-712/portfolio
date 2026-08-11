@@ -4,14 +4,18 @@
 # stdin : harness hook JSON  { tool_input: { file_path } }
 # exit 0: allow.  exit 2: block, stderr is shown to the model.
 set -uo pipefail
+# shellcheck source=_lib.sh
+. "$(dirname "${BASH_SOURCE[0]}")/_lib.sh"
 
 payload="$(cat)"
 file_path="$(jq -r '.tool_input.file_path // empty' <<<"$payload")"
 [ -z "$file_path" ] && exit 0
 
 # Normalise to a repo-relative path so the patterns below stay readable.
-root="${CLAUDE_PROJECT_DIR:-$PWD}"
-rel="${file_path#"$root"/}"
+# Resolved against the repo that owns THIS file: a git worktree lives outside
+# CLAUDE_PROJECT_DIR, and stripping that prefix would leave an absolute path,
+# so every pattern below would silently miss.
+rel="$(repo_relative "$file_path")"
 
 deny() {
   echo "BLOCKED — $rel" >&2

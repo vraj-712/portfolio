@@ -11,13 +11,17 @@
 # stdin : harness hook JSON  { tool_input: { file_path, content|new_string } }
 # exit 0: allow.  exit 2: block, stderr is shown to the model.
 set -uo pipefail
+# shellcheck source=_lib.sh
+. "$(dirname "${BASH_SOURCE[0]}")/_lib.sh"
 
 payload="$(cat)"
 file_path="$(jq -r '.tool_input.file_path // empty' <<<"$payload")"
 [ -z "$file_path" ] && exit 0
 
-root="${CLAUDE_PROJECT_DIR:-$PWD}"
-rel="${file_path#"$root"/}"
+# Resolve against the repo that owns THIS file, not the session's project dir.
+# A git worktree lives outside CLAUDE_PROJECT_DIR, so stripping that prefix
+# leaves an absolute path and every allowlist below silently misses.
+rel="$(repo_relative "$file_path")"
 
 # Only guard the files that render the site.
 case "$rel" in
