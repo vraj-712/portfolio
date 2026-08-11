@@ -100,6 +100,8 @@ export function ProjectCard({ project, index, total, distort = true }: ProjectCa
           <img
             className={styles.mediaEl}
             src={media.src}
+            srcSet={media.srcSet}
+            sizes="min(78vw, 640px)" // matches .media's width in ProjectCard.module.css
             alt={media.alt}
             loading="lazy"
             decoding="async"
