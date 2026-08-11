@@ -69,11 +69,19 @@ export function Intro({ onDone }: { onDone: () => void }) {
 
   useGSAP(
     () => {
+      // Under reduced motion the variant hands off from its OWN layout effect,
+      // and React runs child effects before the parent's — so finish() has
+      // already released the lock by the time we get here. Re-locking now would
+      // strand `overflow: hidden` on <body> forever, because doneRef stops
+      // finish() from ever running again.
+      if (doneRef.current) return;
+
+      const prevOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       lenis?.current?.stop();
       // the provider effect (ancestor) may run after this child effect — make
       // sure the instance is stopped once it exists
-      requestAnimationFrame(() => lenis?.current?.stop());
+      const raf = requestAnimationFrame(() => lenis?.current?.stop());
       skipRef.current?.focus();
 
       const onKey = (e: KeyboardEvent) => {
@@ -91,7 +99,12 @@ export function Intro({ onDone }: { onDone: () => void }) {
 
       return () => {
         window.clearTimeout(cap);
+        cancelAnimationFrame(raf);
         window.removeEventListener('keydown', onKey);
+        // Release unconditionally: this effect owns the lock, so freeing it must
+        // not depend on finish() having run. Mirrors Header's sheet scroll-lock.
+        document.body.style.overflow = prevOverflow;
+        lenis?.current?.start();
       };
     },
     { dependencies: [reduced], scope: rootRef },
