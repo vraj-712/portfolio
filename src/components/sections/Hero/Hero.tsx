@@ -121,9 +121,13 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
   const { settings } = useSettings();
   const theme = settings.cursorTheme;
   // read live inside the pin's onUpdate so the bloom shape follows the Mode
-  // without rebuilding the (pinned) ScrollTrigger
+  // without rebuilding the (pinned) ScrollTrigger. Assigned in an effect, not
+  // during render: a render can be discarded under concurrent rendering, so a
+  // render-phase write may not match the committed tree (react-hooks/refs).
   const themeRef = useRef(theme);
-  themeRef.current = theme;
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
   const rootRef = useRef<HTMLElement>(null);
   const bloomRef = useRef<HTMLDivElement>(null);
   const [facet, setFacet] = useState(0);

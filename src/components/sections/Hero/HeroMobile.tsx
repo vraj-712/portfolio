@@ -111,9 +111,14 @@ export function HeroMobile({ started = true }: { started?: boolean }) {
   const reduced = useReducedMotion();
   const lenis = useLenis();
   const { settings } = useSettings();
-  // read live so the bloom shape follows the Mode without rebuilding the trigger
+  // read live so the bloom shape follows the Mode without rebuilding the trigger.
+  // Assigned in an effect, not during render: a render can be discarded under
+  // concurrent rendering, so a render-phase write may not match the committed
+  // tree (react-hooks/refs).
   const themeRef = useRef(settings.cursorTheme);
-  themeRef.current = settings.cursorTheme;
+  useEffect(() => {
+    themeRef.current = settings.cursorTheme;
+  }, [settings.cursorTheme]);
   const rootRef = useRef<HTMLElement>(null);
   const bloomRef = useRef<HTMLDivElement>(null);
   const [facet, setFacet] = useState(0);
