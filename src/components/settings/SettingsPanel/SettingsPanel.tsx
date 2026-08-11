@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useSettings } from '../../../hooks/useSettings';
 import { useFocusTrap } from '../../../hooks/useFocusTrap';
 import { PALETTES, FONT_PAIRS } from '../../../data/settingsSchema';
-import type { FontPairId, ThemeMode } from '../../../settings/types';
+import type { FontPairId } from '../../../settings/types';
 import { ToggleControl } from '../controls/ToggleControl';
 import { SliderControl } from '../controls/SliderControl';
 import { SegmentedControl } from '../controls/SegmentedControl';
@@ -63,7 +63,7 @@ export function SettingsPanel() {
                 { value: 'light', label: 'Light' },
                 { value: 'dark', label: 'Dark' },
               ]}
-              onChange={(v) => setSetting('themeMode', v as ThemeMode)}
+              onChange={(v) => setSetting('themeMode', v)}
             />
             <p className={s.subLabel}>Palettes</p>
             <PresetSwatches palettes={PALETTES} activeId={settings.paletteId} onSelect={applyPreset} />
