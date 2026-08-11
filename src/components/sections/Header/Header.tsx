@@ -43,6 +43,10 @@ export function Header() {
   }, []);
 
   const jump = (id: string) => {
+    // The activated link is about to unmount with the sheet. Without this,
+    // focus falls to <body> and a keyboard user is dumped back to the start of
+    // the tab order. The Escape path already does this; the link path did not.
+    if (menuOpen) burgerRef.current?.focus();
     setMenuOpen(false);
     // The scroll-lock effect only releases Lenis on cleanup, which runs after
     // this handler returns — scrolling now would be swallowed while it's still
