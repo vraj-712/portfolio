@@ -50,7 +50,7 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
       </div>
 
       <div className={styles.center}>
-        <p className={cx(styles.eyebrow, accent && styles.eyebrowAccent)}>{brand.taglineParts[0]}</p>
+        <p  style={{textAlign: 'center'}} className={cx(styles.eyebrow, accent && styles.eyebrowAccent)}>{brand.taglineParts[0]}</p>
         <NameTag
           className={styles.name}
           data-hero-name
@@ -58,14 +58,14 @@ function HeroContent({ accent, facet, time, onNav }: HeroContentProps) {
         >
           <span className={styles.lineOuter}>
             <span className={styles.lineInner} data-hero-line>
-              {brand.firstName}
+              {brand.firstName} {brand.lastName}
             </span>
           </span>
-          <span className={cx(styles.lineOuter, styles.lineOffset)}>
+          {/* <span className={cx(styles.lineOuter, styles.lineOffset)}>
             <span className={styles.lineInner} data-hero-line>
               {brand.lastName}
             </span>
-          </span>
+          </span> */}
         </NameTag>
         <p className={styles.role}>
           <span className={styles.roleStatic}>{brand.role} —&nbsp;</span>

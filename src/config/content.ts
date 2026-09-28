@@ -281,7 +281,7 @@ export const content: SiteContent = {
       blurb:
         'A metals-industry platform with a Next.js front end and WebSocket-driven live data — supporting the team on feature development and bug fixing.',
       tags: ['Next.js', 'WebSockets', 'Frontend'],
-      media: { type: 'image', src: '/media/projects/tennant-metals.svg', alt: 'Tennant Metals platform' }, // TODO real media
+      media: { type: 'image', src: '/media/cover-tennant.png', alt: 'Tennant Metals platform' }, // TODO real media
       links: {},
     },
   ],
