@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ElementType } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -17,12 +17,23 @@ import styles from './HeroMobile.module.css';
 const { brand } = content;
 
 interface MobileContentProps {
+  accent?: boolean;
   facet: number;
   time: string;
   onNav: (id: string) => void;
 }
 
-function MobileContent({ facet, time, onNav }: MobileContentProps) {
+function MobileContent({ accent, facet, time, onNav }: MobileContentProps) {
+  // Mirrors HeroContent on the desktop variant: the accent layer is a purely
+  // visual, aria-hidden duplicate, so only the base layer may be the real
+  // heading. Rendering the duplicate as a <div> (identical styling — .name
+  // resets margin) keeps a single <h1> on the page.
+  //
+  // This was missing here while the desktop hero already had it, so the MOBILE
+  // page shipped two <h1>Vraj Patel</h1> — and indexing is mobile-first, so it
+  // was the version that counted. Caught by measuring the live page, not by
+  // reading the prerendered HTML.
+  const NameTag: ElementType = accent ? 'div' : 'h1';
   return (
     <div className={styles.inner}>
       <header className={styles.top}>
@@ -43,7 +54,7 @@ function MobileContent({ facet, time, onNav }: MobileContentProps) {
         <p className={styles.eyebrow} data-rise>
           {brand.taglineParts[0]}
         </p>
-        <h1 className={styles.name} aria-label={brand.name}>
+        <NameTag className={styles.name} {...(accent ? {} : { 'aria-label': brand.name })}>
           <span className={styles.lineOuter}>
             <span className={styles.lineInner} data-hero-line>
               {brand.firstName}
@@ -54,7 +65,7 @@ function MobileContent({ facet, time, onNav }: MobileContentProps) {
               {brand.lastName}
             </span>
           </span>
-        </h1>
+        </NameTag>
         <p className={styles.role} data-rise>
           <span className={styles.roleStatic}>{brand.role} —&nbsp;</span>
           <RollingText values={brand.roleFacets} index={facet} className={styles.roleRoll} />
@@ -211,7 +222,7 @@ export function HeroMobile({ started = true }: { started?: boolean }) {
       {/* accent duplicate revealed by the scroll bloom — inert so its duplicated
           buttons/links never take focus or clicks */}
       <div ref={bloomRef} className={cx(styles.layer, styles.bloom)} aria-hidden="true" inert>
-        <MobileContent facet={facet} time={time} onNav={onNav} />
+        <MobileContent accent facet={facet} time={time} onNav={onNav} />
       </div>
     </section>
   );
