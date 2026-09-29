@@ -15,8 +15,9 @@
 
 ## Status — 2026-09-29
 
-Six of nine findings are closed (1, 3, 4, 5, 6, 9). The three that remain (2, 7, 8) are all
-**new-animation** work, deliberately not started.
+All nine findings are now resolved: eight fixed or closed (1, 2, 3, 4, 5, 6, 7, 9) and one
+(8, scroll snapping) **assessed and deliberately declined** — shipping it would have fought Lenis.
+Finding 2 was **corrected** before being fixed; it was wrong as first written.
 
 All fixes are verified by `npm run verify` at **15/15** against both the dev server and a
 production `vite build` + `vite preview`.
@@ -28,13 +29,13 @@ production `vite build` + `vite preview`.
 | # | Severity | Finding | Anchor |
 |---|---|---|---|
 | 1 | ~~**P0**~~ **FIXED** | Crossing the compact breakpoint at runtime unmounted the entire app | `PinHost.tsx` + `ErrorBoundary.tsx`, merged `a12ba0b` |
-| 2 | P1 | Expertise section has no motion signature at all | `sections/Expertise/` |
+| 2 | ~~P1~~ **CORRECTED + FIXED** | Expertise *did* have hover motion; the real gap was that it was hover-only, so touch got nothing | `Expertise.tsx` scan-line flood |
 | 3 | ~~P1~~ **CLOSED — by design** | All 8 projects ship `links: {}` | Owner decision: every project is internal or client work |
 | 4 | ~~P2~~ **FIXED** | Hero role line read "FULL STACK DEVELOPER — FULL STACK" | `Hero.tsx` buckets + `content.ts` facets |
 | 5 | ~~P2~~ **FIXED** | `README.md` was the stock Vite starter template | `README.md` rewritten |
 | 6 | ~~P2~~ **FIXED** | Tennant cover was a 1.6MB PNG with no `srcSet` | WebP pair; dead PNG deleted |
-| 7 | Gap | `AccentWipe` primitive is built but used in exactly one place | `Closing.tsx:81` |
-| 8 | Gap | No scroll snapping anywhere, despite three pinned scenes | — |
+| 7 | ~~Gap~~ **FIXED** | `AccentWipe` was built but used in exactly one place | Scene hand-off curtain on Work (`Projects.tsx`) |
+| 8 | **ASSESSED — not shipped** | Scroll snapping would fight Lenis; deliberately declined | See §8 |
 | 9 | ~~P1~~ **FIXED** | 14px horizontal overflow at 360px — found by the harness, not by eye | `Skills.module.css` `.learning` |
 
 ---
@@ -164,16 +165,44 @@ Two notes for anyone extending it:
 
 ---
 
-## 2. P1 — Expertise has no motion signature
+## 2. CORRECTED — Expertise was hover-only, not motionless
 
-`sections/Expertise/` renders eight rows of `number · title · blurb` separated by hairlines, over
-**1571px** of scroll. No hover state, no entrance choreography, no accent moment, no media.
+> **This finding was wrong as originally written, and the error is kept here on purpose.**
+> The original text said Expertise had "no hover state, no entrance choreography, no accent
+> moment". That was judged from a *static screenshot*. Reading the code and driving the page
+> proved otherwise: `.flood` wipes an accent panel across the row on `:hover`
+> (`inset(0 100% 0 0)` to `inset(0)`) with the index, title and blurb flipping to
+> `--color-on-accent`, and the rows already enter on a staggered `Reveal`.
+>
+> Lesson for future audits in this repo: a screenshot cannot see a hover state. Interaction
+> findings must be driven, not looked at.
 
-It sits between a strong About (split-line lead, accent-marked phrase, education card) and a strong
-Experience (scrubbed timeline spine with markers), so the drop in energy is conspicuous.
+### The real gap
 
-`ANIMATION_STUDY.md` mandate C.5 was *"escalate, don't repeat: give each section a distinct motion
-signature."* Expertise is currently the section with no signature at all.
+The flood is the section's entire interaction and it is gated on `:hover`, which **never fires on
+a touch device**. So on a phone the section was inert — the exact failure `ANIMATION_STUDY.md`
+names as the reference portfolio's worst trait ("the personality is desktop-only by omission, not
+by design"), and what mandate C.3 requires we not repeat.
+
+### Fix — a scan line on coarse pointers
+
+On coarse pointers only, a `ScrollTrigger` per row toggles a `.flooded` class while the row
+straddles the viewport midline (`start: 'top 50%'`, `end: 'bottom 50%'`). Rows are contiguous, so
+exactly one is lit at any scroll position — which matches `:hover` semantics and honours the
+styling law's "one point of emphasis per section". An earlier wider band lit two rows at once and
+read as decoration.
+
+Two decisions worth keeping:
+
+- **Toggle a class; do not tween `clip-path` from JS.** The CSS already owns the wipe *and* the
+  text-colour flip in one rule, so they cannot fall out of step. Animating the flood from JS while
+  the text stayed `--color-ink` would put ink on accent at roughly 1.6:1.
+- **Fine pointers get no trigger at all**, so desktop hover is provably unchanged — verified:
+  nothing lit without hover, and hovering row 2 lights only row 2.
+
+Measured on touch at 390x844: rows light in sequence 1 through 7 as you scroll, **maximum 1 lit at
+a time**, no flood/text mismatch at any sample. Reduced motion skips the trigger entirely; the row
+rests un-flooded, which is the legible state, so there is no end-state to strand.
 
 ---
 
@@ -209,6 +238,66 @@ unfinished work.
   is copied wholesale, so it had still been shipping. `dist/` went **3.7 MB to 2.1 MB (-43%)**.
   The `// TODO real media` marker is deliberately kept: a format change does not make the image
   final.
+
+---
+
+## 7. FIXED — a scene hand-off curtain on Work
+
+`AccentWipe` existed as a primitive but was used once, as a closing curtain (`Closing.tsx:81`).
+`ANIMATION_STUDY.md` opportunity #2 asked for it to be generalised into section transitions.
+
+Shipped on **one** boundary only: entering Work. The accent panel sweeps across and clears
+straight out — a curtain, not a cover. Measured across the crossing: **62 distinct clip-path
+states**, fully covering for **3 of 70 sampled frames**.
+
+Deliberate constraints:
+
+- **One boundary, not seven.** A curtain at every section would be seven accent flashes on one
+  scroll, which is decoration. The styling law rations accent to one point of emphasis. Work earns
+  it because it is the biggest scene change on the page — vertical flow pivots to a pinned
+  horizontal track. The curtain travels `right` to foreshadow that pivot.
+- **Scoped to the section, not fixed to the viewport.** The panel is `absolute; inset: 0` inside
+  `.projects`, which is `overflow: hidden`. While pinned the two are the same rectangle, so it
+  reads full-screen, but it can never outlive its section or overlap the next one.
+- `pointer-events: none` and `aria-hidden`, so it never blocks input or reaches the a11y tree.
+- Reduced motion gets no curtain; the panel's resting clip-path is already cleared, so there is no
+  end state to strand. Verified: resting `inset(0% 0% 100%)`, cards at opacity 1.
+
+---
+
+## 8. ASSESSED — scroll snapping, deliberately NOT shipped
+
+`ANIMATION_STUDY.md` opportunity #6 asked for snapping between the pinned scenes. **Declined, on
+evidence.**
+
+`SmoothScrollProvider` wires Lenis to ScrollTrigger one way only: `lenis.on('scroll', ScrollTrigger.update)`
+plus `lenis.raf` on the GSAP ticker. There is **no `ScrollTrigger.scrollerProxy()`** — verified,
+zero occurrences in `src/`. ScrollTrigger therefore *reads* scroll position but has no sanctioned
+way to *drive* it.
+
+ScrollTrigger's built-in `snap` drives scroll itself, via the scroller's own `scrollTo`. With Lenis
+simultaneously animating that same scroll position toward its own target, the two would compete —
+precisely the failure `.claude/skills/gsap-motion-patterns` §5 names: *"Two scrollers fighting
+produces jitter that is very hard to trace."*
+
+This is not theoretical. Every programmatic scroll in the codebase already routes through Lenis —
+`Header.tsx:56`, `Hero.tsx:146`, `HeroMobile.tsx:147`, `ScrollProgress.tsx:46`, `Closing.tsx:73`,
+`Projects.tsx:48` — with a native `window.scrollTo` only ever as the fallback for when Lenis is
+off. Snapping would be the single feature to bypass that rule.
+
+**What shipping it correctly would require** (a real piece of work, not a flag):
+
+1. A `ScrollTrigger.scrollerProxy()` wiring `scrollTop` through Lenis, or
+2. A custom snap that computes the nearest stop on scroll-end and calls `lenis.scrollTo(target)`,
+   with care not to trap a user mid-section.
+
+Worth noting the ceiling is lower than the opportunity implies: the pinned scenes are 900-4800px
+apart, so page-level snapping on a long reading page risks yanking the reader more than it helps.
+A better-targeted version would snap *within* the Skills carousel to its five category stops —
+still a Lenis-native implementation, but a bounded and clearly useful one.
+
+Recorded here rather than left open, so the next person does not reach for `snap: true` and spend
+an afternoon on the jitter.
 
 ---
 
