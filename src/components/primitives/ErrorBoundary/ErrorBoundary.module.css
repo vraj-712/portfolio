@@ -1,0 +1,44 @@
+/* Brutalist fallback: sharp corners, hard shadow, token-only values. */
+.panel {
+  margin: var(--space-section) var(--gutter);
+  padding: var(--space-6);
+  border: var(--bw) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-base-2);
+  box-shadow: var(--shadow);
+}
+
+.label {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-100);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.body {
+  margin: 0 0 var(--space-5);
+  max-width: var(--measure);
+  font-size: var(--fs-300);
+  color: var(--color-ink-muted);
+}
+
+.action {
+  padding: var(--space-3) var(--space-5);
+  border: var(--bw) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease-ui);
+}
+
+.action:hover,
+.action:focus-visible {
+  box-shadow: var(--shadow-sm);
+}
