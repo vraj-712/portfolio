@@ -13,19 +13,29 @@
 
 ---
 
+## Status — 2026-09-29
+
+Six of nine findings are closed (1, 3, 4, 5, 6, 9). The three that remain (2, 7, 8) are all
+**new-animation** work, deliberately not started.
+
+All fixes are verified by `npm run verify` at **15/15** against both the dev server and a
+production `vite build` + `vite preview`.
+
+---
+
 ## Findings summary
 
 | # | Severity | Finding | Anchor |
 |---|---|---|---|
 | 1 | ~~**P0**~~ **FIXED** | Crossing the compact breakpoint at runtime unmounted the entire app | `PinHost.tsx` + `ErrorBoundary.tsx`, merged `a12ba0b` |
 | 2 | P1 | Expertise section has no motion signature at all | `sections/Expertise/` |
-| 3 | P1 | All 8 projects ship `links: {}` — no clickable affordance in the work section | `config/content.ts:198-287` |
-| 4 | P2 | Hero role line reads "FULL STACK DEVELOPER — FULL STACK" | `config/content.ts:13-14` |
-| 5 | P2 | `README.md` is still the stock Vite starter template | `README.md` |
-| 6 | P2 | One project cover is a PNG with no `srcSet` while 8 others ship WebP pairs | `config/content.ts:284` |
+| 3 | ~~P1~~ **CLOSED — by design** | All 8 projects ship `links: {}` | Owner decision: every project is internal or client work |
+| 4 | ~~P2~~ **FIXED** | Hero role line read "FULL STACK DEVELOPER — FULL STACK" | `Hero.tsx` buckets + `content.ts` facets |
+| 5 | ~~P2~~ **FIXED** | `README.md` was the stock Vite starter template | `README.md` rewritten |
+| 6 | ~~P2~~ **FIXED** | Tennant cover was a 1.6MB PNG with no `srcSet` | WebP pair; dead PNG deleted |
 | 7 | Gap | `AccentWipe` primitive is built but used in exactly one place | `Closing.tsx:81` |
 | 8 | Gap | No scroll snapping anywhere, despite three pinned scenes | — |
-| 9 | P1 | 14px horizontal overflow at 360px width — found by the new harness, not by eye | open |
+| 9 | ~~P1~~ **FIXED** | 14px horizontal overflow at 360px — found by the harness, not by eye | `Skills.module.css` `.learning` |
 
 ---
 
@@ -119,8 +129,11 @@ on its own merits.
 2. **Stop `<main>`'s direct children from being pin-wrapped.** Pin an inner wrapper rather than the
    section element itself, so each `<main>` child stays a stable React-owned node and the
    `.pin-spacer` lives *inside* it. This removes the divergence React trips over.
-3. **Make split targets React leaves** (`lib/gsap/splitText.ts`) so GSAP never writes into
-   React-owned children — closes the latent second instance.
+3. **Make split targets React leaves** — ✅ **done**. `SplitReveal` now renders an empty element
+   and writes its text in a layout effect, so React owns no children under a node GSAP rewrites.
+   No observable behaviour change: the bug was latent because `About` and `Closing` never unmount.
+   Verified by absence of regression (split spans, sr-only original, reduced-motion plain text and
+   prerendered HTML all intact), not by a behavioural delta.
 
 Each step is verified in a browser against the matrix in
 `.claude/skills/visual-verification/SKILL.md`, plus the new breakpoint-crossing check below.
@@ -164,28 +177,38 @@ signature."* Expertise is currently the section with no signature at all.
 
 ---
 
-## 3. P1 — The work section has no outbound links
+## 3. CLOSED (by design) — the work section has no outbound links
 
-All eight entries in `config/content.ts` ship `links: {}`, so the `ProjectLinks { live?, source? }`
-type is never populated and no card renders a live or source affordance. Confirmed visually in the
-pinned track: title, year, blurb and tags render, but nothing is clickable.
+All eight entries in `config/content.ts` ship `links: {}`, so `ProjectLinks { live?, source? }` is
+never populated and no card renders a live or source affordance.
 
-This may be correct and unavoidable — Pivotal is internal tooling, and Kavra / Ablefinder /
-BuildChain / Tennant are client work. **This is a content decision, not a bug.** Flagged because the
-practical effect is that a visitor cannot navigate anywhere from the work section.
+**Resolved as intended, 2026-09-29, by owner decision.** Every project is internal tooling
+(Pivotal) or client work (Kavra, Ablefinder, BuildChain, Rocket, Tennant Metals, SportsGrid,
+MyUnify) with no public URL or repository to link to. There is nothing to fix.
+
+The `ProjectLinks` type and `ProjectCard`'s rendering path are deliberately kept, so a future
+project with a public URL needs only a data edit. Recorded here so this stops reading as
+unfinished work.
 
 ---
 
-## 4-6. P2 — Copy and asset polish
+## 4-6. P2 — Copy and asset polish — **ALL FIXED**
 
-- **Hero role duplication.** `brand.role` is `'Full Stack Developer'` and `brand.roleFacets[0]` is
-  `'FULL STACK'`, so when the rotator rests on its first facet the hero reads
-  "FULL STACK DEVELOPER — FULL STACK". Observed live.
-- **`README.md`** is unmodified `create-vite` boilerplate ("This template provides a minimal setup
-  to get React working in Vite with HMR…"). It is the first thing a GitHub visitor reads, and it
-  describes a template rather than this project.
-- **`config/content.ts:284`** — Tennant Metals uses `/media/cover-tennant.png` with no `srcSet`,
-  while the other eight projects each ship a 640w/1280w WebP pair.
+- **Hero role duplication.** ✅ Two causes. `Hero.tsx` hardcoded three scroll buckets
+  (`p < 0.34 ? 0 : p < 0.67 ? 1 : 2`), so the facet count was not editable from the config; it now
+  derives from `brand.roleFacets.length`, matching how the Skills pin already worked. The
+  redundant `'FULL STACK'` facet was then removed. Hero now reads "FULL STACK DEVELOPER — NEXT.JS".
+  Note this second part is *branding copy*, not a defect fix — adding a third specialism restores
+  a three-way rotation and the bucketing handles it automatically.
+- **`README.md`** ✅ rewritten: quick start, command table, what is genuinely unusual
+  (contrast-solved palette, cursor Modes, the token law), architecture, rebranding guide, and the
+  `npm run verify` workflow.
+- **Tennant cover.** ✅ Bigger than the audit first implied: the PNG was **1,582 KB**, roughly 29x
+  the comparable WebP. Regenerated with `sharp` at the same dimensions as every other cover
+  (640x427 / 1280x853) to **29 KB / 82 KB**, and the now-unreferenced PNG was deleted — `public/`
+  is copied wholesale, so it had still been shipping. `dist/` went **3.7 MB to 2.1 MB (-43%)**.
+  The `// TODO real media` marker is deliberately kept: a format change does not make the image
+  final.
 
 ---
 
@@ -234,12 +257,12 @@ Measured live at 1512×900 unless noted.
 - **Projects pin** consumes ~3900px of scroll between its start and the Skills section.
 - **Pinned triggers — exactly three:** `Hero.tsx:179` (scrub 0.6), `Projects.tsx:73` (scrub 0.3),
   `Skills.tsx:47` (scrub true).
-- **Production bundle:** `index.js` 443.05 kB (gzip **144.12 kB**); `index.css` 74.72 kB
-  (gzip 13.07 kB). Build time 336ms.
+- **Production bundle (post-fixes):** `index.js` ~443 kB (gzip ~139 KiB); `index.css` ~73 KiB
+  (gzip ~12 KiB). Total `dist/` **2.1 MB**, down from 3.7 MB once the dead PNG was removed.
 - **Console on a clean desktop load:** zero errors, zero warnings.
 - **`getVelocity()` call sites:** 1 (`Marquee.tsx:58`).
-- **`loading=`/`decoding=` attributes:** 1 element (`ProjectCard.tsx:106-107`).
-- **Error boundaries:** 0.
+- **`loading=`/`decoding=` attributes:** 1 element (`ProjectCard.tsx:106-107`). All 9 covers now ship a 640w/1280w WebP `srcSet`.
+- **Error boundaries:** 1 (`ErrorBoundary.tsx`, wrapping `<main>`). Was 0 at audit time.
 - **Scroll-snap usage:** 0 (every `snap` grep hit is the `--dur-snappy` token).
 - **`prefers-reduced-motion` handling:** present, via `useReducedMotion()` + `settings/motionFlag.ts`.
 
