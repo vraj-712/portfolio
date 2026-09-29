@@ -3,6 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AppProviders } from './components/providers/AppProviders';
 import { Cursor } from './components/primitives/Cursor/Cursor';
 import { ErrorBoundary } from './components/primitives/ErrorBoundary/ErrorBoundary';
+import { PinHost } from './components/primitives/PinHost/PinHost';
 import { ScrollProgress } from './components/primitives/ScrollProgress/ScrollProgress';
 import { SettingsTrigger } from './components/settings/SettingsTrigger/SettingsTrigger';
 import { SettingsPanel } from './components/settings/SettingsPanel/SettingsPanel';
@@ -47,13 +48,19 @@ function App() {
         <ScrollProgress sections={content.nav} />
         <ErrorBoundary>
           <main id="main" ref={mainRef} tabIndex={-1}>
-            <Hero started={introDone} />
+            <PinHost>
+              <Hero started={introDone} />
+            </PinHost>
             <MarqueeBand />
             <About />
             <Expertise />
             <Experience />
-            <Projects />
-            <Skills />
+            <PinHost>
+              <Projects />
+            </PinHost>
+            <PinHost>
+              <Skills />
+            </PinHost>
             <Credentials />
             <Closing />
           </main>
