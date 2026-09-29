@@ -17,7 +17,7 @@
 
 | # | Severity | Finding | Anchor |
 |---|---|---|---|
-| 1 | **P0** | Crossing the compact breakpoint at runtime unmounts the entire app (blank page) | `Hero.tsx:179`, `Projects.tsx:73`, `Skills.tsx:47` |
+| 1 | ~~**P0**~~ **FIXED** | Crossing the compact breakpoint at runtime unmounted the entire app | `PinHost.tsx` + `ErrorBoundary.tsx`, merged `a12ba0b` |
 | 2 | P1 | Expertise section has no motion signature at all | `sections/Expertise/` |
 | 3 | P1 | All 8 projects ship `links: {}` — no clickable affordance in the work section | `config/content.ts:198-287` |
 | 4 | P2 | Hero role line reads "FULL STACK DEVELOPER — FULL STACK" | `config/content.ts:13-14` |
@@ -25,10 +25,16 @@
 | 6 | P2 | One project cover is a PNG with no `srcSet` while 8 others ship WebP pairs | `config/content.ts:284` |
 | 7 | Gap | `AccentWipe` primitive is built but used in exactly one place | `Closing.tsx:81` |
 | 8 | Gap | No scroll snapping anywhere, despite three pinned scenes | — |
+| 9 | P1 | 14px horizontal overflow at 360px width — found by the new harness, not by eye | open |
 
 ---
 
-## 1. P0 — Runtime breakpoint crossing white-screens the site
+## 1. P0 — Runtime breakpoint crossing white-screens the site  — **FIXED**
+
+> **Resolved** in `a12ba0b`. Two commits: `PinHost` (cause) and `ErrorBoundary` (safety net).
+> Verification went 10/15 to 14/15, and rendered output is unchanged — document height and all
+> nine section offsets are identical to the pre-fix build at 1440x900. The analysis below is kept
+> because the failure mode generalises to any future pinned section.
 
 ### Symptom
 The entire page goes blank. `document.getElementById('root').children.length` drops to **0** — the
@@ -119,14 +125,29 @@ on its own merits.
 Each step is verified in a browser against the matrix in
 `.claude/skills/visual-verification/SKILL.md`, plus the new breakpoint-crossing check below.
 
-### Regression check to add to the verification matrix
+### Regression check — now automated
 
-The existing matrix checks fixed viewports; this bug only appears on a *transition*. Add:
+The existing matrix checks fixed viewports; this bug only appears on a *transition*, so no
+single-viewport check could ever have caught it. `scripts/verify.mjs` now covers it:
 
+```bash
+npm run dev                          # or: npm run build && npm run preview
+npm run verify -- http://localhost:5173
 ```
-load at 1440x900 -> resize to 390x844 -> assert #root has children, console has 0 errors
-load at 390x844  -> resize to 1440x900 -> same assertions
-```
+
+The harness runs the whole `visual-verification` matrix — static viewports, reduced-motion end
+states, horizontal overflow, console/page-error/failed-request counts — plus the runtime breakpoint
+transition in both directions. It exits non-zero, so it works as a pre-merge gate.
+
+Two notes for anyone extending it:
+
+- **Count sections by id, not by DOM position.** `main > section` is structure-dependent: the
+  pin-spacer re-parents pinned sections, so that selector reports 6 on desktop and 9 on mobile for
+  an identical page.
+- **Do not symlink `node_modules` into a worktree.** `worktree-flow` suggests it, but Vite's
+  `server.fs.allow` then returns 403 for every font file outside the worktree root, which shows up
+  as five phantom "failed request" errors. Run a real install — and note that `npm install` in a
+  bun project drops a competing `package-lock.json` (now gitignored).
 
 ---
 
