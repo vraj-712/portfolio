@@ -188,12 +188,28 @@
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--color-ink-muted);
-  white-space: nowrap;
+  /* No nowrap: the chip is centred with translateX(-50%), so a single
+     unbreakable line wider than the viewport overhangs by half the excess on
+     each side, and the right-hand overhang lands in document scrollWidth
+     (14px of horizontal scroll at 360px). Capping to the gutter and letting it
+     wrap keeps it inside the page. Wide viewports are unaffected — the content
+     fits on one line well inside the cap, so nothing reflows. */
+  max-width: calc(100% - var(--gutter) * 2);
+  text-align: center;
+  text-wrap: balance;
 }
 .arrow,
 .learnItem {
   color: var(--color-accent);
   font-weight: 700;
+}
+
+/* Break BEFORE the subject rather than through it, so the chip reads
+   "NOW LEARNING →" / "RAG & AI INTEGRATION" instead of splitting the term.
+   inline-block still allows the subject to wrap internally if it is itself
+   longer than the chip, so a long value cannot reintroduce overflow. */
+.learnItem {
+  display: inline-block;
 }
 
 /* --- static grids (touch / reduced motion) --- */
