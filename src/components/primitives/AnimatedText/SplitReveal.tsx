@@ -1,4 +1,4 @@
-import { useRef, type ElementType, type Ref } from 'react';
+import { useLayoutEffect, useRef, type ElementType, type Ref } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSplitText } from '../../../hooks/useSplitText';
@@ -38,6 +38,28 @@ export function SplitReveal({
 }: SplitRevealProps) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
+
+  // React must NOT own the children of a node GSAP rewrites. splitText() clears
+  // this element and rebuilds its subtree, and revert() replaces the text node
+  // again — so if React rendered {children} here, its fiber would keep pointing
+  // at a text node that is no longer in the document, and the next
+  // reconciliation touching this subtree (an unmount, say) would throw
+  // NotFoundError. That is the same class of bug as the pin-spacer desync
+  // documented in SITE_AUDIT.md, and it is latent only because About and
+  // Closing never unmount today.
+  //
+  // Rendering an empty element and writing the text imperatively keeps this
+  // subtree entirely GSAP's, and keeps React's model of it accurate: no
+  // children. A layout effect runs before useSplitText's passive effect, so the
+  // text is always in place before the first split.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Already split from this exact text — leave the split subtree alone.
+    if (el.getAttribute('data-split-original') === children) return;
+    el.removeAttribute('data-split-original');
+    el.textContent = children;
+  }, [children]);
 
   useSplitText(ref, {
     type: splitBy,
@@ -108,8 +130,8 @@ export function SplitReveal({
       ref={ref as Ref<HTMLElement>}
       className={className}
       style={reduced ? undefined : { visibility: 'hidden' }}
-    >
-      {children}
-    </Tag>
+      // No children: the layout effect above writes the text. See the comment
+      // there — anything React renders into this node, GSAP would destroy.
+    />
   );
 }
