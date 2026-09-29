@@ -24,7 +24,12 @@
   clip-path: inset(0 100% 0 0);
   transition: clip-path var(--dur-base) var(--ease-power-out);
 }
-.row:hover .flood {
+/* `.flooded` is the touch equivalent of :hover — set by a ScrollTrigger on
+   coarse pointers, where :hover can never fire. Both states drive the SAME
+   declarations so the flood and the text colour can never disagree, which is
+   what would otherwise leave ink-on-accent text at ~1.6:1. */
+.row:hover .flood,
+.row.flooded .flood {
   clip-path: inset(0 0 0 0);
 }
 
@@ -69,6 +74,18 @@
 /* flooded text colors */
 .row:hover .index,
 .row:hover .title,
-.row:hover .blurb {
+.row:hover .blurb,
+.row.flooded .index,
+.row.flooded .title,
+.row.flooded .blurb {
   color: var(--color-on-accent);
+}
+
+/* Reduced motion: the flood is decoration, so it simply never runs. The row
+   rests in its un-flooded state, which is the legible one — no end-state to
+   strand. */
+@media (prefers-reduced-motion: reduce) {
+  .flood {
+    transition: none;
+  }
 }
