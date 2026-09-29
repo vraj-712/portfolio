@@ -11,7 +11,7 @@
  * real visitors still get the full JS experience (React re-renders into #root).
  */
 import { createServer } from 'node:http';
-import { readFile, writeFile, stat, readdir } from 'node:fs/promises';
+import { readFile, writeFile, stat } from 'node:fs/promises';
 import { join, extname, resolve } from 'node:path';
 
 const DIST = resolve(process.cwd(), 'dist');
@@ -95,56 +95,14 @@ async function main() {
     await page.waitForTimeout(400);
 
     const html = await page.content();
-    // Injected after capture: the live page has no preloads (the hashed names
-    // only exist post-build), so they are added to the snapshot we ship.
-    const preloads = await fontPreloadTags();
-    const out = preloads ? html.replace('</head>', `${preloads}  </head>`) : html;
-    await writeFile(join(DIST, 'index.html'), out, 'utf8');
-    console.log(
-      `[prerender] Wrote prerendered dist/index.html${preloads ? ` (+${preloads.trim().split('\n').length} font preload${preloads.trim().split('\n').length > 1 ? 's' : ''})` : ''}`,
-    );
+    await writeFile(join(DIST, 'index.html'), html, 'utf8');
+    console.log('[prerender] Wrote prerendered dist/index.html');
   } finally {
     await browser.close();
     server.close();
   }
 }
 
-
-/* Preload the two fonts the first screen actually paints with.
- *
- * Fontsource fonts are discovered only once the CSS has been fetched and
- * parsed, so the hero — an H1 in the display face, and the LCP element — waits
- * a whole extra round trip before it can paint with its real font. Preloading
- * moves that fetch to the start of the waterfall.
- *
- * Only the `latin` subsets of the two faces visible above the fold: the display
- * face for the name, and mono 400 for the status chip and clock. Preloading
- * more (latin-ext, vietnamese, italics, mono 700) would compete for bandwidth
- * with the LCP itself and make things worse.
- *
- * The filenames are content-hashed, so this cannot live in index.html — it has
- * to be injected here, after the bundle exists.
- */
-async function fontPreloadTags() {
-  const patterns = [
-    /^bricolage-grotesque-latin-wght-normal-.*\.woff2$/,
-    /^space-mono-latin-400-normal-.*\.woff2$/,
-  ];
-  let files;
-  try {
-    files = await readdir(join(DIST, 'assets'));
-  } catch {
-    return '';
-  }
-  return patterns
-    .map((re) => files.find((f) => re.test(f)))
-    .filter(Boolean)
-    .map(
-      (f) =>
-        `    <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/${f}" />\n`,
-    )
-    .join('');
-}
 
 main().catch((err) => {
   // Never fail the build over prerender — warn and move on.
