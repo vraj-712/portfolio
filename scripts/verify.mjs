@@ -49,13 +49,21 @@ async function settle(page) {
   await page.waitForTimeout(400);
 }
 
+/** Count sections by id, not by DOM position. A `main > section` selector is
+ *  structure-dependent: ScrollTrigger's pin-spacer re-parents pinned sections,
+ *  so that selector silently under-counts on desktop (6) vs mobile (9). */
+const SECTION_IDS = [
+  'hero', 'marquee', 'about', 'expertise', 'experience',
+  'projects', 'skills', 'credentials', 'closing',
+];
+
 const probe = (page) =>
-  page.evaluate(() => ({
+  page.evaluate((ids) => ({
     rootChildren: document.getElementById('root')?.children.length ?? 0,
-    sections: document.querySelectorAll('main > section, main > footer').length,
+    sections: ids.filter((id) => document.getElementById(id)).length,
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     docHeight: document.body.scrollHeight,
-  }));
+  }), SECTION_IDS);
 
 /** Same launch-fallback ladder as scripts/prerender.mjs: bundled Chromium, then
  *  a system Chrome, then a system Chromium. First one that launches wins. */
@@ -98,7 +106,11 @@ async function main() {
     await settle(page);
 
     const m = await probe(page);
-    record(`${label} — renders`, m.rootChildren > 0, `root children ${m.rootChildren}, ${m.sections} sections`);
+    record(
+      `${label} — renders`,
+      m.rootChildren > 0 && m.sections === SECTION_IDS.length,
+      `root children ${m.rootChildren}, ${m.sections}/${SECTION_IDS.length} sections`,
+    );
     record(`${label} — no horizontal overflow`, m.overflow === 0, `${m.overflow}px`);
     record(
       `${label} — clean console`,
@@ -158,7 +170,7 @@ async function main() {
     const m = await probe(page);
     record(
       `breakpoint ${label} — tree survives`,
-      m.rootChildren > 0 && m.sections > 0,
+      m.rootChildren > 0 && m.sections === SECTION_IDS.length,
       `root children ${m.rootChildren}, ${m.sections} sections`,
     );
     record(
