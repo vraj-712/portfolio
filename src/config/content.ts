@@ -11,7 +11,10 @@ export const content: SiteContent = {
     firstName: 'Vraj',
     lastName: 'Patel',
     role: 'Full Stack Developer',
-    roleFacets: ['FULL STACK', 'NEXT.JS', 'REACT NATIVE'],
+    // The hero renders "<role> — <facet>", so a 'FULL STACK' facet next to the
+    // 'Full Stack Developer' role read as "FULL STACK DEVELOPER — FULL STACK".
+    // Facets should add information the role line does not already carry.
+    roleFacets: ['NEXT.JS', 'REACT NATIVE'],
     tagline: 'Curious by default. Fast by habit. Building for what comes next.',
     taglineParts: ['Curious by default.', 'Fast by habit.', 'Building for what comes next.'],
     location: 'Ahmedabad, Gujarat, India',

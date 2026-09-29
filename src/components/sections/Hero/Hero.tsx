@@ -180,7 +180,12 @@ function HeroDesktop({ started = true }: { started?: boolean }) {
             scrub: 0.6,
             onUpdate: (self) => {
               const p = self.progress;
-              setFacet(p < 0.34 ? 0 : p < 0.67 ? 1 : 2);
+              // Split the pin evenly across however many facets exist, rather
+              // than hardcoding three thresholds — editing brand.roleFacets in
+              // the config should not silently strand the roller on one value.
+              // (Mirrors the Skills pin, which derives its buckets the same way.)
+              const n = brand.roleFacets.length;
+              setFacet(Math.max(0, Math.min(n - 1, Math.floor(p * n))));
               // bloom shape follows the *current* Mode, read live
               if (bloom) bloom.style.clipPath = bloomShapeAt(themeRef.current, p);
             },
