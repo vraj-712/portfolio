@@ -6,6 +6,8 @@ import { useReducedMotion } from '../../../hooks/useReducedMotion';
 import { useIsCoarsePointer } from '../../../hooks/useIsCoarsePointer';
 import { useLenis } from '../../../hooks/useLenis';
 import { useRegisterActiveSection } from '../../../hooks/useRegisterActiveSection';
+import { AccentWipe } from '../../primitives/AccentWipe/AccentWipe';
+import { wipeIn, wipeOut } from '../../../lib/gsap/clipReveal';
 import { ProjectCard } from '../../primitives/ProjectCard/ProjectCard';
 import { SectionLabel } from '../../primitives/Section/SectionLabel';
 import { content, labels } from '../../../site.config';
@@ -21,6 +23,7 @@ export function Projects() {
   const rootRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const stRef = useRef<ScrollTriggerInstance | null>(null);
+  const curtainRef = useRef<HTMLDivElement>(null);
   const horizontal = !reduced && !coarse;
 
   /* Keyboard reachability for the pinned track.
@@ -49,6 +52,44 @@ export function Projects() {
   };
 
   useRegisterActiveSection(rootRef, 'projects');
+
+  /* Scene hand-off curtain — ANIMATION_STUDY opportunity #2.
+   *
+   * The accent panel sweeps across as Work arrives and clears straight out
+   * again: a curtain, not a cover. It is deliberately the ONLY section
+   * transition on the page. A curtain at every boundary would be seven accent
+   * flashes on one scroll, which is decoration — the styling law rations accent
+   * to one point of emphasis. Work earns it because it is the biggest scene
+   * change on the page: the layout pivots from vertical flow to a pinned
+   * horizontal track.
+   *
+   * Direction 'right' foreshadows that pivot — the curtain travels the same
+   * axis the track is about to.
+   *
+   * The panel lives inside .projects (absolute inset:0) rather than fixed to
+   * the viewport. While the section is pinned the two are the same rectangle,
+   * and this way the curtain cannot outlive its section or overlap the one
+   * after it. It is pointer-events:none and aria-hidden, so it never blocks
+   * input or reaches the accessibility tree.
+   */
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      const curtain = curtainRef.current;
+      // Reduced motion gets no curtain at all. The panel's resting clip-path is
+      // fully cleared, so skipping it leaves nothing covering the section —
+      // there is no end state to strand.
+      if (!root || !curtain || reduced) return;
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: root, start: 'top 85%', once: true },
+      });
+      tl.add(wipeIn(curtain, { direction: 'right', duration: 0.55 })).add(
+        wipeOut(curtain, { direction: 'right', duration: 0.55 }),
+        '+=0.04',
+      );
+    },
+    { revertOnUpdate: true, dependencies: [reduced], scope: rootRef },
+  );
 
   useGSAP(
     () => {
@@ -89,6 +130,7 @@ export function Projects() {
       className={cx(styles.projects, horizontal && styles.horizontal)}
       aria-label={labels.sections.work}
     >
+      <AccentWipe ref={curtainRef} className={styles.curtain} />
       <div className={styles.head}>
         <SectionLabel index={4}>{labels.sections.work}</SectionLabel>
       </div>

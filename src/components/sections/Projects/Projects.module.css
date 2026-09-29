@@ -50,3 +50,10 @@
 .horizontal .track > article {
   width: min(70vw, 560px);
 }
+
+/* Scene hand-off curtain. Sits above the track but below nothing else it could
+   trap: the panel is pointer-events:none and aria-hidden, and .projects is
+   overflow:hidden so it can never bleed into a neighbouring section. */
+.curtain {
+  z-index: var(--z-overlay);
+}
