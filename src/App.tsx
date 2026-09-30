@@ -19,6 +19,7 @@ import { Skills } from './components/sections/Skills/Skills';
 import { Credentials } from './components/sections/Credentials/Credentials';
 import { Closing } from './components/sections/Closing/Closing';
 import { content } from './data/content';
+import { Analytics } from '@vercel/analytics/next';
 
 function App() {
   const [introDone, setIntroDone] = useState(false);
@@ -72,6 +73,7 @@ function App() {
           <SettingsPanel />
         </>
       )}
+      <Analytics />
     </AppProviders>
   );
 }
