@@ -23,15 +23,33 @@ const record = (name, pass, detail) => {
 };
 
 /** Attach console/page-error collectors. Returns a live, resettable sink. */
+/** Noise that is not a defect:
+ *  - favicon: absent in some contexts, never meaningful
+ *  - /_vercel/insights: Vercel Analytics' script is served by Vercel's edge, so
+ *    it 404s on localhost and in `vite preview` by design. Ignoring it keeps
+ *    this gate meaningful locally; a gate that always fails is a gate people
+ *    stop reading. It still surfaces if it breaks in production, because that
+ *    is a different host. */
+const IGNORED_REQUESTS = /favicon|\/_vercel\/insights\//;
+
 function watch(page) {
   const sink = { console: [], pageerror: [], failed: [] };
   page.on('console', (m) => {
-    if (m.type() === 'error') sink.console.push(m.text().slice(0, 200));
+    if (m.type() !== 'error') return;
+    // A failed subresource logs a console error whose location is the URL that
+    // failed, so the same allowlist has to apply here or the noise just moves.
+    if (IGNORED_REQUESTS.test(m.location()?.url ?? '')) return;
+    sink.console.push(m.text().slice(0, 200));
   });
   page.on('pageerror', (e) => sink.pageerror.push(String(e).slice(0, 200)));
   page.on('requestfailed', (r) => {
-    // favicon noise is not a real failure
-    if (!/favicon/.test(r.url())) sink.failed.push(r.url());
+    if (!IGNORED_REQUESTS.test(r.url())) sink.failed.push(r.url());
+  });
+  page.on('response', (r) => {
+    // preview serves a 404 page rather than failing the request outright
+    if (r.status() >= 400 && !IGNORED_REQUESTS.test(r.url())) {
+      sink.failed.push(`${r.status()} ${r.url()}`);
+    }
   });
   sink.reset = () => {
     sink.console.length = 0;
