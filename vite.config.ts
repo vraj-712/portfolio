@@ -8,11 +8,12 @@ import react from '@vitejs/plugin-react'
  * an extra round trip before it can paint with its real font.
  *
  * This lives in the bundler, not in scripts/prerender.mjs, on purpose. The
- * prerender step is deliberately fail-open: on a build host with no Chromium
- * (Vercel's, for one) it warns and ships the CSR build. Injecting preloads
- * there meant they silently never shipped in production — verified against the
- * live site, which served 0 preloads while a local build served 2. A Vite hook
- * needs no browser, so the preloads ship wherever the bundle does.
+ * prerender step is fail-open off Vercel: on a build host with no Chromium it
+ * warns and ships the CSR build (Vercel's own host did this until
+ * scripts/vercel-install.sh). Injecting preloads there meant they silently
+ * never shipped in production — verified against the live site, which served
+ * 0 preloads while a local build served 2. A Vite hook needs no browser, so
+ * the preloads ship wherever the bundle does.
  *
  * Only the `latin` subsets of the two faces visible above the fold: the display
  * face for the name, and mono 400 for the status chip and clock. Preloading

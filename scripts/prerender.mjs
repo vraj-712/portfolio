@@ -4,11 +4,16 @@
  * bots the actual page content — the build-time SEO/OG/JSON-LD tags are already
  * in the head; this adds the <body>.
  *
- * FAIL-OPEN: if a browser can't be launched (e.g. a CI env without Chromium),
- * it warns loudly and exits 0 so the build still ships the CSR bundle. To run
- * prerender on such a host, install the browser first: `npx playwright install
- * chromium`. Does NOT touch design, layout, or animation of the live app —
- * real visitors still get the full JS experience (React re-renders into #root).
+ * FAIL-OPEN locally: if a browser can't be launched, it warns loudly and exits
+ * 0 so the build still ships the CSR bundle. To run prerender on such a host,
+ * install the browser first: `npx playwright install --only-shell chromium`.
+ *
+ * FAIL-CLOSED on Vercel (VERCEL is set): a skipped prerender there would ship
+ * an empty #root to crawlers, so it exits 1 and Vercel keeps serving the
+ * previous deployment. scripts/vercel-install.sh provisions Chromium there.
+ *
+ * Does NOT touch design, layout, or animation of the live app — real visitors
+ * still get the full JS experience (React re-renders into #root).
  */
 import { createServer } from 'node:http';
 import { readFile, writeFile, stat } from 'node:fs/promises';
@@ -16,6 +21,16 @@ import { join, extname, resolve } from 'node:path';
 
 const DIST = resolve(process.cwd(), 'dist');
 const PORT = 4188;
+const FAIL_CLOSED = Boolean(process.env.VERCEL);
+
+/** Report a skipped prerender; fails the build only when FAIL_CLOSED. */
+function skip(reason, details = []) {
+  const outcome = FAIL_CLOSED
+    ? 'failing the build (VERCEL is set, refusing to ship an empty #root).'
+    : 'skipping prerender (shipping CSR build).';
+  console.warn([`\n[prerender] ${reason} — ${outcome}`, ...details].join('\n[prerender] ') + '\n');
+  process.exitCode = FAIL_CLOSED ? 1 : 0;
+}
 
 const TYPES = {
   '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript',
@@ -50,7 +65,7 @@ async function main() {
   try {
     ({ chromium } = await import('playwright'));
   } catch {
-    console.warn('\n[prerender] Playwright not available — skipping prerender (shipping CSR build).\n');
+    skip('Playwright not available');
     return;
   }
 
@@ -61,27 +76,28 @@ async function main() {
   // `playwright install chromium`), then a system Chrome/Chromium (common on
   // dev machines). First one that launches wins.
   const strategies = [
-    () => chromium.launch(),
-    () => chromium.launch({ channel: 'chrome' }),
-    () => chromium.launch({ channel: 'chromium' }),
+    ['bundled chromium', () => chromium.launch()],
+    ['channel "chrome"', () => chromium.launch({ channel: 'chrome' })],
+    ['channel "chromium"', () => chromium.launch({ channel: 'chromium' })],
   ];
   let browser = null;
-  let lastErr;
-  for (const launch of strategies) {
+  // Keep every strategy's error: the last one alone is misleading (it reports a
+  // missing channel when the real failure is the bundled browser's system libs).
+  const errors = [];
+  for (const [label, launch] of strategies) {
     try {
       browser = await launch();
       break;
     } catch (err) {
-      lastErr = err;
+      errors.push(`${label}: ${err?.message ?? err}`);
     }
   }
   if (!browser) {
-    console.warn(
-      '\n[prerender] Could not launch a browser — skipping prerender (shipping CSR build).' +
-      '\n[prerender] To enable on this host: `npx playwright install chromium`.' +
-      `\n[prerender] (${lastErr?.message ?? lastErr})\n`,
-    );
     server.close();
+    skip('Could not launch a browser', [
+      'To enable on this host: `npx playwright install --only-shell chromium`.',
+      ...errors,
+    ]);
     return;
   }
 
@@ -105,7 +121,6 @@ async function main() {
 
 
 main().catch((err) => {
-  // Never fail the build over prerender — warn and move on.
-  console.warn(`\n[prerender] Skipped due to error (shipping CSR build): ${err?.message ?? err}\n`);
-  process.exit(0);
+  skip(`Error: ${err?.message ?? err}`);
+  process.exit();
 });
