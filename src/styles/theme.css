@@ -77,6 +77,12 @@
   --page-max:  120rem;  /* 1920 */
   --page-inset: max(0px, calc((100vw - var(--page-max)) / 2));
 
+  /* Full-screen sections (hero, closing) stop growing here. No real screen
+     reaches it, but Googlebot renders with a page-tall viewport (~14,000px):
+     an uncapped 100vh section swells to fill it and pushes every section below
+     out of the render, where its scroll reveals never fire. */
+  --viewport-max-h: 150rem;  /* 2400 */
+
   /* --- Borders — brutalist --- */
   --bw-hair: 1px; --bw: 2px; --bw-thick: 3px; --bw-brutal: 4px;
   --radius: 0;            /* sharp corners everywhere */

@@ -1,7 +1,7 @@
 .closing {
   position: relative;
   overflow: hidden;
-  min-height: 100vh;
+  min-height: min(100vh, var(--viewport-max-h));
   display: flex;
   align-items: center;
   background: var(--color-base);

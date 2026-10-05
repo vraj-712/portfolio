@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: min(100svh, var(--viewport-max-h));
   overflow: hidden;
   background: var(--color-base);
 }
@@ -63,7 +63,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: var(--space-7);
-  min-height: 100svh;
+  min-height: min(100svh, var(--viewport-max-h));
   padding: calc(var(--space-9) + env(safe-area-inset-top, 0px)) var(--gutter)
     calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
 }
